@@ -1,0 +1,858 @@
+<!-- Template: work_area_main.tmpl , but not single template in this file  -->
+
+
+<html>
+<head>
+    <title>Cyberplat&reg;</title>
+    <meta name="KEYWORDS" content="">
+    <META content="" name=DESCRIPTION>
+    <link rel="stylesheet" type="text/css" href="http://card.cyberplat.ru/dealer/css/style.css">
+    <META http-equiv=Content-Type content="text/html; charset=windows-1251">
+</head>
+<body topmargin="0" leftmargin="0" rightmargin="0">
+<table align="center" border="0" cellspacing="0" cellpadding="0" width="100%" height="100%">
+
+<tr>
+    <td colspan="2">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td valign="top" width="416"><a href="http://www.cyberplat.ru/agent/index.htm"><img
+                        src="http://card.cyberplat.ru/dealer/img/logo2_tab.gif" alt="" border="0"></a></td>
+                <td><img src="http://card.cyberplat.ru/dealer/img/head2_tab.gif" alt="" border="0" width="100%"
+                         height="97"></td>
+            </tr>
+        </table>
+    </td>
+</tr>
+
+
+<OBJECT CLASSID="clsid:47B955CD-0E70-406B-BC50-13EF2EA20B0A"
+        CODEBASE="http://card.cyberplat.ru/dealer/secure/iprivcom.cab#version=1,0,0,7" ID="ipriv" width=0 height=0
+        standby="ПО 'Тонкий клиент'. Версия II"></OBJECT>
+<iframe name="save_request_form_workframe" width="0" height="0" frameborder="0" marginheight="0" marginwidth="0"
+        id="save_request_form_frame" scrolling="0" hspace="0" vspace="0"></iframe>
+
+<iframe name="save_request_form_workframe2" width="3" height="3" frameborder="0" id="save_request_form_frame2"
+        scrolling="0"
+        src2="http://wa.cyberplat.com/jobs.html?sesid=ebfb52f9130fa9205e16ca24&make=save_request&saveRequest=shijashfdjkhfdfhsdjkfhsdkjlfhsdklfhsdjkfhsdjkfhsdjhsdfjhsdjkfhsdjkfhsdfjkh"
+        src="http://card.cyberplat.ru/dealer/jobs.html?make=job_save_form&sesid=038ed4956e68a155ee594294"></iframe>
+
+<FORM METHOD="POST" ACTION="http://card.cyberplat.ru/dealer/jobs.html" name="save_request_form"
+      target="save_request_form_workframe">
+    <INPUT TYPE="hidden" name="sesid" value="038ed4956e68a155ee594294">
+    <INPUT TYPE="hidden" name="make" value="save_request">
+    <INPUT TYPE="hidden" name="saveRequest" value="">
+</FORM>
+<SCRIPT LANGUAGE="JavaScript">
+    <!--
+
+    var timerID = null;
+
+    function stopclock() {
+        if (timerID)
+            clearInterval(timerID);
+        timerID = null;
+    }
+    function startclock() {
+        stopclock();
+        timerID = setInterval(showtime, 1000); // или setInterval("showtime()", 1000)
+    }
+    function showtime() {
+        window.status = (new Date()).toLocaleTimeString();
+    }
+    function saved_request(line)
+    {
+        try
+        {
+            var fr = document.forms['save_request_form'];
+            fr.saveRequest.value = line;
+            fr.submit();
+            for (i = 0; i < 9999; i++);
+
+        }
+
+        catch(exception)
+        {
+            view_exception(exception);
+        }
+
+        return false;
+    }
+
+    function replacedigit(x)
+    {
+        x = x.replace(/[^\d]/g, '');
+        return x;
+    }
+    //-->
+</SCRIPT>
+
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+
+function hash_to_line(hash)
+{
+    var line = '';
+    for (var k in hash) line += "		<" + k + ">" + hash[k] + "</" + k + ">\r\n";
+    return line;
+}
+
+function GetResultSign(line)
+{
+    var ResultSign = ipriv.SignMessage(line);
+
+//alert(line);
+    //alert(ResultSign);
+
+    //если результат успешный, то передаем новое значение в форму
+    //		if ( ResultSign && confirm(ResultSign))
+    //		{
+    //		if ( confirm(ResultSign) )
+    if (ResultSign && confirm('Подтвердите запрос на выполнение данной операции.'))
+    {
+        try
+        {
+            if (document.getElementById('save_req_body_id'))
+            {
+                if (document.getElementById('save_req_body_id').checked)
+                    saved_request(ResultSign);
+            }
+        }
+
+        catch(exception)
+        {
+            //alert(exception);
+
+            if (exception.description == null || exception.message)
+            {
+                alert(exception.message + ' 1');
+            }
+            else
+            {
+                alert(exception.description + ' 2');
+            }
+        }
+        ;
+
+//alert(ResultSign);
+        return ResultSign;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+var gooTo = false;
+var SenForms = null;
+var GlobalVarForm = null;
+function mySubmit(form)
+{
+    GlobalVarForm = form;
+    try
+    {
+        //			if ( document.getElementById('save_req_body_id') )
+        //			{
+        if (document.getElementById('save_req_body_id') && document.getElementById('save_req_body_id').checked)
+        {
+            window.setTimeout('setMySubmit();', 5000);
+	//				document.getElementById('save_req_body_id').checked = false;
+            alert('Дождитесь сохраненного запроса');
+        }
+
+            //			}
+        else
+        {
+            GlobalVarForm.submit();
+            return true;
+        }
+
+    }
+
+    catch(exception)
+    {
+        view_exception(exception);
+    }
+
+    return false;
+}
+
+function setMySubmit(form)
+{
+    GlobalVarForm.submit();
+    return true;
+}
+
+
+function my_confidence()
+{
+    return confirm('Данная операция приведет к необратимым последствиям. Подтвердите запрос на выполнение данной операции.');
+}
+
+var window_var2 = false;
+//-->
+</SCRIPT>
+
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+
+function set_activ_action(value)
+{
+    document.forms['ACTION_FORM'].make.value = value;
+
+    set_selected_value_by_id('setactiv1', value);
+    set_selected_value_by_id('setactiv2', value);
+
+    return true;
+}
+
+function set_activ_action2(value)
+{
+    document.forms['ACTION_FORM'].make.value = value;
+
+//		set_selected_value_by_id('setactiv1', value);
+    //		set_selected_value_by_id('setactiv2', value);
+
+    return true;
+}
+
+
+function set_action_list(tag, name)
+{
+    var set = false;
+    if (tag.checked == true)
+        set = true;
+
+    for (var i = 0; i < document.forms['ACTION_FORM'].length; i++)
+    {
+        if (document.forms['ACTION_FORM'][i].id == "action_list_id" || document.forms['ACTION_FORM'][i].id == name)
+            document.forms['ACTION_FORM'][i].checked = set;
+    }
+
+    return true;
+}
+
+function check_field()
+{
+
+    for (var i = 0; i < document.forms['ACTION_FORM'].length; i++)
+    {
+
+        if (document.forms['ACTION_FORM'][i].checked == true && document.forms['ACTION_FORM'][i].value > 0)
+            return true;
+    }
+
+    alert("Нет выбранных данных");
+    return false;
+}
+
+function check_field(form)
+{
+
+    for (var i = 0; i < form.length; i++)
+    {
+
+        if (form[i].checked == true && form[i].value > 0)
+            return true;
+    }
+
+    alert("Нет выбранных данных");
+    return false;
+}
+
+function set_selected_value_by_id(id, value)
+{
+    sel = document.getElementById(id);
+    if (!sel)
+    {
+        alert("Нет определенного объекта! (" + id + ", " + value + ")");
+        return;
+    }
+    for (i = 0; i < sel.options.length; i++)
+    {
+        if (value == sel.options[i].value)
+        {
+            sel.options[i].selected = true;
+            return true;
+        }
+        else
+        {
+            sel.options[i].selected = false;
+        }
+    }
+
+    return false;
+}
+
+function view_exception(exception)
+{
+    if (exception.description == null || exception.message)
+    {
+        alert(exception.message);
+    }
+    else
+    {
+        alert(exception.description);
+    }
+    return false;
+}
+
+//-->
+</SCRIPT>
+
+
+<tr>
+<td align="center" valign="top" height="100%" width="100%"
+    style="border-style: solid; border-width:1px; border-color:#394A91;">
+<table width="100%" height="100%" border="0" cellspacing="0" cellpadding="0">
+<TR>
+    <TD colSpan=2 bgcolor="394A91">&nbsp;</TD>
+</TR>
+
+<TR>
+<TD VALIGN="TOP" COLSPAN="2"><!-- include\work_area\tree_menu.tmpl -->
+<SCRIPT LANGUAGE="JavaScript">
+    <!--
+    function open_help_window()
+    {
+        new_window = window.open('http://card.cyberplat.ru/dealer/work_area.html?sesid=038ed4956e68a155ee594294&make=help#tree_add_point', 'HELP', 'copyhistory=no,dependent=no,directories=no,scrollbars=yes,status=no,toolbar=no,location=no,menubar=no,resizable=yes,width=650,height=400,screenX=100,screenY=100');
+
+        return false;
+    }
+
+    function change_url(url, action)
+    {
+
+        location.replace(url + '&sort_by=' + action);
+    }
+
+    function advanced_change_url(url, action)
+    {
+
+        location.replace(url + action);
+    }
+
+
+    function subdealer_redirect()
+    {
+        if (confirm("Воспользоваться мастером?"))
+        {
+            parent.location = 'http://card.cyberplat.ru/dealer/work_area.html?sesid=038ed4956e68a155ee594294&make=form_add_subdealer_master';
+        }
+        else
+        {
+            parent.location = 'http://card.cyberplat.ru/dealer/work_area.html?sesid=038ed4956e68a155ee594294&make=form_add_subdealer';
+        }
+	//alert('Добавляем субдилера');
+    }
+
+    //-->
+</SCRIPT>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="98%" VALIGN="TOP">
+    <TR>
+        <TD COLSPAN="2">
+            <TABLE CELLSPACING=2 CELLPADDING=2>
+                <TR BGCOLOR="#394A91">
+
+
+                    <td width="162" align="center"><A
+                            HREF="http://card.cyberplat.ru/dealer/work_area.html?main_serial=1269688&sesid=038ed4956e68a155ee594294&make=form_point"
+                            class="find">Поиск точек</a></TD>
+                    <td width="162" align="center"><A
+                            HREF="http://card.cyberplat.ru/dealer/work_area.html?main_serial=1269688&sesid=038ed4956e68a155ee594294&make=form_operator"
+                            class="find">Поиск пользователей</a></TD>
+
+                    <!-- 						<td width="150" align="center"><A HREF="http://card.cyberplat.ru/dealer/work_area.html?serial=1269688&sesid=038ed4956e68a155ee594294&make=tree_add_point" class="find">Добавить точку</a></TD> -->
+
+                    <!-- 					<td width="156" align="center"><A HREF="#" class="find" onClick="advanced_change_url('http://card.cyberplat.ru/dealer/work_area.html?sesid=038ed4956e68a155ee594294&make=form_gate_access&serial=', document.forms['quick_menu'].serial.value)">Доступ к шлюзам</a></TD> -->
+
+                    <td width="156" align="center"><A HREF="#" class="find"
+                                                      onClick="javascript: return open_help_window();">Помощь</a></TD>
+                    <TD WIDTH="162" ALIGN="CENTER"><A
+                            HREF="http://card.cyberplat.ru/dealer/work_area.html?main_serial=1269688&sesid=038ed4956e68a155ee594294&make=register_keys"
+                            class="find">API ключи</A></TD>
+
+
+                    <TD WIDTH="162" ALIGN="CENTER"><A
+                            HREF="http://card.cyberplat.ru/dealer/work_area.html?sesid=038ed4956e68a155ee594294&serial=1269688&make=form_e_documents#edo"
+                            class="find">Договоры</A></TD>
+
+
+                    <TD WIDTH="162" ALIGN="CENTER"><A
+                            HREF="http://card.cyberplat.ru/dealer/work_area.html?sesid=038ed4956e68a155ee594294&serial=1269688&make=report_view"
+                            class="find">Отчеты</A></TD>
+
+                    <TD WIDTH="162" ALIGN="CENTER"><A HREF="http://card.cyberplat.ru/dealer/work_area_login.html"
+                                                      class="find">Выход</A></TD>
+                    <!--				<TD WIDTH="150" ALIGN="CENTER"><A HREF="http://card.cyberplat.ru/dealer/dogovor.html?sesid=038ed4956e68a155ee594294&make=full_exit" class="find">Выход</A></TD> //-->
+                </TR>
+            </TABLE>
+        </TD>
+    </TR>
+    <FORM METHOD=POST NAME="SEARCH" ACTION="http://card.cyberplat.ru/dealer/work_area.html">
+        <INPUT TYPE="hidden" name="sesid" value="038ed4956e68a155ee594294">
+        <!-- Постоянные формы -->
+        <TR>
+            <TD COLSPAN="2" cellspacing="3">
+                <table cellspacing="3">
+                    <tr>
+                        <td>
+                            <!-- Градусник -->
+                            <TABLE>
+                                <TR>
+                                    <TD>
+
+
+                                        <b>
+
+
+                                            <a href="http://card.cyberplat.ru/dealer/work_area.html?sesid=038ed4956e68a155ee594294&make=tree_view_level&serial=1269688"><b>OOO
+                                                Флай-Теч</a></TD>
+
+
+                                    </b>
+
+
+                                </TR>
+                            </TABLE>
+                        </td>
+                    </tr>
+                </table>
+            </TD>
+        </TR>
+    </FORM>
+
+</table>
+
+</TD>
+</TR>
+<!-- заменить на add_menu.tmpl -->
+
+
+<tr bgcolor="#ffffff" valign="top">
+<td valign="top" colspan="2" height="100%" width="100%" ALIGN="CENTER">
+
+
+<!--# Создание точки add_point.tmpl'-->
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+
+function checkDigital(value, mes)
+{
+
+    if (!value || value == null)
+        return '';
+    value = String(value);
+    if (value.match(/[^0-9]/))
+    {
+        if (mes == 1)
+        {
+            alert('Разрешено вводить только цифры');
+        }
+
+        value = value.replace(/[^0-9]/g, '');
+    }
+
+    return value;
+}
+
+function replaceValidName(x)
+{
+    x = x.replace(/[\@\\\/\|\?\*\"\<\>\:\;\xab\xbb\+\&\%\#\$\^]/g, '');
+    return x;
+}
+
+
+function replacedigit(x)
+{
+    x = x.replace(/[^\d]/g, '');
+    return x;
+}
+
+function AdmPointConditions()
+{
+    for (var i = 1; i <= numberForm; i++)
+    {
+        eval("var t = document.forms['ACTION_FORM'].point_type_" + i + ";");
+
+        d = t.options[t.selectedIndex].value;
+        if (d == 'adm')
+        {
+            set_service_form('title', i, 'Головной офис');
+            eval("var t = document.forms['ACTION_FORM'].beeline_reg_" + i + ".checked = false;");
+        }
+        else
+        {
+            set_service_form('title', i, '');
+            eval("var t = document.forms['ACTION_FORM'].beeline_reg_" + i + ".checked = true;");
+        }
+    }
+}
+
+
+function EasySign(form)
+{
+    // Создаем список загружаемых полей
+    //		var line = "<document>\r\n	<subdealer>1269688</subdealer>\r\n	<operator>1269835</operator>\r\n	<action>save_add_point</action>\r\n";
+
+    var line = '<?xml version="1.0" encoding="win-1251" ?><!DOCTYPE administration PUBLIC "http://www.cyberplat.ru/mobpay/dtd/dealer_admin.dtd"><administration><author>1269835</author><dealer></dealer><subdealer>1269688</subdealer><action type="add_POS">';
+
+    for (var i = 1; i <= numberForm; i++)
+    {
+        var title = get_service_form('title', i);
+        var subject_federation = get_service_form('subject_federation', i);
+        var city = get_service_form('city', i);
+        var street = get_service_form('street', i);
+
+        if (!title || !subject_federation || !city || !street)
+        {
+            alert("Не заполнены обязательные поля!");
+            return false;
+        }
+
+        title = replaceValidName(title);
+
+        if (!city.match(/^[ЁёА-Яа-я]{3}[ЁёА-Яа-я0-9\s\-\.]*$/))
+        {
+            alert("Неверно указано название населеного пункта: " + city);
+            eval("document.forms['ACTION_FORM'].city_" + i + ".focus();");
+            return false;
+        }
+
+
+        if (!street.match(/^[ЁёА-Яа-я]{2}[ЁёА-Яа-я0-9\s\-\.\,\/]*$/))
+        {
+            alert("Неверно указана улица: " + street);
+            eval("document.forms['ACTION_FORM'].street_" + i + ".focus();");
+            return false;
+        }
+
+        eval("var t = document.forms['ACTION_FORM'].point_type_" + i + ";");
+        d = t.options[t.selectedIndex].value;
+
+        if (d == 'adm' && title != 'Головной офис')
+        {
+            alert("Точка данного типа должна называться 'Головной офис'!");
+            set_service_form('title', i, 'Головной офис');
+            eval("var t = document.forms['ACTION_FORM'].beeline_reg_" + i + ".checked = false;");
+            return false;
+        }
+
+        var one_pos = '<ref_dealer></ref_dealer>' + "\r\n" +
+                      '<ref_subdealer>1269688</ref_subdealer>' + "\r\n" +
+                      '<POS_type>' + get_service_form('point_type', i) + '</POS_type>' + "\r\n" +
+                      '<title>' + title + '</title>' + "\r\n" +
+                      '<zip>' + get_service_form('zip', i) + '</zip>' + "\r\n" +
+                      '<district>' + subject_federation + '</district>' + "\r\n" +
+                      '<area>' + get_service_form('location', i) + '</area>' + "\r\n" +
+                      '<city type="' + get_service_form('locality', i) + '">' + city + '</city>' + "\r\n" +
+                      '<street>' + street + '</street>' + "\r\n" +
+                      '<metro>' + get_service_form('metro', i) + '</metro>' + "\r\n" +
+                      '<chief><last_name>' + get_service_form('last_name', i) + '</last_name>' + "\r\n" +
+                      '<first_name>' + get_service_form('first_name', i) + '</first_name>' + "\r\n" +
+                      '<mid_name>' + get_service_form('mid_name', i) + '</mid_name></chief>' + "\r\n" +
+                      '<ip>' + get_service_form('ip', i) + '</ip>' + "\r\n" +
+                      '<phone>' + get_service_form('phone', i) + '</phone>' + "\r\n" +
+                      '<beeline>' + get_service_form_add('beeline_reg', i) + '</beeline>' + "\r\n";
+
+        line += "<POS>\r\n" + one_pos + "\r\n</POS>\r\n";
+    }
+
+    line += "</action>\r\n</administration>\r\n";
+
+		//подписываем документ
+    document.forms['ACTION_FORM'].main_signature_line.value = GetResultSign(line);
+
+    if (document.forms['ACTION_FORM'].main_signature_line.value)
+        return true;
+
+    return false
+}
+
+numRe = /_number_Form/gi;
+function delete_point()
+{
+    eval(' var deleteRe = /' + '<POINT_' + numberForm + '>.*<\\/POINT_' + numberForm + '>/gi;');
+    var line = document.getElementById('insert_tag').innerHTML;
+    line = line.replace(/[\s\n]+/gi, ' ');
+    document.getElementById('insert_tag').innerHTML = line.replace(deleteRe, '');
+
+		//
+    if (numberForm <= 1)
+        document.getElementById('delete_button').innerHTML = '';
+
+    numberForm--;
+}
+
+var longText = '<table border="0" cellpadding="4" cellspacing="1">\
+	<tr valign="top" align="left" bgcolor="#F9F9F9">\
+		<td valign="top"><B>Название&nbsp;<FONT SIZE="" COLOR="#FF0000">*</FONT></B></td>\
+		<td valign="top" align="center"><INPUT TYPE="text" NAME="title_number_Form" size="55" maxlength="100" onkeyup="e =  window.event; if(e.keyCode>57 || e.keyCode<48) this.value = replaceValidName(this.value); return true;"></td>\
+	</tr>\
+	<tr valign="top" align="left" bgcolor="#F9F9F9">\
+		<td valign="top"><B>Прием платежей&nbsp;<FONT SIZE="" COLOR="#FF0000">*</FONT></B></td>\
+		<td valign="top"><SELECT NAME="point_type_number_Form" onChange="AdmPointConditions();"><OPTION value="adm">Административная точка</OPTION><OPTION value="nal">WEB-схема</OPTION><OPTION value="api" selected>API-схема</OPTION></SELECT>\
+	</tr>\
+	<tr valign="top" align="left" bgcolor="#F9F9F9">\
+		<td valign="top"><B>Руководитель&nbsp;</B></td>\
+		<td valign="top"></td>\
+	</tr>\
+	<tr valign="top" align="left" bgcolor="#F9F9F9">\
+		<td valign="top"><B>Фамилия:&nbsp;</B></td>\
+		<td valign="top"><INPUT TYPE="text" NAME="last_name_number_Form" size="55" maxlength="100"></td>\
+	</tr>\
+	<tr valign="top" align="left" bgcolor="#F9F9F9">\
+		<td valign="top"><B>Имя:&nbsp;</B></td>\
+		<td valign="top"><INPUT TYPE="text" NAME="first_name_number_Form" size="55" maxlength="100"></td>\
+	</tr>\
+	<tr valign="top" align="left" bgcolor="#F9F9F9">\
+		<td valign="top"><B>Отчество:&nbsp;</B></td>\
+		<td valign="top"><INPUT TYPE="text" NAME="mid_name_number_Form" size="55" maxlength="100"></td>\
+	</tr>\
+	<tr valign="top" align="left" bgcolor="#F9F9F9">\
+		<td valign="top"><B>Контактный телефон:&nbsp;</B></td>\
+		<td valign="top"><INPUT TYPE="text" NAME="phone_number_Form" size="15" maxlength="15"></td>\
+	</tr>\
+	<tr valign="top" align="left" bgcolor="#F9F9F9">\
+		<td valign="top"><B>Субъект федерации&nbsp;<FONT COLOR="#FF0000">*</FONT>\
+		<BR><FONT SIZE="-1">республика / край / область / автономный округ</FONT></B></td>\
+		<td valign="top"><SELECT name="subject_federation_number_Form" id="subject_federation_id"><option value=""> - </option><option value="77">г Москва</option><option value="78">г Санкт-Петербург</option><option value="80">Агинский Бурятский АО</option><option value="01">Респ Адыгея</option><option value="04">Респ Алтай</option><option value="22">Алтайский край</option><option value="28">Амурская обл</option><option value="29">Архангельская обл</option><option value="30">Астраханская обл</option><option value="99">г Байконур</option><option value="02">Респ Башкортостан</option><option value="31">Белгородская обл</option><option value="32">Брянская обл</option><option value="03">Респ Бурятия</option><option value="33">Владимирская обл</option><option value="34">Волгоградская обл</option><option value="35">Вологодская обл</option><option value="36">Воронежская обл</option><option value="05">Респ Дагестан</option><option value="79">Еврейская Аобл</option><option value="37">Ивановская обл</option><option value="06">Респ Ингушетия</option><option value="38">Иркутская обл</option><option value="07">Респ Кабардино-Балкарская</option><option value="39">Калининградская обл</option><option value="08">Респ Калмыкия</option><option value="40">Калужская обл</option><option value="41">Камчатская обл</option><option value="09">Респ Карачаево-Черкесская</option><option value="10">Респ Карелия</option><option value="42">Кемеровская обл</option><option value="43">Кировская обл</option><option value="11">Респ Коми</option><option value="81">Коми-Пермяцкий АО</option><option value="82">Корякский АО</option><option value="44">Костромская обл</option><option value="23">Краснодарский край</option><option value="24">Красноярский край</option><option value="45">Курганская обл</option><option value="46">Курская обл</option><option value="47">Ленинградская обл</option><option value="48">Липецкая обл</option><option value="49">Магаданская обл</option><option value="12">Респ Марий Эл</option><option value="13">Респ Мордовия</option><option value="50">Московская обл</option><option value="51">Мурманская обл</option><option value="83">Ненецкий АО</option><option value="52">Нижегородская обл</option><option value="53">Новгородская обл</option><option value="54">Новосибирская обл</option><option value="55">Омская обл</option><option value="56">Оренбургская обл</option><option value="57">Орловская обл</option><option value="58">Пензенская обл</option><option value="59">Пермская обл</option><option value="25">Приморский край</option><option value="60">Псковская обл</option><option value="61">Ростовская обл</option><option value="62">Рязанская обл</option><option value="63">Самарская обл</option><option value="64">Саратовская обл</option><option value="14">Респ Саха (Якутия)</option><option value="65">Сахалинская обл</option><option value="66">Свердловская обл</option><option value="15">Респ Северная Осетия - Алания</option><option value="67">Смоленская обл</option><option value="26">Ставропольский край</option><option value="84">Таймырский АО</option><option value="68">Тамбовская обл</option><option value="16">Респ Татарстан</option><option value="69">Тверская обл</option><option value="70">Томская обл</option><option value="71">Тульская обл</option><option value="17">Респ Тыва</option><option value="72">Тюменская обл</option><option value="18">Респ Удмуртская</option><option value="73">Ульяновская обл</option><option value="85">Усть-Ордынский Бурятский АО</option><option value="27">Хабаровский край</option><option value="19">Респ Хакасия</option><option value="86">Ханты-Мансийский - Югра АО</option><option value="74">Челябинская обл</option><option value="20">Респ Чеченская</option><option value="75">Читинская обл</option><option value="21">Респ Чувашская - Чувашия</option><option value="87">Чукотский АО</option><option value="88">Эвенкийский АО</option><option value="89">Ямало-Ненецкий АО</option><option value="76">Ярославская обл</option></SELECT></td>\
+	</tr>\
+	<tr valign="top" align="left" bgcolor="#F9F9F9">\
+		<td valign="top"><B>Почтовый индекс</B></td>\
+		<td valign="top"><INPUT TYPE="text" NAME="zip_number_Form" size="6" maxlength="6" onkeyup="e =  window.event; if(e.keyCode>57 || e.keyCode<48) this.value = replacedigit(this.value); return true;"></td>\
+	</tr>\
+	<tr valign="top" align="left" bgcolor="#F9F9F9">\
+		<td valign="top"><B>Район</B></td>\
+		<td valign="top"><INPUT TYPE="text" NAME="location_number_Form" size="55" maxlength="100"></td>\
+	</tr>\
+	<tr valign="top" align="left" bgcolor="#F9F9F9">\
+		<td valign="top"><B>Тип населенного пункта&nbsp;<FONT COLOR="#FF0000">*</FONT></B></td>\
+		<td valign="top"><SELECT name="locality_number_Form"><OPTION value=" "> </OPTION><OPTION value="г">Город</OPTION><OPTION value="д">Деревня</OPTION><OPTION value="с">Село</OPTION><OPTION value="п">Поселок</OPTION><OPTION value="пгт">Поселок городского типа</OPTION><OPTION value="рп">Рабочий (заводской) поселок</OPTION><OPTION value="кп">Курортный поселок</OPTION><OPTION value="дп">Дачный поселок</OPTION><OPTION value="с/с">Сельсовет</OPTION><OPTION value="с/а">Сельская администрация</OPTION><OPTION value="с/мо">Сельское муницип. образование</OPTION><OPTION value="с/о">Сельский округ</OPTION><OPTION value="волость">Волость</OPTION><OPTION value="п/о">Почтовое отделение</OPTION><OPTION value="тер">Территория</OPTION><OPTION value="с/т">Сельская территория</OPTION><OPTION value="ст-ца">Станица</OPTION></SELECT></td>\
+	</tr>\
+	<tr valign="top" align="left" bgcolor="#F9F9F9">\
+		<td valign="top"><B>Населенный пункт&nbsp;<FONT COLOR="#FF0000">*</FONT></B></td>\
+		<td valign="top"><INPUT TYPE="text" NAME="city_number_Form" size="55" maxlength="100"></td>\
+	</tr>\
+	<tr valign="top" align="left" bgcolor="#F9F9F9">\
+		<td valign="top"><B>Улица, микрорайон,  дом, корпус&nbsp;<FONT SIZE="" COLOR="#FF0000">*</FONT></B></td>\
+		<td valign="top"><INPUT TYPE="text" NAME="street_number_Form" size="55" maxlength="100"></td>\
+	</tr>\
+	<tr valign="top" align="left" bgcolor="#F9F9F9">\
+		<td valign="top"><B>Ближайшая станция метро ( если есть )</B></td>\
+		<td valign="top"><INPUT TYPE="text" NAME="metro_number_Form" size="55" maxlength="100"></td>\
+	</tr>\
+	<tr valign="top" align="left" bgcolor="#F9F9F9">\
+		<td valign="top"><B>IP адрес (только для API-точек, если необходимо)</B></td>\
+		<td valign="top" width="300"><INPUT TYPE="text" NAME="ip_number_Form" size="55" maxlength="100"></td>\
+	</tr>\
+		<tr valign="top" align="left" bgcolor="#F9F9F9">\
+		<td valign="top"><B>Регистрировать в Билайн</B></td>\
+		<td valign="top" width="300"><INPUT TYPE="checkbox" NAME="beeline_reg_number_Form" checked></td>\
+	</tr>\
+</table>';
+var numberForm = 0;
+quot_re = /\"/gi;
+numRe = /_number_Form/gi;
+
+function add_point()
+{
+    // Берем текущии значения элементов
+
+    if (numberForm > 0)
+    {
+        title = get_service_form('title', numberForm);
+        zip = get_service_form('zip', numberForm);
+        mylocation = get_service_form('location', numberForm);
+        city = get_service_form('city', numberForm);
+        street = get_service_form('street', numberForm);
+        metro = get_service_form('metro', numberForm);
+        ip = get_service_form('ip', numberForm);
+        phone = get_service_form('phone', numberForm);
+        last_name = get_service_form('last_name', numberForm);
+        first_name = get_service_form('first_name', numberForm);
+        mid_name = get_service_form('mid_name', numberForm);
+        locality = get_service_form('locality', numberForm);
+        subject_federation = get_service_form('subject_federation', numberForm);
+    }
+
+    numberForm++;
+
+    var longTextLoc = longText.replace(numRe, '_' + numberForm);
+    document.getElementById('insert_tag').innerHTML += '<POINT_' + numberForm + '>' + longTextLoc + '</POINT_' + numberForm + '>';
+
+    if (numberForm > 1)
+        document.getElementById('delete_button').innerHTML = '<INPUT TYPE="BUTTON" VALUE="- 1 точка" onClick="javascript: delete_point();"  class="butt">';
+
+    if (numberForm > 1)
+    {
+        set_service_form('title', numberForm, title + ' ' + numberForm);
+        set_service_form('zip', numberForm, zip);
+        set_service_form('last_name', numberForm, last_name);
+        set_service_form('first_name', numberForm, first_name);
+        set_service_form('mid_name', numberForm, mid_name);
+        set_service_form('phone', numberForm, phone);
+        set_service_form('location', numberForm, mylocation);
+        set_service_form('locality', numberForm, locality);
+        set_service_form('city', numberForm, city);
+
+        eval("var sel = document.forms['ACTION_FORM'].subject_federation_" + numberForm + ";");
+        for (i = 0; i < sel.options.length; i++)
+        {
+            if (subject_federation == sel.options[i].value)
+                sel.options[i].selected = true;
+            else
+                sel.options[i].selected = false;
+        }
+    }
+}
+
+function get_service_form(tag, number)
+{
+    eval("var t = document.forms['ACTION_FORM']." + tag + "_" + number + ".value;");
+    return t;
+}
+
+function set_service_form(tag, number, value)
+{
+    value = value.replace(quot_re, '\"');
+    eval("document.forms['ACTION_FORM']." + tag + "_" + number + ".value = '" + value + "';");
+}
+
+function get_service_form_add(tag, number)
+{
+    eval("var t = document.forms['ACTION_FORM']." + tag + "_" + number + ".checked;");
+    return t;
+}
+
+//-->
+</SCRIPT>
+<FORM METHOD=POST NAME="ACTION_FORM" ACTION="http://card.cyberplat.ru/dealer/work_area.html"
+      onSubmit="return EasySign(this);">
+    <INPUT TYPE="HIDDEN" NAME="make" VALUE="tree_save_add_point">
+    <INPUT TYPE="HIDDEN" NAME="sesid" VALUE="038ed4956e68a155ee594294">
+    <INPUT TYPE="HIDDEN" NAME="point_serial" VALUE="">
+    <INPUT TYPE="HIDDEN" NAME="main_signature_line" VALUE="">
+
+    <TABLE border="0" cellpadding="4" cellspacing="1">
+        <TR bgcolor="394A91">
+            <TD colspan="2">
+                <B style="color:FFFFFF">
+
+                    Данные субдилера 1269688
+
+                </B>
+            </TD>
+        </TR>
+        <tr>
+            <td colspan="2">
+                <table>
+                    <tr>
+                        <td width="250"><b>Название:</b></td>
+                        <td>
+
+                            OOO Флай-Теч
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>Адрес:</b></td>
+                        <td>
+
+                            367950, Россия, Респ Дагестан, г Махачкала, Акушинского, д.34, кв. 20
+
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr valign="top" align="left" bgcolor="394A91">
+            <td valign="top" colspan="2"><B style="color:#ffffff">Создание новой точки</B></td>
+        </tr>
+        <tr>
+            <td valign="top" colspan="2">
+                <div id="insert_tag"></div>
+            </td>
+        </tr>
+        <tr valign="top" align="left" bgcolor="#F9F9F9">
+            <td>
+                <table>
+                    <tr>
+                        <td width="350" valign="top" align="rihgt" colspan="0"><INPUT TYPE="BUTTON" VALUE="+ 1 точка"
+                                                                                      onClick="javascript: add_point();"
+                                                                                      class="butt"></td>
+                        <td valign="top" align="rihgt" colspan="0" id="delete_button"></td>
+                    </tr>
+                </table>
+            </td>
+
+            <!-- 	<td  width="200" valign="top" align="rihgt" colspan="0"><INPUT TYPE="BUTTON" VALUE="+ 1 точка" onClick="javascript: add_point();" class="butt"></td>
+               <td valign="top" align="rihgt" colspan="0" id="delete_button"></td>
+            --></tr>
+        <tr valign="top" align="left" bgcolor="#F9F9F9">
+            <td valign="top" align="rihgt" colspan="2">
+                <table>
+                    <tr>
+                        <td width="350" valign="middle" align="center">
+                            <label for="save_req_body_id">Сохранить подписанный запрос:</label>&nbsp;<input
+                                type="checkbox" name="save_req_body" value="1" id="save_req_body_id"
+                                title="Сохранить подписанный запрос"
+                                alt="Сохранить подписанный запрос на Ваш персональный компьютер"></td>
+                        <td><INPUT TYPE="submit" value="Сохранить" class="butt">
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <TR>
+            <TD colspan="2">
+                <P><IMG SRC="http://card.cyberplat.ru/dealer/img/hand.gif"> Значком <B style="color:red">*</B> отмечены
+                    поля, обязательные для заполнения.</p>
+
+                <P><IMG SRC="http://card.cyberplat.ru/dealer/img/hand.gif"> Обратите внимание на поле <B>Прием
+                    платежей</B> - от значения этого поля зависят возможности операторов.
+                    <B>WEB-схема</B> подразумевает использование только браузера для проведения платежей. Если
+                    сотрудники этой точки сети используют специализированное ПО,
+                    например, <B>Модуль "Прием платежей"</B>, то следует указывать <B>API-схема</B>.</p>
+            </TD>
+        </TR>
+    </TABLE>
+</FORM>
+
+<SCRIPT LANGUAGE="JavaScript">
+    <!--
+    add_point();
+    //-->
+</SCRIPT>
+
+
+<!--# Справка помощи -->
+
+
+</td>
+</tr>
+</table>
+</td>
+</tr>
+
+
+<!--count-->
+<tr>
+    <td colspan="2" align="center"><a href="http://www.cyberplat.ru/agent/earn.htm">Как заработать|</a> <a
+            href="http://www.cyberplat.ru/agent/profit.htm">Почему это выгодно |</a> <a
+            href="http://www.cyberplat.ru/agent/advantage.htm">Наши преимущества |</a> <a
+            href="http://www.cyberplat.ru/agent/commis.htm">Какая комиссия </a> <a
+            href="http://www.cyberplat.ru/agent/reklama.htm">| Рекламная поддержка |</a><a
+            href="http://www.cyberplat.ru/agent/providers.htm"> Наши партнеры |</a> <a
+            href="http://www.cyberplat.ru/agent/connect.htm">Как подключиться |</a> <a
+            href="http://card.cyberplat.ru/dealer/register.html">Регистрация |</a> <a
+            href="http://card.cyberplat.ru/dealer/login.html">Кабинет дилера</a><br> <a
+            href="http://www.cyberplat.ru/agent/card.htm">Что такое карты экспресс-оплаты |</a> <a
+            href="http://www.cyberplat.ru/agent/abonent.htm">Абонент голосует за удобство </a><a
+            href="http://www.cyberplat.ru/agent/contacts.htm">| Контакты </a>
+
+        <p style="color:394A91;">&copy; Copyright Cyberplat.Com 1998-2006</p></td>
+</tr>
+</table>
+</td></tr></table></body>
+</html>
