@@ -9,7 +9,7 @@
         <webroots>
           <root url="file://$MODULE_DIR$/web" relative="/" />
         </webroots>
-        <context-artifact name="ps:Web" />
+        <context-artifact name="ps:Web exploded" />
       </configuration>
       <facet type="Struts2" name="Struts 2">
         <configuration>
