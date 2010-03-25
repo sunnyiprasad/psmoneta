@@ -1,0 +1,169 @@
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+    <package name="dealer" namespace="/dealer" extends="struts-default">
+
+        <interceptors>
+            <interceptor name="authentication" class="com.batyrov.ps.interceptor.AuthInterceptor"/>
+            <interceptor-stack name="stackInterceptors">                
+                <interceptor-ref name="authentication" />
+                <interceptor-ref name="defaultStack" />
+            </interceptor-stack>
+        </interceptors>
+
+        <default-interceptor-ref name="stackInterceptors" />
+
+        <default-action-ref name="ViewPointList" />
+
+        <global-results>
+            <result name="login">/pages/loginDealer.jsp</result>
+        </global-results>
+
+        <action name="Exit" class="com.batyrov.ps.action.Exit">
+            <result name="success">/pages/loginDealer.jsp</result>
+        </action>
+
+        <action name="AddDealerBalance" class="com.batyrov.ps.action.GetSubDealer">
+            <result name="error">/pages/dealer/viewPointList.jsp</result>
+            <result name="success">/pages/dealer/dealerBalanceEditorForm.jsp</result>
+        </action>
+
+        <action name="AddDealerBalance-Submit" class="com.batyrov.ps.action.AddDealerBalance">
+            <result name="error" type="redirectAction">ViewSubDealerList</result>
+            <result name="success" type="redirectAction">ViewSubDealerList</result>
+        </action>
+
+        <action name="AddPointBalance" class="com.batyrov.ps.action.GetPoint">
+            <result name="error" type="redirectAction">ViewPointList</result>
+            <result name="success">/pages/dealer/pointBalanceEditorForm.jsp</result>
+        </action>
+
+        <action name="AddPointBalance-Submit" class="com.batyrov.ps.action.AddPointBalance">
+            <result name="error" type="redirectAction">ViewPointList</result>
+            <result name="success" type="redirectAction">ViewPointList</result>
+        </action>
+
+
+        <action name="ViewPointList" class="com.batyrov.ps.action.ViewPointList">
+            <result name="success">/pages/dealer/viewPointList.jsp</result>
+            <result name="error">/pages/dealer/viewPointList.jsp</result>
+        </action>
+
+        <action name="ViewUserList" class="com.batyrov.ps.action.ViewUserList">
+            <result name="success">/pages/dealer/viewUserList.jsp</result>
+            <result name="error">/pages/dealer/viewUserList.jsp</result>
+        </action>
+
+        <action name="ViewSubDealerList" class="com.batyrov.ps.action.ViewSubDealerList">
+            <result name="success">/pages/dealer/viewSubDealerList.jsp</result>
+            <result name="error">/pages/dealer/viewSubDealerList.jsp</result>
+        </action>
+
+        <action name="ViewDealerUserList" class="com.batyrov.ps.action.ViewDealerUserList">
+            <result name="success">/pages/dealer/viewDealerUserList.jsp</result>
+            <result name="error">/pages/dealer/viewDealerUserList.jsp</result>
+        </action>
+
+        <action name="MakeKeyCard" class="com.batyrov.ps.action.MakeKeyCard">
+            <result name="error" type="redirectAction">MakeKeyCard?keytype=${keytype}&amp;id=${id}&amp;keyId=${keyId}</result>
+            <result name="success" type="stream">
+                <param name="contentType">application/octet-stream</param>
+                <param name="inputName">inputStream</param>
+                <param name="contentDisposition">filename="keyCard.dat"</param>
+                <param name="bufferSize">1024</param>
+            </result>
+        </action>
+
+        <action name="UploadKey" class="com.batyrov.ps.action.PreUploadKey">
+            <result>/pages/dealer/uploadKey.jsp</result>
+        </action>
+
+        <action name="UploadKeySubmit" class="com.batyrov.ps.action.UploadKey">                        
+            <result name="success" type="redirectAction">ViewPointList</result>
+            <result name="success2" type="redirectAction">ViewUserList?pointId=${pointId}</result>
+            <result name="success3" type="redirectAction">ViewDealerUserList?dealerId=${dealerId}</result>
+            <result name="error" type="redirectAction">UploadKey?keytype=${keytype}&amp;id=${id}</result>
+        </action>
+
+        <action name="GetSubDealer" class="com.batyrov.ps.action.GetSubDealer">
+            <result name="success">/pages/dealer/dealerForm.jsp</result>
+        </action>
+
+        <action name="GetUser" class="com.batyrov.ps.action.GetUser">
+            <result name="success">/pages/dealer/userForm.jsp</result>
+        </action>
+
+        <action name="GetPoint" class="com.batyrov.ps.action.GetPoint">
+            <result name="success">/pages/dealer/pointForm.jsp</result>
+        </action>
+
+        <action name="GetDealerUser" class="com.batyrov.ps.action.GetDealerUser">
+            <result name="success">/pages/dealer/userForm.jsp</result>
+        </action>
+
+        <action name="SaveUser" class="com.batyrov.ps.action.UpdateUser">
+            <result name="success" type="redirectAction">ViewUserList?pointId=${pointId}</result>
+            <result name="error" type="redirectAction">GetUser?id=${id}</result>
+            <result name="success2" type="redirectAction">ViewDealerUserList?dealerId=${dealerId}</result>
+            <result name="error2" type="redirectAction">GetDealerUser?id=${id}</result>
+        </action>
+
+        <action name="SaveSubDealer" class="com.batyrov.ps.action.UpdateSubDealer">
+            <result name="success" type="redirectAction">ViewSubDealerList</result>
+            <result name="error" type="redirectAction">GetSubDealer?id=${id}</result>
+        </action>
+
+        <action name="SavePoint" class="com.batyrov.ps.action.UpdatePoint">
+            <result name="success" type="redirectAction">ViewPointList</result>
+            <result name="error" type="redirectAction">GetPoint?id=${id}</result>
+        </action>
+
+        <action name="RemoveUser" class="com.batyrov.ps.action.RemoveUser">
+            <result name="success" type="redirectAction">ViewUserList?pointId=${pointId}</result>
+            <result name="error" type="redirectAction">ViewUserList?pointId=${pointId}</result>
+        </action>
+
+        <action name="RemoveSubDealer" class="com.batyrov.ps.action.RemoveSubDealer">
+            <result name="success" type="redirectAction">ViewSubDealerList</result>
+            <result name="error" type="redirectAction">ViewSubDealerList</result>
+        </action>
+        
+        <action name="RemovePoint" class="com.batyrov.ps.action.RemovePoint">
+            <result name="success" type="redirectAction">ViewPointList</result>
+            <result name="error" type="redirectAction">ViewPointList</result>
+        </action>
+
+        <action name="RemoveDealerUser" class="com.batyrov.ps.action.RemoveDealerUser">
+            <result name="success" type="redirectAction">ViewDealerUserList?dealerId=${dealerId}</result>
+            <result name="error" type="redirectAction">ViewDealerUserList?dealerId=${dealerId}</result>
+        </action>
+
+        <action name="LockSubDealer" class="com.batyrov.ps.action.LockSubDealer">
+            <result name="success" type="redirectAction">ViewSubDealerList</result>
+        </action>
+
+        <action name="LockDealerUser" class="com.batyrov.ps.action.LockDealerUser">
+            <result name="success" type="redirectAction">ViewDealerUserList?dealerId=${dealerId}</result>
+        </action>
+
+        <action name="LockPoint" class="com.batyrov.ps.action.LockPoint">
+            <result name="success" type="redirectAction">ViewPointList</result>
+        </action>
+
+        <action name="LockUser" class="com.batyrov.ps.action.LockUser">
+            <result name="success" type="redirectAction">ViewUserList?pointId=${pointId}</result>
+        </action>
+
+        <action name="ViewPointPaymentList" class="com.batyrov.ps.action.ViewPointPaymentList">
+            <result name="success">/pages/dealer/viewPointPaymentList.jsp</result>
+        </action>
+
+        <action name="ViewDealerPaymentList" class="com.batyrov.ps.action.ViewDealerPaymentList">            
+            <result name="success">/pages/dealer/viewDealerPaymentList.jsp</result>
+        </action>
+
+
+    </package>
+</struts>
