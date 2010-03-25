@@ -1,5 +1,6 @@
 package com.batyrov.ps.module;
 
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -10,8 +11,8 @@ import java.util.Properties;
  * To change this template use File | Settings | File Templates.
  */
 public interface Handler {
-    String check(Properties inputData);
-    String pay(Properties inputData);
-    String getStatus(Properties inputData);
-    String cancel(Properties inputData);
+    String check(Map inputData);
+    String pay(Map inputData);
+    String getStatus(Map inputData);
+    String cancel(Map inputData);
 }
