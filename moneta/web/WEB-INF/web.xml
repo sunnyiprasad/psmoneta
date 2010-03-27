@@ -17,6 +17,46 @@
         <servlet-name>OSMPCheck</servlet-name>
         <url-pattern>/OSMPCheck</url-pattern>
     </servlet-mapping>
+
+
+     <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
+    <listener>
+        <listener-class>org.apache.myfaces.webapp.StartupServletContextListener</listener-class>
+    </listener>
+
+    <filter>
+        <filter-name>struts2</filter-name>
+        <filter-class>org.apache.struts2.dispatcher.FilterDispatcher</filter-class>
+
+    </filter>
+    <filter-mapping>
+        <filter-name>struts2</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>sitemesh</filter-name>
+        <filter-class>com.opensymphony.module.sitemesh.filter.PageFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>sitemesh</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>FORWARD</dispatcher>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>struts-cleanup</filter-name>
+        <filter-class>org.apache.struts2.dispatcher.ActionContextCleanUp</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>struts-cleanup</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+
     <session-config>
         <session-timeout>
             30
@@ -25,11 +65,5 @@
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
-
-
-    &gt;
-    <init-param>
-        <description>Payment system name</description>
-        <param-name>ps.0.name</param-name>
-        <param-value>Платика</param-value>
-    </init-param></web-app>
+    
+</web-app>
