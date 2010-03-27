@@ -1,8 +1,6 @@
 package com.rsc.moneta.action;
 
 
-import com.batyrov.cms.action.BaseAction;
-import com.batyrov.cms.action.Const;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

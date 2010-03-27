@@ -1,4 +1,4 @@
-package com.batyrov.cms.action;
+package com.rsc.moneta.action;
 
 /**
  * Created by IntelliJ IDEA.
