@@ -6,4 +6,10 @@
  
 <struts>
     <!-- Add your configuration elements here -->
+    <package name="main" namespace="/" extends="struts-default">
+        <action name="assistant" class="com.rsc.moneta.action.moneta.Assistant">
+            <result>/pages/assistant.jsp</result>
+        </action>
+
+    </package>
 </struts>
