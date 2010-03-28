@@ -34,6 +34,51 @@ public class User implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    private String phone;
+    private String password;
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public List<PaymentKey> getPaymentKeys() {
+        return paymentKeys;
+    }
+
+    public void setPaymentKeys(List<PaymentKey> paymentKeys) {
+        this.paymentKeys = paymentKeys;
+    }
+
+    public List<PaymentTransaction> getPaymentTransactionsFrom() {
+        return paymentTransactionsFrom;
+    }
+
+    public void setPaymentTransactionsFrom(List<PaymentTransaction> paymentTransactionsFrom) {
+        this.paymentTransactionsFrom = paymentTransactionsFrom;
+    }
+
+    public List<PaymentTransaction> getPaymentTransactionsTo() {
+        return paymentTransactionsTo;
+    }
+
+    public void setPaymentTransactionsTo(List<PaymentTransaction> paymentTransactionsTo) {
+        this.paymentTransactionsTo = paymentTransactionsTo;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    
+
     public Long getId() {
         return id;
     }
