@@ -8,7 +8,7 @@ package com.rsc.moneta.action.moneta;
 import com.rsc.moneta.bean.Market;
 import com.opensymphony.xwork2.Action;
 import com.rsc.moneta.action.BaseAction;
-import com.rsc.moneta.action.dao.Dao;
+import com.rsc.moneta.dao.Dao;
 import com.rsc.moneta.bean.PaymentKey;
 import com.rsc.moneta.util.Utils;
 import java.security.NoSuchAlgorithmException;
@@ -234,10 +234,9 @@ public class Assistant extends BaseAction{
     }
 
     private boolean checkSignature() throws NoSuchAlgorithmException  {
-        //TODO: Здесь должна быть проверка сигнатуры пришедшего запроса.
         int test = (MNT_TEST_MODE) ? 0 : 1;
         String all = MNT_ID + MNT_TRANSACTION_ID + MNT_AMOUNT+MNT_CURRENCY_CODE+test+market.getPassword();
-        return  (MNT_SIGNATURE.equals(Utils.byteArrayToHexString(Utils.md5(all))));
+        return  (MNT_SIGNATURE.equalsIgnoreCase(Utils.byteArrayToHexString(Utils.md5(all))));
     }
 
 }

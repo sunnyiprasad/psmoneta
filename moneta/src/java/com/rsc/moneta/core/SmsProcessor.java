@@ -5,8 +5,13 @@
 
 package com.rsc.moneta.core;
 
+import com.rsc.moneta.bean.Sms;
+import com.rsc.moneta.dao.EMF;
+import com.rsc.moneta.dao.SmsDao;
+import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.persistence.EntityManager;
 
 /**
  *
@@ -19,7 +24,9 @@ public class SmsProcessor implements Runnable{
     public void run() {
         while (flag){
             try {
-                //TODO: Здесь должна быть отправка СМС из очереди
+                EntityManager em = EMF.getEntityManager();
+                Collection<Sms> smsList = new SmsDao(em).getNewSms();
+                
                 Thread.sleep(1000);
             } catch (InterruptedException ex) {
                 flag = false;

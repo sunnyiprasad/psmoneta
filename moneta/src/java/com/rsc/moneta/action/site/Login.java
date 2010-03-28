@@ -6,7 +6,7 @@ package com.rsc.moneta.action.site;
 
 import com.opensymphony.xwork2.Action;
 import com.rsc.moneta.action.BaseAction;
-import com.rsc.moneta.action.dao.UserDao;
+import com.rsc.moneta.dao.UserDao;
 import com.rsc.moneta.bean.User;
 
 /**

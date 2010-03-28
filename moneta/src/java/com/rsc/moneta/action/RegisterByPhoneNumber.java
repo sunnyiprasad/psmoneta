@@ -6,7 +6,7 @@ package com.rsc.moneta.action;
 
 import com.rsc.moneta.bean.Sms;
 import com.opensymphony.xwork2.Action;
-import com.rsc.moneta.action.dao.Dao;
+import com.rsc.moneta.dao.Dao;
 import com.rsc.moneta.bean.User;
 import com.rsc.moneta.util.PasswordGenerator;
 import java.util.logging.Level;
@@ -38,7 +38,7 @@ public class RegisterByPhoneNumber extends BaseAction {
     }
 
     public String generatePassword() throws InvalidPreferencesFormatException {
-        // TODO: Генерация пароля
+        // Генерация пароля
         PasswordGenerator passGen = new PasswordGenerator();
         passGen.clearTemplate();
         passGen.setNumbersIncluded(true);
