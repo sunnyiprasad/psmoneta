@@ -5,15 +5,25 @@
 <!-- Author: sulic -->
  
 <struts>
+    <include file="admin.xml" />
+    <include file="private.xml"/>
+    <include file="public.xml" />
     <!-- Add your configuration elements here -->
     <package name="main" namespace="/" extends="struts-default">
+
         <action name="Assistant" class="com.rsc.moneta.action.moneta.Assistant">
-            <result>/pages/assistant.jsp</result>
+            <result>/pages/requestPhone.jsp</result>
         </action>
 
         <action name="RegisterByPhone" class="com.rsc.moneta.action.RegisterByPhoneNumber" >
             <result>/pages/selectPaymentSystem.jsp</result>
         </action>
+
+        <action name="SelectPaymentSystem" class="com.rsc.moneta.action.SelectPaymentSystem">
+            <result name="class_a">/pages/goToTerminal.jsp</result>
+            <result name="webmoney">/pages/notSupportedPS.jsp</result>
+            <result name="yandex">/pages/notSupportedPS.jsp</result>
+        </action>        
 
     </package>
 </struts>

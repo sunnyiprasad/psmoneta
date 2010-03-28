@@ -6,4 +6,12 @@
         <pattern>/pages/admin/*</pattern>
     </decorator>
 
+    <decorator name="private" page="private.jsp">
+        <pattern>/pages/private/*</pattern>
+    </decorator>
+
+    <decorator name="public" page="public.jsp">
+        <pattern>/pages/public/*</pattern>
+    </decorator>
+
 </decorators>
