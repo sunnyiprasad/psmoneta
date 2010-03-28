@@ -2,13 +2,16 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.rsc.moneta.action;
 
 import com.rsc.moneta.bean.Sms;
 import com.opensymphony.xwork2.Action;
 import com.rsc.moneta.action.dao.Dao;
 import com.rsc.moneta.bean.User;
+import com.rsc.moneta.util.PasswordGenerator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.prefs.InvalidPreferencesFormatException;
 
 /**
  *
@@ -20,7 +23,7 @@ public class RegisterByPhoneNumber extends BaseAction {
 
     @Override
     public String execute() throws Exception {
-        if (phone != null && !"".equals(phone)){            
+        if (phone != null && !"".equals(phone)) {
             User user = new User();
             user.setPhone(phone);
             user.setPassword(generatePassword());
@@ -34,9 +37,13 @@ public class RegisterByPhoneNumber extends BaseAction {
         return Action.SUCCESS;
     }
 
-    public String generatePassword(){
-        // TODO: 
-        return null;
+    public String generatePassword() throws InvalidPreferencesFormatException {
+        // TODO: Генерация пароля
+        PasswordGenerator passGen = new PasswordGenerator();
+        passGen.clearTemplate();
+        passGen.setNumbersIncluded(true);
+        passGen.generatePassword();
+        return passGen.getPassword();
     }
 
     public String getPhone() {
@@ -46,5 +53,4 @@ public class RegisterByPhoneNumber extends BaseAction {
     public void setPhone(String phone) {
         this.phone = phone;
     }
-
 }

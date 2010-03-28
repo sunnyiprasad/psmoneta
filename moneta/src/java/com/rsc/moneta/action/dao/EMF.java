@@ -19,7 +19,7 @@ public class EMF {
     public static EntityManager getEntityManager() {
         if (emfInstance == null) {
             try {
-                emfInstance = Persistence.createEntityManagerFactory("moneta-PU");
+                emfInstance = Persistence.createEntityManagerFactory("monetaPU");
             } catch (Exception e) {
                 e.printStackTrace();
             }
