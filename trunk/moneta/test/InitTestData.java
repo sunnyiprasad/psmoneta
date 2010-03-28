@@ -1,6 +1,6 @@
 
-import com.rsc.moneta.action.dao.Dao;
-import com.rsc.moneta.action.dao.EMF;
+import com.rsc.moneta.dao.Dao;
+import com.rsc.moneta.dao.EMF;
 import com.rsc.moneta.bean.Market;
 import com.rsc.moneta.bean.User;
 import java.io.BufferedReader;

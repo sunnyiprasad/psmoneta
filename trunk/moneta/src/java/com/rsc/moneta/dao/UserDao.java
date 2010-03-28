@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package com.rsc.moneta.action.dao;
+package com.rsc.moneta.dao;
 
 import com.rsc.moneta.action.Const;
 import com.rsc.moneta.bean.User;

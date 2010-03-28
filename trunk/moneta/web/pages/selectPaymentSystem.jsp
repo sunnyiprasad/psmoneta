@@ -1,7 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8" language="java"%>
 <%@ taglib prefix="s" uri="/struts-tags" %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-   "http://www.w3.org/TR/html4/loose.dtd">
+    "http://www.w3.org/TR/html4/loose.dtd">
 
 <html>
     <head>
@@ -9,6 +9,10 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h1>Hello World!</h1>
+        <p>Ваш заказ зарегистрирован. <br/>
+            Сейчас вы должна направиться к любому терминалу платежных систем: Платика<br/>
+            При оплате билета у вас будет запрошен код заказа.
+            Введите код:<s:property value="%{paymentKey.key}" />
+        </p>        
     </body>
 </html>

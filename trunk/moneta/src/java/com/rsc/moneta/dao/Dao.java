@@ -1,4 +1,4 @@
-package com.rsc.moneta.action.dao;
+package com.rsc.moneta.dao;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
