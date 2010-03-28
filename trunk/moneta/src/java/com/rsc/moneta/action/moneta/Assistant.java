@@ -5,7 +5,12 @@
 
 package com.rsc.moneta.action.moneta;
 
+import com.rsc.moneta.bean.Market;
+import com.opensymphony.xwork2.Action;
 import com.rsc.moneta.action.BaseAction;
+import com.rsc.moneta.action.dao.Dao;
+import com.rsc.moneta.bean.PaymentKey;
+import java.util.Date;
 
 
 
@@ -15,32 +20,82 @@ import com.rsc.moneta.action.BaseAction;
  */
 public class Assistant extends BaseAction{
     
-    private Long MNT_ID;
-    private Long MNT_TRANSACTION_ID;
-    private String MNT_CURRENCY_CODE;
-    private Double MNT_AMOUNT;
-    private Boolean MNT_TEST_MODE;
-    private String MNT_DESCRIPTION;
-    private String MNT_SIGNATURE;
-    private String MNT_CUSTOM1;
-    private String MNT_CUSTOM2;
-    private String MNT_CUSTOM3;
-    private String MNT_SUCCESS_URL;
-    private String MNT_FAIL_URL;
-    private String monetaLocale;
-    private String paymentSystemUnitId;
-    private String paymentSystemLimitIds;
+    private Long MNT_ID = null;
+    private String MNT_TRANSACTION_ID = null;
+    private String MNT_CURRENCY_CODE = null;
+    private Double MNT_AMOUNT = null;
+    private Boolean MNT_TEST_MODE = true;
+    private String MNT_DESCRIPTION = null;
+    private String MNT_SIGNATURE = null;
+    private String MNT_CUSTOM1 = null;
+    private String MNT_CUSTOM2 = null;
+    private String MNT_CUSTOM3 = null;
+    private String MNT_SUCCESS_URL = null;
+    private String MNT_FAIL_URL = null;
+    private String monetaLocale = null;
+    private String paymentSystemUnitId = null;
+    private String paymentSystemLimitIds = null;
+
 
     @Override
     public String execute() throws Exception {
-        // TODO: Здесь должен быть обработчик.
+        //  Здесь должен быть обработчик.
         // Сюда придет запрос от ТАИСа с том, что билет куплен
         // и необходио быть готовым принять платеж за него.
         // описание параметров смотрите в MONETA.Assistant
         // см.стр. 13
         // По идее после обработки у пользователя необходимо запросить номер телефона
         // И отправить пользователя на страницу с поддерживаемыми платежными системами.
-        return super.execute();
+
+        if (checkSignature()){
+            addActionError(getText("invalid_signature"));
+            return Action.ERROR;
+        }
+        if (MNT_ID == null){
+            addActionError(getText("MNT_ID_not_defined"));
+            return Action.ERROR;
+        }
+        if (MNT_TRANSACTION_ID == null){
+            addActionError(getText("MNT_TRANSACTION_ID_not_defined"));
+            return Action.ERROR;
+        }
+        if (MNT_TRANSACTION_ID.length()>255){
+            addActionError(getText("MNT_TRANSACTION_ID_longer_than_255"));
+            return Action.ERROR;
+        }
+        if (MNT_CURRENCY_CODE == null){
+            addActionError(getText("MNT_CURRENCY_CODE_not_defined"));
+            return Action.ERROR;
+        }
+        if (MNT_AMOUNT == null){
+            addActionError(getText("MNT_AMOUNT_not_defined"));
+            return Action.ERROR;
+        }
+        Market market = em.find(Market.class, MNT_ID);
+        if (market == null){
+            addActionError(getText("market_not_found"));
+            return Action.ERROR;
+        }
+        PaymentKey key = new PaymentKey();
+        key.setDate(new Date(System.currentTimeMillis()));
+        key.setAmount(MNT_AMOUNT);
+        key.setKey(MNT_TRANSACTION_ID);
+        key.setMarket(market);
+        key.setCustom1(MNT_CUSTOM1);
+        key.setCustom2(MNT_CUSTOM2);
+        key.setCustom3(MNT_CUSTOM3);
+        key.setDescription(MNT_DESCRIPTION);
+        key.setFailUrl(MNT_FAIL_URL);
+        key.setSuccessUrl(MNT_SUCCESS_URL);
+        key.setMonetaLocale(monetaLocale);
+        key.setPaymentSystemLimitIds(paymentSystemLimitIds);
+        key.setPaymentSystemUnitId(paymentSystemUnitId);
+        key.setTest(MNT_TEST_MODE);
+        if (!new Dao(em).persist(key)){
+            addActionError(getText("dbms_save_error"));
+            return Action.ERROR;
+        }
+        return Action.SUCCESS;
     }
 
     public Double getMNT_AMOUNT() {
@@ -131,11 +186,11 @@ public class Assistant extends BaseAction{
         this.MNT_TEST_MODE = MNT_TEST_MODE;
     }
 
-    public Long getMNT_TRANSACTION_ID() {
+    public String getMNT_TRANSACTION_ID() {
         return MNT_TRANSACTION_ID;
     }
 
-    public void setMNT_TRANSACTION_ID(Long MNT_TRANSACTION_ID) {
+    public void setMNT_TRANSACTION_ID(String MNT_TRANSACTION_ID) {
         this.MNT_TRANSACTION_ID = MNT_TRANSACTION_ID;
     }
 
@@ -163,6 +218,9 @@ public class Assistant extends BaseAction{
         this.paymentSystemUnitId = paymentSystemUnitId;
     }
 
-
+    private boolean checkSignature() {
+        //TODO: Здесь должна быть проверка сигнатуры пришедшего запроса.
+        return false;
+    }
 
 }
