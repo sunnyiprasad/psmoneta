@@ -11,8 +11,18 @@
     <!-- Add your configuration elements here -->
     <package name="main" namespace="/" extends="struts-default">
 
+        <interceptors>
+            <interceptor name="initem" class="com.rsc.moneta.interceptor.InitEntityManager"/>
+            <interceptor-stack name="main">
+                <interceptor-ref name="defaultStack"/>
+                <interceptor-ref name="initem"/>
+             </interceptor-stack>
+        </interceptors>
+        <default-interceptor-ref name="main" />
+        
         <action name="Assistant" class="com.rsc.moneta.action.moneta.Assistant">
-            <result>/pages/requestPhone.jsp</result>
+            <result name="error">/pages/error.jsp</result>
+            <result name="success">/pages/requestPhone.jsp</result>
         </action>
 
         <action name="RegisterByPhone" class="com.rsc.moneta.action.RegisterByPhoneNumber" >
@@ -23,7 +33,7 @@
             <result name="class_a">/pages/goToTerminal.jsp</result>
             <result name="webmoney">/pages/notSupportedPS.jsp</result>
             <result name="yandex">/pages/notSupportedPS.jsp</result>
-        </action>        
+        </action>
 
     </package>
 </struts>

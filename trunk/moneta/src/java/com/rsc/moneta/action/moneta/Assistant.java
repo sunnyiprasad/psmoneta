@@ -10,6 +10,8 @@ import com.opensymphony.xwork2.Action;
 import com.rsc.moneta.action.BaseAction;
 import com.rsc.moneta.action.dao.Dao;
 import com.rsc.moneta.bean.PaymentKey;
+import com.rsc.moneta.util.Utils;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 
 
@@ -35,7 +37,8 @@ public class Assistant extends BaseAction{
     private String monetaLocale = null;
     private String paymentSystemUnitId = null;
     private String paymentSystemLimitIds = null;
-
+    private PaymentKey paymentKey;
+    private Market market;
 
     @Override
     public String execute() throws Exception {
@@ -71,7 +74,7 @@ public class Assistant extends BaseAction{
             addActionError(getText("MNT_AMOUNT_not_defined"));
             return Action.ERROR;
         }
-        Market market = em.find(Market.class, MNT_ID);
+        market = em.find(Market.class, MNT_ID);
         if (market == null){
             addActionError(getText("market_not_found"));
             return Action.ERROR;
@@ -98,8 +101,20 @@ public class Assistant extends BaseAction{
         return Action.SUCCESS;
     }
 
+    public PaymentKey getPaymentKey() {
+        return paymentKey;
+    }
+
+    public void setPaymentKey(PaymentKey paymentKey) {
+        this.paymentKey = paymentKey;
+    }
+
     public Double getMNT_AMOUNT() {
         return MNT_AMOUNT;
+    }
+
+    public void setMNT_AMOUNT(String MNT_AMOUNT) {
+        this.MNT_AMOUNT = Double.parseDouble(MNT_AMOUNT);
     }
 
     public void setMNT_AMOUNT(Double MNT_AMOUNT) {
@@ -218,9 +233,11 @@ public class Assistant extends BaseAction{
         this.paymentSystemUnitId = paymentSystemUnitId;
     }
 
-    private boolean checkSignature() {
+    private boolean checkSignature() throws NoSuchAlgorithmException  {
         //TODO: Здесь должна быть проверка сигнатуры пришедшего запроса.
-        return false;
+        int test = (MNT_TEST_MODE) ? 0 : 1;
+        String all = MNT_ID + MNT_TRANSACTION_ID + MNT_AMOUNT+MNT_CURRENCY_CODE+test+market.getPassword();
+        return  (MNT_SIGNATURE.equals(Utils.byteArrayToHexString(Utils.md5(all))));
     }
 
 }

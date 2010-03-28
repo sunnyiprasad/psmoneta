@@ -22,7 +22,8 @@ import javax.persistence.Table;
 @Table(name = "t_User")
 public class User implements Serializable {
     @OneToMany(mappedBy = "user")
-    private List<PaymentKey> paymentKeys;
+    private List<Market> markets;
+  
     @OneToMany(mappedBy = "fromUser")
     private List<PaymentTransaction> paymentTransactionsFrom;
 
@@ -45,13 +46,7 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public List<PaymentKey> getPaymentKeys() {
-        return paymentKeys;
-    }
-
-    public void setPaymentKeys(List<PaymentKey> paymentKeys) {
-        this.paymentKeys = paymentKeys;
-    }
+    
 
     public List<PaymentTransaction> getPaymentTransactionsFrom() {
         return paymentTransactionsFrom;
