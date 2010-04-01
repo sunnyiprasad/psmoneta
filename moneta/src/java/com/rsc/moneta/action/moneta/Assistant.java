@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.rsc.moneta.action.moneta;
 
 import com.rsc.moneta.bean.Market;
@@ -14,14 +13,12 @@ import com.rsc.moneta.util.Utils;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 
-
-
 /**
  *
  * @author sulic
  */
-public class Assistant extends BaseAction{
-    
+public class Assistant extends BaseAction {
+
     private Long MNT_ID = null;
     private String MNT_TRANSACTION_ID = null;
     private String MNT_CURRENCY_CODE = null;
@@ -50,35 +47,36 @@ public class Assistant extends BaseAction{
         // По идее после обработки у пользователя необходимо запросить номер телефона
         // И отправить пользователя на страницу с поддерживаемыми платежными системами.
 
-        if (checkSignature()){
-            addActionError(getText("invalid_signature"));
-            return Action.ERROR;
-        }
-        if (MNT_ID == null){
+        if (MNT_ID == null) {
             addActionError(getText("MNT_ID_not_defined"));
             return Action.ERROR;
         }
-        if (MNT_TRANSACTION_ID == null){
-            addActionError(getText("MNT_TRANSACTION_ID_not_defined"));
-            return Action.ERROR;
-        }
-        if (MNT_TRANSACTION_ID.length()>255){
-            addActionError(getText("MNT_TRANSACTION_ID_longer_than_255"));
-            return Action.ERROR;
-        }
-        if (MNT_CURRENCY_CODE == null){
-            addActionError(getText("MNT_CURRENCY_CODE_not_defined"));
-            return Action.ERROR;
-        }
-        if (MNT_AMOUNT == null){
-            addActionError(getText("MNT_AMOUNT_not_defined"));
-            return Action.ERROR;
-        }
         market = em.find(Market.class, MNT_ID);
-        if (market == null){
+        if (market == null) {
             addActionError(getText("market_not_found"));
             return Action.ERROR;
         }
+        if (checkSignature()) {
+            addActionError(getText("invalid_signature"));
+            return Action.ERROR;
+        }
+        if (MNT_TRANSACTION_ID == null) {
+            addActionError(getText("MNT_TRANSACTION_ID_not_defined"));
+            return Action.ERROR;
+        }
+        if (MNT_TRANSACTION_ID.length() > 255) {
+            addActionError(getText("MNT_TRANSACTION_ID_longer_than_255"));
+            return Action.ERROR;
+        }
+        if (MNT_CURRENCY_CODE == null) {
+            addActionError(getText("MNT_CURRENCY_CODE_not_defined"));
+            return Action.ERROR;
+        }
+        if (MNT_AMOUNT == null) {
+            addActionError(getText("MNT_AMOUNT_not_defined"));
+            return Action.ERROR;
+        }
+
         PaymentKey key = new PaymentKey();
         key.setDate(new Date(System.currentTimeMillis()));
         key.setAmount(MNT_AMOUNT);
@@ -94,7 +92,7 @@ public class Assistant extends BaseAction{
         key.setPaymentSystemLimitIds(paymentSystemLimitIds);
         key.setPaymentSystemUnitId(paymentSystemUnitId);
         key.setTest(MNT_TEST_MODE);
-        if (!new Dao(em).persist(key)){
+        if (!new Dao(em).persist(key)) {
             addActionError(getText("dbms_save_error"));
             return Action.ERROR;
         }
@@ -233,10 +231,9 @@ public class Assistant extends BaseAction{
         this.paymentSystemUnitId = paymentSystemUnitId;
     }
 
-    private boolean checkSignature() throws NoSuchAlgorithmException  {
+    private boolean checkSignature() throws NoSuchAlgorithmException {
         int test = (MNT_TEST_MODE) ? 0 : 1;
-        String all = MNT_ID + MNT_TRANSACTION_ID + MNT_AMOUNT+MNT_CURRENCY_CODE+test+market.getPassword();
-        return  (MNT_SIGNATURE.equalsIgnoreCase(Utils.byteArrayToHexString(Utils.md5(all))));
+        String all = MNT_ID + MNT_TRANSACTION_ID + MNT_AMOUNT + MNT_CURRENCY_CODE + test + market.getPassword();
+        return (MNT_SIGNATURE.equalsIgnoreCase(Utils.byteArrayToHexString(Utils.md5(all))));
     }
-
 }

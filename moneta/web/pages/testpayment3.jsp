@@ -16,7 +16,7 @@
     <body>
         <h1>Hello World!</h1>
         <form method="post" action="https://www.moneta.ru/assistant.htm">
-            <input type="hidden" name="MNT_ID" value="00000001">
+            <input type="hidden" name="MNT_ID" value="4">
             <input type="hidden" name="MNT_TRANSACTION_ID" value="FF790ABCD">
             <input type="hidden" name="MNT_CURRENCY_CODE" value="RUB">
             <input type="hidden" name="MNT_AMOUNT" value="120.25">

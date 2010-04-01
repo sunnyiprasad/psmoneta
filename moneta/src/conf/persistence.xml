@@ -8,6 +8,7 @@
     <class>com.rsc.moneta.bean.Provider</class>
     <class>com.rsc.moneta.bean.Sms</class>
     <class>com.rsc.moneta.bean.User</class>
+    <class>com.rsc.moneta.bean.PaymentParameter</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <property name="hibernate.connection.username" value="postgres"/>

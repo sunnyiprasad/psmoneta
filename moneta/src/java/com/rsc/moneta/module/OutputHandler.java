@@ -14,7 +14,5 @@ import java.util.Map;
  */
 public interface OutputHandler {
     CheckResponse check(PaymentKey key);
-    CheckResponse pay(Map inputData);
-    String getStatus(Map inputData);
-    String cancel(Map inputData);
+    CheckResponse pay(PaymentKey key);
 }

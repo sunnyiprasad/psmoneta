@@ -34,7 +34,7 @@ public class MonetaOutputHandler implements OutputHandler {
     public CheckResponse check(PaymentKey key) {
         try {
             String query = key.getMarket().getCheckUrl();
-            query += "MNT_COMMAND=CHECK&MNT_ID="+key.getMarket().getId()+"&MNT_TRANSACTION_ID="
+            query += "?MNT_COMMAND=CHECK&MNT_ID="+key.getMarket().getId()+"&MNT_TRANSACTION_ID="
                     +key.getKey()+"&MNT_AMOUNT="+key.getAmount()+"&MNT_CURRENCY_CODE=RUB&MNT_TEST_MODE="
                     +key.getTest()+"&MNT_SIGNATURE="+Utils.createSignature(key);
             URLConnection url = new URL(query).openConnection();
@@ -56,23 +56,30 @@ public class MonetaOutputHandler implements OutputHandler {
     }
 
     // Данный метод отправляет запрос в интернет магазин по протоколу монета. См. MONETA.Assistant стр. 21
-    public CheckResponse pay(Map inputData) {
-        //TODO: Rashid
-        throw new UnsupportedOperationException("Not supported yet.");
+    public CheckResponse pay(PaymentKey key) {
+        try {
+            String query = key.getMarket().getCheckUrl();
+            query += "?MNT_ID="+key.getMarket().getId()+"&MNT_TRANSACTION_ID="
+                    +key.getKey()+"&MNT_AMOUNT="+key.getAmount()+"&MNT_CURRENCY_CODE=RUB&MNT_TEST_MODE="
+                    +key.getTest()+"&MNT_SIGNATURE="+Utils.createSignature(key);
+            URLConnection url = new URL(query).openConnection();
+            DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();
+            fac.setNamespaceAware(true);
+            Document doc = fac.newDocumentBuilder().parse(url.getInputStream());
+            CheckResponse response = parseResponse(doc);
+            if (checkSignature(response)){
+                return response;
+            }
+        } catch (SAXException ex) {
+            Logger.getLogger(MonetaOutputHandler.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParserConfigurationException ex) {
+            Logger.getLogger(MonetaOutputHandler.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(MonetaOutputHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
-
-    // Данный метод не реализуется для Монеты
-    public String getStatus(Map inputData) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    // Данный метод не реализуется для Монеты
-    public String cancel(Map inputData) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
     
-
     public CheckResponse parseResponse(Document doc) {
         CheckResponse response = new CheckResponse();
         response.setMarketId(Utils.getLongValue("MNT_ID", doc));
