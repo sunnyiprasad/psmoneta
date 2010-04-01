@@ -12,7 +12,7 @@
         <h1>Hello World!</h1>
         <s:form action="/Assistant.html" method="get">
             <!--<form method="post" action="/moneta/Assistant.html">-->
-            <input type="hidden" name="MNT_ID" value="1">
+            <input type="hidden" name="MNT_ID" value="4">
             <input type="hidden" name="MNT_TRANSACTION_ID" value="FF790ABCD">
             <input type="hidden" name="MNT_CURRENCY_CODE" value="RUB">
             <input type="hidden" name="MNT_AMOUNT" value="120.25">

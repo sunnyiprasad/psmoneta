@@ -19,7 +19,7 @@ import org.w3c.dom.NodeList;
 public class Utils {
 
     public static String byteArrayToHexString(byte [] data){
-        return null;
+        return "";
     }
 
     public static byte [] md5(String data) throws NoSuchAlgorithmException{
