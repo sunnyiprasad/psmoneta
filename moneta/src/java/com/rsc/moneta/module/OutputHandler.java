@@ -5,6 +5,7 @@
 
 package com.rsc.moneta.module;
 
+import com.rsc.moneta.bean.PaymentKey;
 import java.util.Map;
 
 /**
@@ -12,8 +13,8 @@ import java.util.Map;
  * @author sulic
  */
 public interface OutputHandler {
-    String check(Map inputData);
-    String pay(Map inputData);
+    CheckResponse check(PaymentKey key);
+    CheckResponse pay(Map inputData);
     String getStatus(Map inputData);
     String cancel(Map inputData);
 }

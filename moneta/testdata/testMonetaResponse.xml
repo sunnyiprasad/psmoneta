@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MNT_RESPONSE>
+        <MNT_ID>54600817</MNT_ID>
+        <MNT_TRANSACTION_ID>FF790ABCD</MNT_TRANSACTION_ID>
+        <MNT_RESULT_CODE>402</MNT_RESULT_CODE>
+        <MNT_DESCRIPTION>Заказ создан, но не оплачен</MNT_DESCRIPTION>
+        <MNT_AMOUNT>120.25</MNT_AMOUNT>
+        <MNT_SIGNATURE>5ebb58862cf8781b62bcc2cc8d66913e</MNT_SIGNATURE>
+        <MNT_ATTRIBUTES>
+             <ATTRIBUTE><KEY>name</KEY><VALUE>John Smith</VALUE></ATTRIBUTE>
+             <ATTRIBUTE><KEY>email</KEY><VALUE>John.Smith@gmail.com</VALUE></ATTRIBUTE>
+        </MNT_ATTRIBUTES>
+</MNT_RESPONSE>
+
