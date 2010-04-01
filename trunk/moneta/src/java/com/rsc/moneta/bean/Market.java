@@ -26,17 +26,32 @@ public class Market implements Serializable {
     private Long id;
 
     private String name;
+    private String checkUrl;
+    private String payUrl;
     private String successUrl;
     private String failUrl;
     private String password;
 
     @ManyToOne
     private User user;
-    
-
-
     @OneToMany(mappedBy = "market")
     private List<PaymentKey> paymentKeys;
+
+    public String getCheckUrl() {
+        return checkUrl;
+    }
+
+    public void setCheckUrl(String checkUrl) {
+        this.checkUrl = checkUrl;
+    }
+
+    public String getPayUrl() {
+        return payUrl;
+    }
+
+    public void setPayUrl(String payUrl) {
+        this.payUrl = payUrl;
+    }
 
     public Long getId() {
         return id;
