@@ -31,11 +31,21 @@ public class Market implements Serializable {
     private String successUrl;
     private String failUrl;
     private String password;
+    private boolean signable;
+
 
     @ManyToOne
     private User user;
     @OneToMany(mappedBy = "market")
     private List<PaymentKey> paymentKeys;
+
+    public boolean isSignable() {
+        return signable;
+    }
+
+    public void setSignable(boolean signable) {
+        this.signable = signable;
+    }
 
     public String getCheckUrl() {
         return checkUrl;

@@ -6,6 +6,7 @@ package com.rsc.moneta.action;
 
 import com.rsc.moneta.bean.Sms;
 import com.opensymphony.xwork2.Action;
+import com.rsc.moneta.bean.PaymentKey;
 import com.rsc.moneta.dao.Dao;
 import com.rsc.moneta.bean.User;
 import com.rsc.moneta.util.PasswordGenerator;
@@ -20,6 +21,8 @@ import java.util.prefs.InvalidPreferencesFormatException;
 public class RegisterByPhoneNumber extends BaseAction {
 
     private String phone;
+    private Long paymentId;
+    private PaymentKey paymentKey;
 
     @Override
     public String execute() throws Exception {
@@ -33,8 +36,32 @@ public class RegisterByPhoneNumber extends BaseAction {
             sms.setPhone(phone);
             sms.setMessage(getText("reg_phone_sms_message", user.getPassword()));
             dao.persist(sms);
+            if (paymentId != null){
+                paymentKey = em.find(PaymentKey.class, paymentId);
+                if (paymentKey == null){
+                    addActionError(getText("payment_key_not_found"));
+                    return Action.ERROR;
+                }
+            }
         }
         return Action.SUCCESS;
+    }
+
+    public PaymentKey getPaymentKey() {
+        return paymentKey;
+    }
+
+    public void setPaymentKey(PaymentKey paymentKey) {
+        this.paymentKey = paymentKey;
+    }
+
+
+    public Long getPaymentId() {
+        return paymentId;
+    }
+
+    public void setPaymentId(Long paymentId) {
+        this.paymentId = paymentId;
     }
 
     public String generatePassword() throws InvalidPreferencesFormatException {
