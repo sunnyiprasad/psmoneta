@@ -9,12 +9,11 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <s:form action="/RegisterByPhone" method="get">
+        <s:form action="RegisterByPhone" method="get">
             <s:hidden name="paymentId" value="%{paymentKey.id}" />
             <s:textfield name="phone" label="Enter your phone"/>
             <s:submit value="Registation"/>
-
-            <a href="<s:url action="/SelectPaymentSystem"><s:param name="paymentId" value="%{paymentKey.id}"/></s:url>"></a>
+            <a href="<s:url action="SelectPaymentSystem"><s:param name="paymentId" value="%{paymentKey.id}"/></s:url>"></a>            
         </s:form>
     </body>
 </html>
