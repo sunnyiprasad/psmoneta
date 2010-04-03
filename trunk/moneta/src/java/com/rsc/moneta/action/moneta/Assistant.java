@@ -23,7 +23,8 @@ public class Assistant extends BaseAction {
     private String MNT_TRANSACTION_ID = null;
     private String MNT_CURRENCY_CODE = null;
     private Double MNT_AMOUNT = null;
-    private Boolean MNT_TEST_MODE = true;
+
+    private Boolean MNT_TEST_MODE = false;
     private String MNT_DESCRIPTION = null;
     private String MNT_SIGNATURE = null;
     private String MNT_CUSTOM1 = null;
@@ -56,9 +57,11 @@ public class Assistant extends BaseAction {
             addActionError(getText("market_not_found"));
             return Action.ERROR;
         }
-        if (checkSignature()) {
-            addActionError(getText("invalid_signature"));
-            return Action.ERROR;
+        if (MNT_SIGNATURE != null && market.isSignable()) {
+            if (checkSignature()) {
+                addActionError(getText("invalid_signature"));
+                return Action.ERROR;
+            }
         }
         if (MNT_TRANSACTION_ID == null) {
             addActionError(getText("MNT_TRANSACTION_ID_not_defined"));
@@ -77,26 +80,37 @@ public class Assistant extends BaseAction {
             return Action.ERROR;
         }
 
-        PaymentKey key = new PaymentKey();
-        key.setDate(new Date(System.currentTimeMillis()));
-        key.setAmount(MNT_AMOUNT);
-        key.setKey(MNT_TRANSACTION_ID);
-        key.setMarket(market);
-        key.setCustom1(MNT_CUSTOM1);
-        key.setCustom2(MNT_CUSTOM2);
-        key.setCustom3(MNT_CUSTOM3);
-        key.setDescription(MNT_DESCRIPTION);
-        key.setFailUrl(MNT_FAIL_URL);
-        key.setSuccessUrl(MNT_SUCCESS_URL);
-        key.setMonetaLocale(monetaLocale);
-        key.setPaymentSystemLimitIds(paymentSystemLimitIds);
-        key.setPaymentSystemUnitId(paymentSystemUnitId);
-        key.setTest(MNT_TEST_MODE);
-        if (!new Dao(em).persist(key)) {
+        paymentKey = new PaymentKey();
+        paymentKey.setDate(new Date(System.currentTimeMillis()));
+        paymentKey.setAmount(MNT_AMOUNT);
+        paymentKey.setKey(MNT_TRANSACTION_ID);
+        paymentKey.setMarket(market);
+        paymentKey.setCustom1(MNT_CUSTOM1);
+        paymentKey.setCustom2(MNT_CUSTOM2);
+        paymentKey.setCustom3(MNT_CUSTOM3);
+        paymentKey.setDescription(MNT_DESCRIPTION);
+        paymentKey.setFailUrl(MNT_FAIL_URL);
+        if (MNT_SUCCESS_URL != null)
+            paymentKey.setSuccessUrl(MNT_SUCCESS_URL);
+        else
+            paymentKey.setSuccessUrl(market.getSuccessUrl());
+        paymentKey.setMonetaLocale(monetaLocale);
+        paymentKey.setPaymentSystemLimitIds(paymentSystemLimitIds);
+        paymentKey.setPaymentSystemUnitId(paymentSystemUnitId);
+        paymentKey.setTest(MNT_TEST_MODE);
+        if (!new Dao(em).persist(paymentKey)) {
             addActionError(getText("dbms_save_error"));
             return Action.ERROR;
         }
         return Action.SUCCESS;
+    }
+
+    public Market getMarket() {
+        return market;
+    }
+
+    public void setMarket(Market market) {
+        this.market = market;
     }
 
     public PaymentKey getPaymentKey() {
@@ -195,8 +209,8 @@ public class Assistant extends BaseAction {
         return MNT_TEST_MODE;
     }
 
-    public void setMNT_TEST_MODE(Boolean MNT_TEST_MODE) {
-        this.MNT_TEST_MODE = MNT_TEST_MODE;
+    public void setMNT_TEST_MODE(int MNT_TEST_MODE) {
+        this.MNT_TEST_MODE = (MNT_TEST_MODE != 0);
     }
 
     public String getMNT_TRANSACTION_ID() {
