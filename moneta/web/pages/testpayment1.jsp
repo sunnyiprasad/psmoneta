@@ -16,7 +16,7 @@
             <input type="hidden" name="MNT_TRANSACTION_ID" value="FF790ABCD">
             <input type="hidden" name="MNT_CURRENCY_CODE" value="RUB">
             <input type="hidden" name="MNT_AMOUNT" value="120.25">
-            <input type="hidden" name="MNT_TEST_MODE " value="1">
+            <input type="hidden" name="MNT_TEST_MODE" value="1">
             <input type="hidden" name="MNT_SUCCESS_URL"
                    value="https://www.magazin.ru/success.htm">
             <input type="hidden" name="MNT_FAIL_URL"
