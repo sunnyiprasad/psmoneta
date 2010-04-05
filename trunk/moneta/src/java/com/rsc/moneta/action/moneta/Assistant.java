@@ -12,6 +12,7 @@ import com.rsc.moneta.bean.PaymentKey;
 import com.rsc.moneta.util.Utils;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+import java.util.Locale;
 import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -43,32 +44,6 @@ public class Assistant extends BaseAction {
     private PaymentKey paymentKey;
     private Market market;
 
-    private String locale = null;
-    private String unitId = null;
-    private String limitIds = null;
-
-    public String getLimitIds() {
-        return limitIds;
-    }
-
-    public void setLimitIds(String limitIds) {
-        this.limitIds = limitIds;
-    }
-
-    public void setLocale(String locale) {
-        this.locale = locale;
-    }
-
-    public String getUnitId() {
-        return unitId;
-    }
-
-    public void setUnitId(String unitId) {
-        this.unitId = unitId;
-    }
-
-
-
     @Override
     public String execute() throws Exception {
         //  Здесь должен быть обработчик.
@@ -82,6 +57,8 @@ public class Assistant extends BaseAction {
         String _monetaLocale = request.getParameter("moneta.locale");
         if (_monetaLocale != null) {
             this.monetaLocale = _monetaLocale;
+            Locale locale = new Locale(this.monetaLocale);
+            ServletActionContext.getContext().setLocale(locale);
         }
         String _paymentSystemUnitId = request.getParameter("paymentSystem.unitId");
         if (_paymentSystemUnitId != null) {
