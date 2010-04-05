@@ -44,6 +44,7 @@ public class PaymentKey implements Serializable {
     private String monetaLocale;
     private String paymentSystemUnitId;
     private String paymentSystemLimitIds;
+    private int currency;
 
 
     @Column(name = "_date")
@@ -52,6 +53,22 @@ public class PaymentKey implements Serializable {
 
     @ManyToOne
     private Market market;
+
+    public int getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(int currency) {
+        this.currency = currency;
+    }
+
+    public List<PaymentParameter> getPaymentParameters() {
+        return paymentParameters;
+    }
+
+    public void setPaymentParameters(List<PaymentParameter> paymentParameters) {
+        this.paymentParameters = paymentParameters;
+    }
 
     public Market getMarket() {
         return market;

@@ -9,6 +9,7 @@
     <class>com.rsc.moneta.bean.Sms</class>
     <class>com.rsc.moneta.bean.User</class>
     <class>com.rsc.moneta.bean.PaymentParameter</class>
+    <class>com.rsc.moneta.bean.Account</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <property name="hibernate.connection.username" value="postgres"/>
@@ -16,6 +17,7 @@
       <property name="hibernate.connection.password" value="postgres"/>
       <property name="hibernate.connection.url" value="jdbc:postgresql://localhost:5432/moneta"/>
       <property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider"/>
+      <property name="hibernate.show_sql" value="true"/>
       <property name="hibernate.hbm2ddl.auto" value="update"/>
     </properties>
   </persistence-unit>

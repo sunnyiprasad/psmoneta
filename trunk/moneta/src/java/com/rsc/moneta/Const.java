@@ -28,4 +28,10 @@ public class Const {
      */
     public static final int ORDER_NOT_ACTUAL = 500;
 
+
+
+    public static final int EURO = 1;
+    public static final int USD = 2;
+    public static final int RUB = 0;
+
 }
