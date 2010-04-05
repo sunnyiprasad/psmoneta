@@ -9,10 +9,9 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <p>Ваш заказ зарегистрирован. <br/>
-            Сейчас вы должна направиться к любому терминалу платежных систем: Платика<br/>
-            При оплате билета у вас будет запрошен код заказа.
-            Введите код:<s:property value="%{paymentKey.key}" />
+        <p><s:text name="selectpayment.order_registered" /> <br/>
+            <s:text name="selectpayment.main_message" />
+            <s:text name="selectpayment.enter_payment_key" /><s:property value="%{paymentKey.key}" />
         </p>
         <p><s:a href="%{paymentKey.successUrl}" >Вернуться в магазин</s:a></p>
     </body>
