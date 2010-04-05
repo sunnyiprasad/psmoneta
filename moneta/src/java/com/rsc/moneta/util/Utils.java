@@ -4,6 +4,7 @@
  */
 package com.rsc.moneta.util;
 
+import com.rsc.moneta.Const;
 import com.rsc.moneta.bean.PaymentKey;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -62,8 +63,44 @@ public class Utils {
         }
     }
 
-    public static String createSignature(PaymentKey key) {
-        //TODO: Генерация сигнатуры для заказа.
-        return "";
+    public static String createSignature(PaymentKey key) throws NoSuchAlgorithmException {
+        return createSignature(null, key);
     }
+
+    public static String createSignature(String command, PaymentKey key) throws NoSuchAlgorithmException {
+        String str = "";
+        if (command != null)
+            str  += command;
+        str += key.getMarket().getId()+key.getKey()+key.getId();
+        if (key.getAmount() != null){
+            str += key.getAmount();
+        }
+        str += Utils.accountTypeToString(key.getCurrency())+Utils.booleanToInt(key.getTest())+key.getMarket().getPassword();
+        return getMd5InHexString(str);
+    }
+
+    public static String accountTypeToString(int accountType){
+        switch (accountType){
+            case Const.EURO: return "EURO";
+            case Const.USD: return "USD";
+            case Const.RUB: return "RUB";
+            default:
+                    return "UNKNOWN";
+        }
+    }
+
+    public static int currencyStringToAccountType(String MNT_CURRENCY_CODE) throws UnknownCurrencyException {
+        if (MNT_CURRENCY_CODE.equalsIgnoreCase("RUB"))
+            return Const.RUB;
+        if (MNT_CURRENCY_CODE.equalsIgnoreCase("EURO"))
+            return Const.EURO;
+        if (MNT_CURRENCY_CODE.equalsIgnoreCase("USD"))
+            return Const.USD;
+        throw new UnknownCurrencyException(MNT_CURRENCY_CODE);
+    }
+
+    private static int booleanToInt(Boolean test) {
+        return (test) ? 1 : 0;
+    }
+
 }

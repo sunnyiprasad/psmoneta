@@ -12,6 +12,11 @@ import com.rsc.moneta.bean.PaymentKey;
 import com.rsc.moneta.util.Utils;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+import javax.servlet.Servlet;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.interceptor.ServletRequestAware;
 
 /**
  *
@@ -38,6 +43,32 @@ public class Assistant extends BaseAction {
     private PaymentKey paymentKey;
     private Market market;
 
+    private String locale = null;
+    private String unitId = null;
+    private String limitIds = null;
+
+    public String getLimitIds() {
+        return limitIds;
+    }
+
+    public void setLimitIds(String limitIds) {
+        this.limitIds = limitIds;
+    }
+
+    public void setLocale(String locale) {
+        this.locale = locale;
+    }
+
+    public String getUnitId() {
+        return unitId;
+    }
+
+    public void setUnitId(String unitId) {
+        this.unitId = unitId;
+    }
+
+
+
     @Override
     public String execute() throws Exception {
         //  Здесь должен быть обработчик.
@@ -46,8 +77,20 @@ public class Assistant extends BaseAction {
         // описание параметров смотрите в MONETA.Assistant
         // см.стр. 13
         // По идее после обработки у пользователя необходимо запросить номер телефона
-        // И отправить пользователя на страницу с поддерживаемыми платежными системами.
-
+        // И отправить пользователя на страницу с поддерживаемыми платежными системами.        
+        HttpServletRequest request = ServletActionContext.getRequest();
+        String _monetaLocale = request.getParameter("moneta.locale");
+        if (_monetaLocale != null) {
+            this.monetaLocale = _monetaLocale;
+        }
+        String _paymentSystemUnitId = request.getParameter("paymentSystem.unitId");
+        if (_paymentSystemUnitId != null) {
+            this.paymentSystemUnitId = _paymentSystemUnitId;
+        }
+        String _paymentSystemLimitIds = request.getParameter("paymentSystem.limitIds");
+        if (_paymentSystemLimitIds != null) {
+            this.paymentSystemLimitIds = _paymentSystemLimitIds;
+        }
         if (MNT_ID == null) {
             addActionError(getText("MNT_ID_not_defined"));
             return Action.ERROR;
@@ -90,13 +133,14 @@ public class Assistant extends BaseAction {
         paymentKey.setCustom3(MNT_CUSTOM3);
         paymentKey.setDescription(MNT_DESCRIPTION);
         paymentKey.setFailUrl(MNT_FAIL_URL);
+        paymentKey.setCurrency(Utils.currencyStringToAccountType(MNT_CURRENCY_CODE));
         if (MNT_SUCCESS_URL != null)
             paymentKey.setSuccessUrl(MNT_SUCCESS_URL);
         else
             paymentKey.setSuccessUrl(market.getSuccessUrl());
-        paymentKey.setMonetaLocale(monetaLocale);
-        paymentKey.setPaymentSystemLimitIds(paymentSystemLimitIds);
-        paymentKey.setPaymentSystemUnitId(paymentSystemUnitId);
+        paymentKey.setMonetaLocale(_monetaLocale);
+        paymentKey.setPaymentSystemLimitIds(_paymentSystemLimitIds);
+        paymentKey.setPaymentSystemUnitId(_paymentSystemUnitId);
         paymentKey.setTest(MNT_TEST_MODE);
         if (!new Dao(em).persist(paymentKey)) {
             addActionError(getText("dbms_save_error"));
@@ -250,4 +294,6 @@ public class Assistant extends BaseAction {
         String all = MNT_ID + MNT_TRANSACTION_ID + MNT_AMOUNT + MNT_CURRENCY_CODE + test + market.getPassword();
         return (MNT_SIGNATURE.equalsIgnoreCase(Utils.byteArrayToHexString(Utils.md5(all))));
     }
+
+
 }

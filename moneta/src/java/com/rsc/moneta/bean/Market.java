@@ -7,10 +7,12 @@ package com.rsc.moneta.bean;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -24,20 +26,44 @@ public class Market implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
+    @Column(nullable=false)
     private String name;
+
+    @Column(nullable=false)
     private String checkUrl;
+
+    @Column(nullable=false)
     private String payUrl;
+
+    @Column(nullable=false)
     private String successUrl;
+
+    @Column(nullable=false)
     private String failUrl;
+
+    @Column(nullable=false)
     private String password;
+
+    @Column(nullable=false) // Данное поле показывает требовать ли обязательно подпись при каждом запросе от магазина.
     private boolean signable;
 
 
     @ManyToOne
     private User user;
+
     @OneToMany(mappedBy = "market")
     private List<PaymentKey> paymentKeys;
+
+    @ManyToMany
+    private List<Account> accounts;
+
+    public List<Account> getAccounts() {
+        return accounts;
+    }
+
+    public void setAccounts(List<Account> accounts) {
+        this.accounts = accounts;
+    }
 
     public boolean isSignable() {
         return signable;

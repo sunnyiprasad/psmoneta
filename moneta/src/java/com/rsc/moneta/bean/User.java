@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.rsc.moneta.bean;
 
 import java.io.Serializable;
@@ -21,23 +20,39 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "t_User")
 public class User implements Serializable {
-    @OneToMany(mappedBy = "user")
-    private List<Market> markets;
-  
-    @OneToMany(mappedBy = "fromUser")
-    private List<PaymentTransaction> paymentTransactionsFrom;
-
-    @OneToMany(mappedBy = "toUser")
-    private List<PaymentTransaction> paymentTransactionsTo;
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
     private String phone;
     private String password;
 
+
+    @OneToMany(mappedBy = "toUser")
+    private List<PaymentTransaction> paymentTransactionsTo;
+    @OneToMany(mappedBy = "user")
+    private List<Account> accounts;
+    @OneToMany(mappedBy = "user")
+    private List<Market> markets;
+    @OneToMany(mappedBy = "fromUser")
+    private List<PaymentTransaction> paymentTransactionsFrom;
+
+    public List<Account> getAccounts() {
+        return accounts;
+    }
+
+    public void setAccounts(List<Account> accounts) {
+        this.accounts = accounts;
+    }
+
+    public List<Market> getMarkets() {
+        return markets;
+    }
+
+    public void setMarkets(List<Market> markets) {
+        this.markets = markets;
+    }
+    
     public String getPassword() {
         return password;
     }
@@ -45,8 +60,6 @@ public class User implements Serializable {
     public void setPassword(String password) {
         this.password = password;
     }
-
-    
 
     public List<PaymentTransaction> getPaymentTransactionsFrom() {
         return paymentTransactionsFrom;
@@ -72,8 +85,6 @@ public class User implements Serializable {
         this.phone = phone;
     }
 
-    
-
     public Long getId() {
         return id;
     }
@@ -81,6 +92,4 @@ public class User implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-
-    
 }

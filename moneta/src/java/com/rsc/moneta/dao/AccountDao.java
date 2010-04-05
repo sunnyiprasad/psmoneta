@@ -5,7 +5,8 @@
 
 package com.rsc.moneta.dao;
 
-import com.rsc.moneta.bean.Market;
+import com.rsc.moneta.bean.Account;
+import java.util.Collection;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
@@ -15,17 +16,18 @@ import javax.persistence.Query;
  *
  * @author sulic
  */
-public class MarketDao extends Dao{
+public class AccountDao extends Dao{
 
-    public MarketDao(EntityManager em) {
+    public AccountDao(EntityManager em) {
         super(em);
     }
 
-    public Market getMarketByName(String name) {
-        Query q = getEntityManager().createQuery("select u from Market u where u.name=:name");
+    public Collection<Account> getAccounts(long userId, int type) {
+        Query q = getEntityManager().createQuery("select u from Account u where u.user.id=:uid and u.type=:type");
         try {
-            q.setParameter("name", name);
-            return (Market) q.getSingleResult();
+            q.setParameter("uid", userId);
+            q.setParameter("type", type);
+            return  q.getResultList();
         } catch (NoResultException e1) {
             return null;
         } catch (NonUniqueResultException e2) {
