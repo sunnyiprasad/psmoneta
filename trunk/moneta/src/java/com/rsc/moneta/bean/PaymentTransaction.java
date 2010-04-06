@@ -18,6 +18,9 @@ import javax.persistence.Temporal;
 /**
  *
  * @author sulic
+ * Это любая транзакция внутри системы.
+ * Пока незадействовано.
+ * Будет задействовано, когда пользователи будут друг другу проводить платежи.
  */
 @Entity
 public class PaymentTransaction implements Serializable {

@@ -13,6 +13,7 @@ import javax.persistence.Id;
 /**
  *
  * @author sulic
+ * Это очередь смс сообщений для отправки
  */
 @Entity
 public class Sms implements Serializable {

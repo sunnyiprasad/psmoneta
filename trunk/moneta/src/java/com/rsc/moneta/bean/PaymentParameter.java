@@ -15,6 +15,7 @@ import javax.persistence.ManyToOne;
 /**
  *
  * @author sulic
+ * Это дополнительные параметры, которые могут быть присланы во время запроса чек к интернет магазину.
  */
 @Entity
 public class PaymentParameter implements Serializable {

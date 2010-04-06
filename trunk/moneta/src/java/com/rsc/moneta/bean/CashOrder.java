@@ -21,7 +21,8 @@ public class CashOrder implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    private User user;
+    private Account account;
 
-    
-
+   // private
 }
