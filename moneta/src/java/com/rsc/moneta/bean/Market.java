@@ -28,13 +28,15 @@ public class Market implements Serializable {
     private Long id;
     @Column(nullable=false)
     private String name;
-
+    // URL куда отправлять чек запрос
     @Column(nullable=false)
     private String checkUrl;
 
+    // Куда отправлять pay запрос
     @Column(nullable=false)
     private String payUrl;
 
+    //
     @Column(nullable=false)
     private String successUrl;
 

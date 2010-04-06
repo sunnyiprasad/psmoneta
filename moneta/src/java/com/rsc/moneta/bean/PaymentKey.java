@@ -20,6 +20,9 @@ import javax.persistence.Temporal;
 /**
  *
  * @author sulic
+ * PaymentKey это короче говоря один заказ.
+ * Он генерится когда присылает ТАИС мне запрос
+ * что пользователь заказ билет и хочет оплатить
  */
 @Entity
 public class PaymentKey implements Serializable {
@@ -30,20 +33,30 @@ public class PaymentKey implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    // Это номер заказа в системе интернет магазина.
     @Column(name = "_key")
     private String key;
 
+    // Сумма заказа
     private Double amount;
+    // Это тестовый платеж?
     private Boolean test;
+    // Описание
     private String description;
     private String custom1;
     private String custom2;
     private String custom3;
+    // Куда отправть пользователя после успешной оплаты.
     private String successUrl;
+    // Куда отправить пользователь при ошибке об оплате.
     private String failUrl;
+    // Это поле уберу нах. Оно не нужно тут.
     private String monetaLocale;
+
     private String paymentSystemUnitId;
     private String paymentSystemLimitIds;
+    // Код валюты. Оплату можно производить в разных валютах
+    // пока не используется вся валюту это рубль.
     private int currency;
 
 
