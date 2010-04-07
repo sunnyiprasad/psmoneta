@@ -60,4 +60,15 @@ public class CashOrderDao extends Dao {
             return new Vector<CashOrder>();
         }
     }
+
+    public Collection<CashOrder> getCashOrderListFilterByStatus(int i) {
+        Query q = em.createQuery("select c from CashOrder c where c.status=:status");
+        try {
+            q.setParameter("status", i);
+            return (Collection<CashOrder>) q.getResultList();
+        } catch (NoResultException exception) {
+            exception.printStackTrace();
+            return new Vector<CashOrder>();
+        }
+    }
 }

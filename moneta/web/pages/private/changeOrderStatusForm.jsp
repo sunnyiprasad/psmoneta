@@ -4,8 +4,8 @@
     <table>
         <s:hidden name="cashOrderId" />
         <select name="status">
-            <option selected>Открытый</option>
-            <option>Обработанный</option>
+            <option selected value="0"> Открытый</option>
+            <option value="1">Обработанный</option>
         </select>
         <s:submit value="%{getText('change_order_status')}" />
     </table>
