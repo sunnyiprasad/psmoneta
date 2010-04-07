@@ -17,6 +17,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 
+import com.rsc.moneta.Const;
+
 /**
  *
  * @author sulic
@@ -29,6 +31,9 @@ public class PaymentKey implements Serializable {
     @OneToMany(mappedBy = "key")
     private List<PaymentParameter> paymentParameters;
     private static final long serialVersionUID = 1L;
+
+    // TODO: изменить ххх на нормальное название проекта
+    // Идентификатор кода заказа ПС ххх
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -59,6 +64,9 @@ public class PaymentKey implements Serializable {
     // пока не используется вся валюту это рубль.
     private int currency;
 
+    // Статус заказа ТЛСМ
+    @Column(name = "OrderStatus")
+    private int orderStatus = Const.ORDER_STATUS_UNDEFINED;
 
     @Column(name = "_date")
     @Temporal(javax.persistence.TemporalType.DATE)
@@ -203,6 +211,13 @@ public class PaymentKey implements Serializable {
         this.test = test;
     }
 
+    public int getOrderStatus() {
+        return this.orderStatus;
+    }
+
+    public void setOrderStatus(int orderStatus) {
+        this.orderStatus = orderStatus;
+    }
     
     
 }

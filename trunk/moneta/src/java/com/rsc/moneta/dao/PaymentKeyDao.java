@@ -29,4 +29,15 @@ public class PaymentKeyDao extends Dao {
             return null;
         }
     }
+
+    public PaymentKey getPaymentById(Long id) {
+        try {
+            Query q = em.createQuery("select p from PaymentKey p where p.id=:id");
+            q.setParameter("id", id);
+            return (PaymentKey) q.getSingleResult();
+        } catch (NoResultException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
 }
