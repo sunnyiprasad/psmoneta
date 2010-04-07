@@ -21,9 +21,12 @@ public class Login extends BaseAction {
 
     @Override
     public String execute() throws Exception {
+        if(phonenumber == null || password == null || "".equals(phonenumber) || "".equals(password)){
+            return Action.LOGIN;
+        }
         setUser(new UserDao(em).getUserByPhoneAndPassword(phonenumber, password));
         session.put("user", user);
-        return (user != null) ? Action.SUCCESS : Action.ERROR;
+        return (user != null) ? Action.SUCCESS : Action.LOGIN;
     }
 
     public String getPassword() {

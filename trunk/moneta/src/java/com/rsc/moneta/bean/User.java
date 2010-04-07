@@ -20,6 +20,8 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "t_User")
 public class User implements Serializable {
+    @OneToMany(mappedBy = "user")
+    private List<CashOrder> cashOrders;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
