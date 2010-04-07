@@ -25,10 +25,23 @@ public class TestOsmpHandler {
 //     command=check&txn_id=1234567&account=4957835959&sum=10.45
         map.put("command", "check");
         map.put("txn_id", "1234567");
-        map.put("account", "4957835959");
+        map.put("account", "0000000000000002222");
         map.put("sum", "10.45");
         String xml = handler.check(map);
         //Assert.assertEquals();
     }
+
+//    @Test
+//    public void testOsmpCheck1() {
+//        OSMPInputHandler handler = new OSMPInputHandler();
+//        Map map = new Properties();
+////     command=check&txn_id=1234567&account=4957835959&sum=10.45
+//        map.put("command", "checkk");
+//        map.put("txn_id", "1234567");
+//        map.put("account", "4957835959");
+//        map.put("sum", "10.45");
+//        String xml = handler.check(map);
+//        // Assert.assertEquals("test1", xml);
+//    }
 
 }
