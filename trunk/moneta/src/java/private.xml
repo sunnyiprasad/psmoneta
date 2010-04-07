@@ -21,8 +21,10 @@
             <result>/pages/private/changeOrderStatusForm.jsp</result>
         </action>
 
-         <action name="ChangeCashOrderStatus" class="com.rsc.moneta.action.admin.ChangeCashOrderStatus">
-            <result type="redirectAction">ViewCashOrderList</result>
+        <action name="ChangeCashOrderStatus" class="com.rsc.moneta.action.admin.ChangeCashOrderStatus">
+            <result name="success" type="redirectAction">ViewCashOrderList</result>
+            <result name="error" type="redirectAction">ViewCashOrderList</result>
+            <result name="next" type="redirectAction">ViewNextUnprocessedCashOrder</result>
         </action>
 
         <action name="ViewCashOrderList" class="com.rsc.moneta.action.admin.ViewCashOrderList">
@@ -31,6 +33,11 @@
 
         <action name="ViewCashOrder" class="com.rsc.moneta.action.admin.ViewCashOrder">
             <result>/pages/private/viewCashOrder.jsp</result>
+        </action>
+
+        <action name="ViewNextUnprocessedCashOrder" class="com.rsc.moneta.action.admin.ViewCashOrder" method="nextUnprocessedCashOrder">
+            <result name="success">/pages/private/viewCashOrder.jsp</result>
+            <result name="error" type="redirectAction">ViewCashOrderList</result>
         </action>
 
     </package>
