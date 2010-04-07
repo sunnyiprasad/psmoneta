@@ -6,6 +6,7 @@ import com.rsc.moneta.util.Month;
 import com.rsc.moneta.util.Year;
 import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -43,16 +44,28 @@ public class BasePeriodListAction extends BaseListAction  {
     }
 
 
-    public Timestamp getStartDate(){
+    public Timestamp getStartDateTimestamp(){
         Calendar cal = Calendar.getInstance();
         cal.set(year_begin, month_begin, day_begin, 0, 0, 0);
         return new Timestamp(cal.getTimeInMillis());
     }
 
-    public Timestamp getEndDate(){
+    public Timestamp getEndDateTimestamp(){
         Calendar cal = Calendar.getInstance();
         cal.set(year_end, month_end, day_end, 0, 0, 0);
         return new Timestamp(cal.getTimeInMillis());
+    }
+
+    public Date getStartDate(){
+        Calendar cal = Calendar.getInstance();
+        cal.set(year_begin, month_begin, day_begin, 0, 0, 0);
+        return new Date(cal.getTimeInMillis());
+    }
+
+    public Date getEndDate(){
+        Calendar cal = Calendar.getInstance();
+        cal.set(year_end, month_end, day_end, 0, 0, 0);
+        return new Date(cal.getTimeInMillis());
     }
 
     public int getDay_begin() {

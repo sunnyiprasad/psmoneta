@@ -10,6 +10,7 @@
     <class>com.rsc.moneta.bean.User</class>
     <class>com.rsc.moneta.bean.PaymentParameter</class>
     <class>com.rsc.moneta.bean.Account</class>
+    <class>com.rsc.moneta.bean.CashOrder</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <property name="hibernate.connection.username" value="postgres"/>

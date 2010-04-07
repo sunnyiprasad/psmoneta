@@ -8,6 +8,15 @@
     <!-- Add your configuration elements here -->
     <package name="public" namespace="/public" extends="struts-default">
 
+        <interceptors>
+            <interceptor name="initem" class="com.rsc.moneta.interceptor.InitEntityManager"/>
+            <interceptor-stack name="main">
+                <interceptor-ref name="defaultStack"/>
+                <interceptor-ref name="initem"/>
+             </interceptor-stack>
+        </interceptors>
+        <default-interceptor-ref name="main" />
+
         <action name="Login" class="com.rsc.moneta.action.site.Login">
             <result name="success" type="redirectAction">/private/main</result>
             <result name="login">/pages/public/login.jsp</result>
@@ -16,5 +25,7 @@
         <action name="Logout" class="com.rsc.moneta.action.site.Logout">            
             <result>/</result>
         </action>
+
+       
     </package>
 </struts>
