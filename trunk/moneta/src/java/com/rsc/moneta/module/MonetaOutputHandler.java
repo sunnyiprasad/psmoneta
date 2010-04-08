@@ -35,9 +35,9 @@ import org.w3c.dom.NodeList;
  */
 public class MonetaOutputHandler implements OutputHandler {
 
-        /*
+    /*
      * Ответ содержит сумму заказа для оплаты. Данным кодом следует отвечать,
-        когда в параметрах проверочного запроса не был указан параметр MNT_AMOUNT
+    когда в параметрах проверочного запроса не был указан параметр MNT_AMOUNT
      */
     public static final int ANSWER_CONTAINS_AMOUNT = 100;
     //Заказ оплачен. Уведомление об оплате магазину доставлено.
@@ -48,8 +48,8 @@ public class MonetaOutputHandler implements OutputHandler {
     public static final int ORDER_IS_CREATE = 402;
     /*
      * Заказ не является актуальным в магазине (например, заказ отменен). При
-        получении данного кода MONETA.Assistant не будет больше пытаться
-        отсылать уведомление об оплате, если оно не было доставлено.
+    получении данного кода MONETA.Assistant не будет больше пытаться
+    отсылать уведомление об оплате, если оно не было доставлено.
      */
     public static final int ORDER_NOT_ACTUAL = 500;
 
@@ -127,5 +127,41 @@ public class MonetaOutputHandler implements OutputHandler {
             // Не указан Идентификатор транзакции
         }
         return false;
+    }
+
+    public int convertForeignCodeToBase(int code) throws UnknownStatusException {
+        switch (code) {
+            case MonetaOutputHandler.ANSWER_CONTAINS_AMOUNT:
+                return com.rsc.moneta.Const.ORDER_STATUS_ACCEPTED;
+            case MonetaOutputHandler.ORDER_IS_CREATE:
+                return com.rsc.moneta.Const.ORDER_STATUS_ACCEPTED;
+            case MonetaOutputHandler.ORDER_NOT_ACTUAL:
+                return com.rsc.moneta.Const.ORDER_STATUS_NOT_PAID_AND_REJECTED_BY_EMARKETPLACE;
+            case MonetaOutputHandler.PAYMENT_SUCCESS:
+                return com.rsc.moneta.Const.ORDER_STATUS_PAID_AND_COMPLETED;
+            case MonetaOutputHandler.UNKNOWN_STATUS:
+                return com.rsc.moneta.Const.ORDER_STATUS_PAID_BUT_NOT_COMPLETED_AND_CONTINUE_PROCESSING;
+            default:
+                throw new UnknownStatusException(code);
+        }
+    }
+
+    public int convertBaseCodeToForeign(int code) throws UnknownStatusException {
+        switch (code) {
+            case com.rsc.moneta.Const.ORDER_STATUS_ACCEPTED:
+                return MonetaOutputHandler.ORDER_IS_CREATE;
+            case com.rsc.moneta.Const.ORDER_STATUS_NOT_PAID_AND_REJECTED_BY_EMARKETPLACE:
+                return MonetaOutputHandler.ORDER_NOT_ACTUAL;
+            case com.rsc.moneta.Const.ORDER_STATUS_PAID_AND_COMPLETED:
+                return MonetaOutputHandler.PAYMENT_SUCCESS;
+            case com.rsc.moneta.Const.ORDER_STATUS_PAID_BUT_NOT_COMPLETED_AND_CONTINUE_PROCESSING:
+                return MonetaOutputHandler.UNKNOWN_STATUS;
+            case com.rsc.moneta.Const.ORDER_STATUS_PAID_BUT_REJECTED_BY_EMARKETPLACE:
+                return MonetaOutputHandler.ORDER_NOT_ACTUAL;
+            case com.rsc.moneta.Const.ORDER_STATUS_PAID_FOR_TLSM:
+                return MonetaOutputHandler.UNKNOWN_STATUS;
+            default:
+                throw new UnknownStatusException(code);
+        }
     }
 }
