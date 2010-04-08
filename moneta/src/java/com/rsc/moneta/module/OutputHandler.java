@@ -15,4 +15,6 @@ import java.util.Map;
 public interface OutputHandler {
     CheckResponse check(PaymentKey key);
     CheckResponse pay(PaymentKey key);
+    int convertForeignCodeToBase(int code)throws UnknownStatusException;
+    int convertBaseCodeToForeign(int code)throws UnknownStatusException;
 }

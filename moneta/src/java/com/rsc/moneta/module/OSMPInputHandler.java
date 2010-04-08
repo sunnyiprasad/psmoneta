@@ -9,7 +9,6 @@ import javax.persistence.EntityManager;
 import java.util.regex.*;
 
 import com.rsc.moneta.dao.EMF;
-import com.rsc.moneta.dao.PaymentKeyDao;
 import com.rsc.moneta.bean.PaymentKey;
 
 /**
@@ -76,7 +75,7 @@ public class OSMPInputHandler implements InputHandler {
                                                     result = Const.OSMP_RETURN_CODE_ACCOUNT_NOT_FOUND;
                                                     comment = Const.STRING_ORDER_DOES_NOT_EXIST_ERROR;
                                                 } else {
-                                                    if (paymentKey.getOrderStatus() == com.rsc.moneta.Const.ORDER_STATUS_UNDEFINED) {
+                                                    if (paymentKey.getOrderStatus() == com.rsc.moneta.Const.ORDER_STATUS_ACCEPTED) {
                                                         result = Const.OSMP_RETURN_CODE_ACCOUNT_NOT_FOUND;
                                                         comment = Const.STRING_ORDER_DOES_NOT_EXIST_ERROR;
                                                     } else {
@@ -120,7 +119,7 @@ public class OSMPInputHandler implements InputHandler {
                                                                         result = Const.OSMP_RETURN_CODE_OK;
                                                                         comment = Const.STRING_PAYMENT_COMPLETED;
                                                                     } else {
-                                                                        if (paymentKey.getOrderStatus() == com.rsc.moneta.Const.ORDER_STATUS_PAID_BUT_NOT_COMPLETED) {
+                                                                        if (paymentKey.getOrderStatus() == com.rsc.moneta.Const.ORDER_STATUS_PAID_BUT_NOT_COMPLETED_AND_CONTINUE_PROCESSING) {
                                                                             // TODO: Сулик, Денис - Обдумать, что в это случае делать
                                                                             throw new UnsupportedOperationException("Not supported yet.");
                                                                         } else {

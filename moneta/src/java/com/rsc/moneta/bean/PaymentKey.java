@@ -66,7 +66,7 @@ public class PaymentKey implements Serializable {
 
     // Статус заказа ТЛСМ
     @Column(name = "orderstatus")
-    private int orderStatus = Const.ORDER_STATUS_UNDEFINED;
+    private int orderStatus = Const.ORDER_STATUS_ACCEPTED;
 
     @Column(name = "_date")
     @Temporal(javax.persistence.TemporalType.DATE)
