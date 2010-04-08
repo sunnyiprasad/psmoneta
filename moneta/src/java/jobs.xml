@@ -8,7 +8,7 @@
     <job>
         <job-detail>
             <name>CashOrderEveryDay</name>
-            <group>MYJOB_GROUP</group>
+            <group>EVD_GROUP</group>
             <description>Эта задача выполняется ежедневно и создается автоматически счета на обналичивание</description>
             <job-class>com.rsc.moneta.scheduller.CashOrderProccess</job-class>
             <job-data-map allows-transient-data="false">
@@ -20,7 +20,7 @@
         </job-detail>
         <job-detail>
             <name>CashOrderEveryWeek</name>
-            <group>MYJOB_GROUP</group>
+            <group>EVW_GROUP</group>
             <description>Эта задача выполняется еженедельно и создает автоматически счета на обналичивание</description>
             <job-class>com.rsc.moneta.scheduller.CashOrderProccess</job-class>
             <job-data-map allows-transient-data="false">
@@ -32,7 +32,7 @@
         </job-detail>
         <job-detail>
             <name>CashOrderEveryMonth</name>
-            <group>MYJOB_GROUP</group>
+            <group>EVM_GROUP</group>
             <description>Эта задача выполняется ежемесячно и создает автоматически счета на обналичивание</description>
             <job-class>com.rsc.moneta.scheduller.CashOrderProccess</job-class>
             <job-data-map allows-transient-data="false">
@@ -46,24 +46,24 @@
         <trigger>
             <cron>
                 <name>EVD-trigger</name>
-                <group>EVD-group</group>
-                <job-name></job-name>
-                <job-group>MYJOB_GROUP</job-group>               
-                <cron-expression>0 30 4 * * ?</cron-expression>
+                <group>EVD-tr-group</group>
+                <job-name>CashOrderEveryDay</job-name>
+                <job-group>EVD_GROUP</job-group>
+                <cron-expression>0 0 1 * * ?</cron-expression>
             </cron>
             <cron>
-                <name>my-trigger</name>
-                <group>MYTRIGGER_GROUP</group>
-                <job-name>my-very-clever-job</job-name>
-                <job-group>MYJOB_GROUP</job-group>
-                <cron-expression>0 30 4 * * ?</cron-expression>
+                <name>EVW-trigger</name>
+                <group>EVW-tr-group</group>
+                <job-name>CashOrderEveryWeek</job-name>
+                <job-group>EVW_GROUP</job-group>
+                <cron-expression>0 0 1 1,7,14,21,28 * ?</cron-expression>
             </cron>
             <cron>
-                <name>my-trigger</name>
-                <group>MYTRIGGER_GROUP</group>
-                <job-name>my-very-clever-job</job-name>
-                <job-group>MYJOB_GROUP</job-group>
-                <cron-expression>0 30 4 * * ?</cron-expression>
+                <name>EVM-trigger</name>
+                <group>EVM-tr-group</group>
+                <job-name>CashOrderEveryMonth</job-name>
+                <job-group>EVM_GROUP</job-group>
+                <cron-expression>0 0 1 1 * ?</cron-expression>
             </cron>
         </trigger>
     </job>
