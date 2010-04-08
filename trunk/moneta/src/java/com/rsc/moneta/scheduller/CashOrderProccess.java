@@ -23,13 +23,12 @@ import org.quartz.JobExecutionException;
 public class CashOrderProccess implements Job {
 
     public void execute(JobExecutionContext jec) throws JobExecutionException {
-
-
+        int type = jec.getJobDetail().getJobDataMap().getInt("when");
         EntityManager em = EMF.getEntityManager();
         try {
             CashOrderDao cashOrderDao = new CashOrderDao(em);
             AccountDao accountDao = new AccountDao(em);
-            List<Account> accounts = accountDao.getAccountsFilterByAutoCheckoutMoney(Account.EVERYDAY);
+            List<Account> accounts = accountDao.getAccountsFilterByAutoCheckoutMoney(type);
             for (Account account : accounts) {
                 try {
                     new CashOrderDao(em).checkoutCashOrder(account, account.getBalance());
