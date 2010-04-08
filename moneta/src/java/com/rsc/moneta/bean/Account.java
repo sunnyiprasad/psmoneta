@@ -26,8 +26,11 @@ import javax.persistence.OneToMany;
  */
 @Entity
 public class Account implements Serializable{
-    @OneToMany(mappedBy = "account")
-    private List<CashOrder> cashOrders;
+
+    // Типы возможного периода обналичивания средств.
+    public static int EVERYDAY = 0;
+    public static int EVERYWEEK = 1;
+    public static int EVERYMONTH = 2;
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -41,10 +44,18 @@ public class Account implements Serializable{
     @Column(nullable=false)
     private double balance;
 
+    // Обналичивать деньги со счета автоматически.
+    // Если стоит нуль тогда автоматически деньги со счеты не обналичиваются.
+    // Что бы обналичивать деньги автоматически у клиента должен быть задан
+    // счет в банке, куда переводить средства.
+    private Integer autoCheckoutMoney;
+
     // Это пользователь владелец счета.
     @ManyToOne
     private User user;
-    
+
+    @OneToMany(mappedBy = "account")
+    private List<CashOrder> cashOrders;
     
     // Каждый магазин должен быть привязан к счету куда его средства переводятся.
     // Каждый магазин должен быть привязан только к одному счету по типу валюты.,

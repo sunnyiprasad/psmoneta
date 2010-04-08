@@ -2,6 +2,9 @@
 <%@ taglib prefix="s" uri="/struts-tags" %>
 <s:actionerror/>
 
+
+<p>Сумма заказа составляет: <s:property value="%{sumAndCount.amount}" /></p>
+<p>Количество заказов составляет: <s:property value="%{sumAndCount.count}" /></p>
 <s:form action="ViewCashOrderList" name="period" >
     Просмотреть платежи сделаные с&nbsp;
     <s:textfield name="day_begin" value="%{day_begin}" size="2" theme="simple" />
@@ -11,6 +14,12 @@
     <s:textfield name="day_end" value="%{day_end}" size="2" theme="simple" />
     <s:select name="month_end" list="%{months}" listKey="number" listValue="name" value="%{month_end}" theme="simple" />
     <s:select name="year_end" list="%{year}" listKey="number" listValue="name" value="%{year_end}" theme="simple" />
+    <br/>
+    Фильтр по статусу:
+    <select name="status">
+        <option selected value="0"> Открытый</option>
+        <option value="1">Обработанный</option>
+    </select>
     <s:hidden value="%{userId}" name="userId" theme="simple" />
     <s:submit value="Показать" theme="simple" />
 </s:form>

@@ -19,17 +19,33 @@ import java.util.Date;
  */
 
 public class ViewCashOrderList extends BasePeriodListAction{
-
-    private Collection<CashOrder> cashOrders;   
+    private int status = 0;
+    private Collection<CashOrder> cashOrders;
+    private SumAndCount sumAndCount;
 
     @Override
     public String execute() throws Exception {
-
         CashOrderDao cashOrderDao = new CashOrderDao(em);
-        SumAndCount sumAndCount = cashOrderDao.getCashOrderCountAndSum(this.getStartDate(), this.getEndDate());
+        sumAndCount = cashOrderDao.getCashOrderCountAndSumFilterByStatus(this.getStartDate(), this.getEndDate(), status);
         setListPages(sumAndCount.getCount());
-        cashOrders = cashOrderDao.getCashOrdersPage(page, getStartDate(), getEndDate());
+        cashOrders = cashOrderDao.getCashOrdersPageFilterByStatus(page, getStartDate(), getEndDate(), status);
         return Action.SUCCESS;
+    }
+
+    public SumAndCount getSumAndCount() {
+        return sumAndCount;
+    }
+
+    public void setSumAndCount(SumAndCount sumAndCount) {
+        this.sumAndCount = sumAndCount;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     public Collection<CashOrder> getCashOrders() {

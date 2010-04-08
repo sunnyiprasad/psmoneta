@@ -7,6 +7,7 @@ package com.rsc.moneta.dao;
 
 import com.rsc.moneta.bean.Account;
 import java.util.Collection;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
@@ -27,6 +28,18 @@ public class AccountDao extends Dao{
         try {
             q.setParameter("uid", userId);
             q.setParameter("type", type);
+            return  q.getResultList();
+        } catch (NoResultException e1) {
+            return null;
+        } catch (NonUniqueResultException e2) {
+            return null;
+        }
+    }
+
+    public List<Account> getAccountsFilterByAutoCheckoutMoney(int when) {
+        Query q = getEntityManager().createQuery("select u from Account u where u.autoCheckoutMoney=:when");
+        try {
+            q.setParameter("when", when);
             return  q.getResultList();
         } catch (NoResultException e1) {
             return null;
