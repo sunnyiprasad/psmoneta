@@ -140,7 +140,7 @@ public class MonetaOutputHandler implements OutputHandler {
             case MonetaOutputHandler.PAYMENT_SUCCESS:
                 return com.rsc.moneta.Const.ORDER_STATUS_PAID_AND_COMPLETED;
             case MonetaOutputHandler.UNKNOWN_STATUS:
-                return com.rsc.moneta.Const.ORDER_STATUS_PAID_BUT_NOT_COMPLETED_AND_CONTINUE_PROCESSING;
+                return com.rsc.moneta.Const.ORDER_STATUS_PAID_BUT_NOT_COMPLETED_AND_STILL_PROCESSING;
             default:
                 throw new UnknownStatusException(code);
         }
@@ -154,12 +154,10 @@ public class MonetaOutputHandler implements OutputHandler {
                 return MonetaOutputHandler.ORDER_NOT_ACTUAL;
             case com.rsc.moneta.Const.ORDER_STATUS_PAID_AND_COMPLETED:
                 return MonetaOutputHandler.PAYMENT_SUCCESS;
-            case com.rsc.moneta.Const.ORDER_STATUS_PAID_BUT_NOT_COMPLETED_AND_CONTINUE_PROCESSING:
+            case com.rsc.moneta.Const.ORDER_STATUS_PAID_BUT_NOT_COMPLETED_AND_STILL_PROCESSING:
                 return MonetaOutputHandler.UNKNOWN_STATUS;
             case com.rsc.moneta.Const.ORDER_STATUS_PAID_BUT_REJECTED_BY_EMARKETPLACE:
                 return MonetaOutputHandler.ORDER_NOT_ACTUAL;
-            case com.rsc.moneta.Const.ORDER_STATUS_PAID_FOR_TLSM:
-                return MonetaOutputHandler.UNKNOWN_STATUS;
             default:
                 throw new UnknownStatusException(code);
         }
