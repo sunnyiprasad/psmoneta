@@ -65,7 +65,7 @@ public class PaymentKey implements Serializable {
     private int currency;
 
     // Статус заказа ТЛСМ
-    @Column(name = "OrderStatus")
+    @Column(name = "orderstatus")
     private int orderStatus = Const.ORDER_STATUS_UNDEFINED;
 
     @Column(name = "_date")

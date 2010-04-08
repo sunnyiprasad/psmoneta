@@ -32,12 +32,15 @@ public class Const {
     public final static String STRING_TXN_DATE_PARAMETER_ERROR = "Отсутствует или неправильный параметр 'txn_date'";
     public final static String STRING_DB_CONNECTION_ERROR = "Отсутствует соединение с БД";
     public final static String STRING_DB_ERROR = "Ошибка БД";
-    public final static String STRING_CARD_DOES_NOT_EXIST_ERROR = "Карты с таким номером не существует";
+    public final static String STRING_ORDER_DOES_NOT_EXIST_ERROR = "Заказ с таким номером не существует";
     public final static String STRING_ENTERED_NUMBER_DOES_NOT_CONFORM_TO_CARD_FORMAT = "Введенный номер не соответствует формату карты";
     public final static String STRING_CARD_IS_NOT_ASSIGNED_TO_USER = "Карта не активирована (не принадлежит абоненту)";
     public final static String STRING_ABONENT_LOCKEDOUT = "Абонент заблокирован";
     public final static String STRING_SUM_TOO_SMALL = "Сумма слишком мала";
     public final static String STRING_SUM_TOO_BIG = "Сумма слишком велика";
     public final static String STRING_PAYMENT_COMPLETED = "Этот платеж уже завершён";
+    
+    public final static String STRING_ORDER_REJECTED_BY_EMARKETPLACE_BEFORE_TLSM_PAYMENT = "Интернет-Магазином признан инвалидным и отменён до получения оплаты";
+    public final static String STRING_ORDER_REJECTED_BY_EMARKETPLACE_AFTER_TLSM__PAYMENT = "Интернет-Магазином признан инвалидным и отменён после получения оплаты";
 }
 
