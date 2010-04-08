@@ -20,31 +20,29 @@ public class Const {
     // TODO: Сулик, статусы, проверь и добавь статусы если нужно, пжлст
     //  -1: неопределён 
     //у нас не должно быть не определенного статуса!!!
-    //public final static int ORDER_STATUS_UNDEFINED = -1;
+    // Денис: на пока всё-таки раскомментирую и попробую объяснить зачем этот статус Сулику :-)
+    public final static int ORDER_STATUS_UNDEFINED = -1;
 
     //   1: заказ от покупателя принят, сохранён в системе ТЛСМ, заказ забронирован в Интернет-Магазине,
     //      Интернет-Магазине об этом "знает", следующий шаг - оплата брони и получение документа об оплате
     //      (билета, чека и т.п.)
     public final static int ORDER_STATUS_ACCEPTED = 1;
 
-    //   2: заказ оплачен покупателем, деньги получены в терминальной ПС и ТЛСМ об этом известно
-    public final static int ORDER_STATUS_PAID_FOR_TLSM = 2;
-
-    //   3: забронированный ранее но еще не оплаченный заказ Интернет-Магазином признан
+    //   2: забронированный ранее но еще не оплаченный заказ Интернет-Магазином признан
     //      инвалидным и отменён
-    public final static int ORDER_STATUS_NOT_PAID_AND_REJECTED_BY_EMARKETPLACE = 3;
+    public final static int ORDER_STATUS_NOT_PAID_AND_REJECTED_BY_EMARKETPLACE = 2;
+
+    //   3: заказ оплачен покупателем, деньги получены в терминальной ПС и ТЛСМ об этом известно,
+    //      системой ТЛСМ передано сообщение Интернет-магазину об оплате
+    public final static int ORDER_STATUS_PAID_AND_COMPLETED = 3;
 
     //   4: заказ оплачен покупателем, деньги получены в терминальной ПС и ТЛСМ об этом известно,
-    //      системой ТЛСМ передано сообщение Интернет-магазину об оплате
-    public final static int ORDER_STATUS_PAID_AND_COMPLETED = 4;
+    //      но системой ТЛСМ не передано сообщение Интернет-магазину об оплате
+    //      при этом продолжается обработка платежа. т.е. платеж не закрыт, и должен быть
+    //      передан в ИМ.
+    public final static int ORDER_STATUS_PAID_BUT_NOT_COMPLETED_AND_STILL_PROCESSING = 4;
 
     //   5: заказ оплачен покупателем, деньги получены в терминальной ПС и ТЛСМ об этом известно,
-    //      но системой ТЛСМ не передано сообщение Интернет-магазину об оплате
-    //      при этом продолжается обработка платежа. т.е. платеж не закрыт, как только
-    //      появится связь мы передадим платеж в ИМ.
-    public final static int ORDER_STATUS_PAID_BUT_NOT_COMPLETED_AND_CONTINUE_PROCESSING = 5;
-
-    //   6: заказ оплачен покупателем, деньги получены в терминальной ПС и ТЛСМ об этом известно,
     //      но заказ Интернет-Магазином признан инвалидным и отменён
-    public final static int ORDER_STATUS_PAID_BUT_REJECTED_BY_EMARKETPLACE = 6;
+    public final static int ORDER_STATUS_PAID_BUT_REJECTED_BY_EMARKETPLACE = 5;
 }

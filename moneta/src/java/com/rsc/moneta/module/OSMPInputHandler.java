@@ -47,7 +47,7 @@ public class OSMPInputHandler implements InputHandler {
         try {
             command = inputData.get("command").toString();
             try {
-                if (command == "check") {
+                if (command.equals("check")) {
                     try {
                         txn_id = inputData.get("txn_id").toString();
                         if (!this.regexMatch("^[0-9]{1,20}$", txn_id)) {
@@ -68,21 +68,26 @@ public class OSMPInputHandler implements InputHandler {
                                             try {
                                                 // TODO: Выяснить, является ли этот сиреновский билет либо наш код заказа неотработанным
                                                 EntityManager em = EMF.getEntityManager();
+
                                                 //Поиск по первичному ключу для всеъ объектов уже реализован JPA
                                                 PaymentKey paymentKey = em.find(PaymentKey.class, paymentKeyId);
+
                                                 if (paymentKey == null) {
-                                                    // Заказ не найден. Введент несуществующий код заказа.
+                                                    // Заказ не найден. Введен несуществующий код заказа.
                                                     result = Const.OSMP_RETURN_CODE_ACCOUNT_NOT_FOUND;
                                                     comment = Const.STRING_ORDER_DOES_NOT_EXIST_ERROR;
                                                 } else {
-                                                    if (paymentKey.getOrderStatus() == com.rsc.moneta.Const.ORDER_STATUS_ACCEPTED) {
+                                                    // Денис: Сулик, вот так не пиши, это во-первых неправильно, во-вторых, если считаешь,
+                                                    // что этот статус не нужен, спроси хотя бы у меня накой я его ввёл
+                                                    // if (paymentKey.getOrderStatus() == com.rsc.moneta.Const.ORDER_STATUS_ACCEPTED) {
+                                                    if (paymentKey.getOrderStatus() == com.rsc.moneta.Const.ORDER_STATUS_UNDEFINED) {
                                                         result = Const.OSMP_RETURN_CODE_ACCOUNT_NOT_FOUND;
                                                         comment = Const.STRING_ORDER_DOES_NOT_EXIST_ERROR;
                                                     } else {
                                                         if (paymentKey.getOrderStatus() == com.rsc.moneta.Const.ORDER_STATUS_ACCEPTED) {
                                                             // TODO: "спросить" у Интернет-Магазина, валиден ли заказ и выполнить дальнейшую обработку
 
-                                                            /////////// Код Сулика для важный для меня для понимания
+                                                            /////////// Код Сулика важный для меня для понимания
 
                                                             // Заказ найден. Проверяем его статус
                                                             // Все нормально можно отправлять чек в ИМ
@@ -103,33 +108,28 @@ public class OSMPInputHandler implements InputHandler {
                                                                 // Что то не то, не должен вернуться null.
                                                                 // Если вернулся нуль, значит проблемы со связью до ИМ или ещё по каким причинам недоступен ИМ.
                                                             }
-                                                            /////////// Код Сулика для важный для меня для понимания
+                                                            /////////// Код Сулика важный для меня для понимания
 
                                                         } else {
-                                                            if (paymentKey.getOrderStatus() == com.rsc.moneta.Const.ORDER_STATUS_PAID_FOR_TLSM) {
-                                                                // TODO: Сулик, Денис - Обдумать, что в это случае делать
-                                                                throw new UnsupportedOperationException("Not supported yet.");
+                                                            if (paymentKey.getOrderStatus() == com.rsc.moneta.Const.ORDER_STATUS_NOT_PAID_AND_REJECTED_BY_EMARKETPLACE) {
+                                                                result = Const.OSMP_RETURN_CODE_PAY_SUPPRESS;
+                                                                comment = Const.STRING_ORDER_REJECTED_BY_EMARKETPLACE_BEFORE_TLSM_PAYMENT;
                                                             } else {
-                                                                if (paymentKey.getOrderStatus() == com.rsc.moneta.Const.ORDER_STATUS_NOT_PAID_AND_REJECTED_BY_EMARKETPLACE) {
-                                                                    result = Const.OSMP_RETURN_CODE_PAY_SUPPRESS;
-                                                                    comment = Const.STRING_ORDER_REJECTED_BY_EMARKETPLACE_BEFORE_TLSM_PAYMENT;
+                                                                if (paymentKey.getOrderStatus() == com.rsc.moneta.Const.ORDER_STATUS_PAID_AND_COMPLETED) {
+                                                                    prv_txn = paymentKey.getId();
+                                                                    result = Const.OSMP_RETURN_CODE_OK;
+                                                                    comment = Const.STRING_PAYMENT_COMPLETED;
                                                                 } else {
-                                                                    if (paymentKey.getOrderStatus() == com.rsc.moneta.Const.ORDER_STATUS_PAID_AND_COMPLETED) {
-                                                                        prv_txn = paymentKey.getId();
-                                                                        result = Const.OSMP_RETURN_CODE_OK;
-                                                                        comment = Const.STRING_PAYMENT_COMPLETED;
+                                                                    if (paymentKey.getOrderStatus() == com.rsc.moneta.Const.ORDER_STATUS_PAID_BUT_NOT_COMPLETED_AND_STILL_PROCESSING) {
+                                                                        // TODO: Сулик, Денис - Обдумать, что в это случае делать
+                                                                        throw new UnsupportedOperationException("Not supported yet.");
                                                                     } else {
-                                                                        if (paymentKey.getOrderStatus() == com.rsc.moneta.Const.ORDER_STATUS_PAID_BUT_NOT_COMPLETED_AND_CONTINUE_PROCESSING) {
-                                                                            // TODO: Сулик, Денис - Обдумать, что в это случае делать
-                                                                            throw new UnsupportedOperationException("Not supported yet.");
+                                                                        if (paymentKey.getOrderStatus() == com.rsc.moneta.Const.ORDER_STATUS_PAID_BUT_REJECTED_BY_EMARKETPLACE) {
+                                                                            result = Const.OSMP_RETURN_CODE_PAY_SUPPRESS;
+                                                                            comment = Const.STRING_ORDER_REJECTED_BY_EMARKETPLACE_AFTER_TLSM__PAYMENT;
                                                                         } else {
-                                                                            if (paymentKey.getOrderStatus() == com.rsc.moneta.Const.ORDER_STATUS_PAID_BUT_REJECTED_BY_EMARKETPLACE) {
-                                                                                result = Const.OSMP_RETURN_CODE_PAY_SUPPRESS;
-                                                                                comment = Const.STRING_ORDER_REJECTED_BY_EMARKETPLACE_AFTER_TLSM__PAYMENT;
-                                                                            } else {
-                                                                                result = Const.OSMP_RETURN_CODE_OTHER_ERROR;
-                                                                                comment = Const.STRING_DB_ERROR;
-                                                                            }
+                                                                            result = Const.OSMP_RETURN_CODE_OTHER_ERROR;
+                                                                            comment = Const.STRING_DB_ERROR;
                                                                         }
                                                                     }
                                                                 }
