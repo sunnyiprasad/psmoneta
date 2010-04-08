@@ -19,7 +19,7 @@ import org.junit.Test;
 public class TestOsmpHandler {
 
     @Test
-    public void testOsmpCheck(){
+    public void testOsmpCheck1(){
         OSMPInputHandler handler = new OSMPInputHandler();
         Map map = new Properties();
 //     command=check&txn_id=1234567&account=4957835959&sum=10.45
@@ -28,20 +28,7 @@ public class TestOsmpHandler {
         map.put("account", "0000000000000002222");
         map.put("sum", "10.45");
         String xml = handler.check(map);
-        //Assert.assertEquals();
+        Assert.assertEquals("<?xml version='1.0' encoding='UTF-8'?><response><osmp_txn_id>1234567</osmp_txn_id><prv_txn>0000000000000002222</prv_txn><result>0</result><comment>Этот платеж уже завершён</comment></response>",
+                xml);
     }
-
-//    @Test
-//    public void testOsmpCheck1() {
-//        OSMPInputHandler handler = new OSMPInputHandler();
-//        Map map = new Properties();
-////     command=check&txn_id=1234567&account=4957835959&sum=10.45
-//        map.put("command", "checkk");
-//        map.put("txn_id", "1234567");
-//        map.put("account", "4957835959");
-//        map.put("sum", "10.45");
-//        String xml = handler.check(map);
-//        // Assert.assertEquals("test1", xml);
-//    }
-
 }
