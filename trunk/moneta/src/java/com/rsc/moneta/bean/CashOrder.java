@@ -21,6 +21,9 @@ import javax.persistence.Temporal;
  */
 @Entity
 public class CashOrder implements Serializable {
+    public static int OPEN = 0;
+    public static int PROCESSED = 1;
+    public static int CANCEL = 2;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

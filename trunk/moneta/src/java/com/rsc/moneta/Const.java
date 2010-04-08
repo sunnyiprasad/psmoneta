@@ -11,6 +11,7 @@ package com.rsc.moneta;
  */
 public class Const {
 
+    // Типы счетов
     public static final int EURO = 1;
     public static final int USD = 2;
     public static final int RUB = 0;

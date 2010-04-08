@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='utf-8'?>
+<quartz xmlns="http://www.quartz-scheduler.org/JobSchedulingData"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.quartz-scheduler.org/JobSchedulingData
+  http://www.quartz-scheduler.org/xml/job_scheduling_data_1_5.xsd"
+  version="1.5">
+
+    <job>
+        <job-detail>
+            <name>CashOrderEveryDay</name>
+            <group>MYJOB_GROUP</group>
+            <description>Эта задача выполняется ежедневно и создается автоматически счета на обналичивание</description>
+            <job-class>com.rsc.moneta.scheduller.CashOrderProccess</job-class>
+            <job-data-map allows-transient-data="false">
+                <entry>
+                    <key>when</key>
+                    <value>0</value>
+                </entry>                
+            </job-data-map>
+        </job-detail>
+        <job-detail>
+            <name>CashOrderEveryWeek</name>
+            <group>MYJOB_GROUP</group>
+            <description>Эта задача выполняется еженедельно и создает автоматически счета на обналичивание</description>
+            <job-class>com.rsc.moneta.scheduller.CashOrderProccess</job-class>
+            <job-data-map allows-transient-data="false">
+                <entry>
+                    <key>when</key>
+                    <value>1</value>
+                </entry>
+            </job-data-map>
+        </job-detail>
+        <job-detail>
+            <name>CashOrderEveryMonth</name>
+            <group>MYJOB_GROUP</group>
+            <description>Эта задача выполняется ежемесячно и создает автоматически счета на обналичивание</description>
+            <job-class>com.rsc.moneta.scheduller.CashOrderProccess</job-class>
+            <job-data-map allows-transient-data="false">
+                <entry>
+                    <key>when</key>
+                    <value>2</value>
+                </entry>
+            </job-data-map>
+        </job-detail>
+
+        <trigger>
+            <cron>
+                <name>EVD-trigger</name>
+                <group>EVD-group</group>
+                <job-name></job-name>
+                <job-group>MYJOB_GROUP</job-group>               
+                <cron-expression>0 30 4 * * ?</cron-expression>
+            </cron>
+            <cron>
+                <name>my-trigger</name>
+                <group>MYTRIGGER_GROUP</group>
+                <job-name>my-very-clever-job</job-name>
+                <job-group>MYJOB_GROUP</job-group>
+                <cron-expression>0 30 4 * * ?</cron-expression>
+            </cron>
+            <cron>
+                <name>my-trigger</name>
+                <group>MYTRIGGER_GROUP</group>
+                <job-name>my-very-clever-job</job-name>
+                <job-group>MYJOB_GROUP</job-group>
+                <cron-expression>0 30 4 * * ?</cron-expression>
+            </cron>
+        </trigger>
+    </job>
+</quartz>
