@@ -12,7 +12,7 @@ import com.rsc.moneta.dao.EMF;
 import com.rsc.moneta.bean.PaymentKey;
 
 /**
- * Класс представляет класс - обработчик запросов, поступающих от терминала ОСМП
+ * Класс представляет собой класс - обработчик запросов, поступающих от терминала ОСМП
  * @author Солодовников Д.А.
  */
 public class OSMPInputHandler implements InputHandler {
@@ -58,7 +58,7 @@ public class OSMPInputHandler implements InputHandler {
                                 account = inputData.get("account").toString();
                                 if (!this.regexMatch("^[0-9]{19}$", account)) {
                                     result = Const.OSMP_RETURN_CODE_ACCOUNT_ILLEGAL_FORMAT;
-                                    comment = Const.STRING_ENTERED_NUMBER_DOES_NOT_CONFORM_TO_CARD_FORMAT;
+                                    comment = Const.STRING_ENTERED_NUMBER_DOES_NOT_CONFORM_TO_ORDER_FORMAT;
                                 } else {
                                     try {
                                         paymentKeyId = Long.parseLong(account);
@@ -66,7 +66,7 @@ public class OSMPInputHandler implements InputHandler {
                                             // TODO: Сулик - уточнить вообще надо ли проверять наличие ненужного нам параметра sum ?
                                             // sum = ...
                                             try {
-                                                // TODO: Выяснить, является ли этот сиреновский билет либо наш код заказа неотработанным
+                                                // TODO: !!! Денис - написать много-много try-catch
                                                 EntityManager em = EMF.getEntityManager();
 
                                                 //Поиск по первичному ключу для всеъ объектов уже реализован JPA
@@ -85,31 +85,46 @@ public class OSMPInputHandler implements InputHandler {
                                                         comment = Const.STRING_ORDER_DOES_NOT_EXIST_ERROR;
                                                     } else {
                                                         if (paymentKey.getOrderStatus() == com.rsc.moneta.Const.ORDER_STATUS_ACCEPTED) {
-                                                            // TODO: "спросить" у Интернет-Магазина, валиден ли заказ и выполнить дальнейшую обработку
 
-                                                            /////////// Код Сулика важный для меня для понимания
-
-                                                            // Заказ найден. Проверяем его статус
-                                                            // Все нормально можно отправлять чек в ИМ
-                                                            // Создаем класс для работы с ИМ
-                                                            MonetaOutputHandler handler = new MonetaOutputHandler();
+                                                            // Заказ в ПС ТЛСМ найден. Проверка его статуса в ИМ - отправка запроса "чек"
+                                                            MonetaOutputHandler handler = new MonetaOutputHandler(); // TODO: !! Денис - заменить на класс из класса Config
                                                             CheckResponse checkResponse = handler.check(paymentKey);
                                                             if (checkResponse != null) {
-                                                                //TODO: Тут надо не просто код в лонге присвоить, в строке с нулями.
-                                                                // Метод преобразующий лонг в строку с нулями, засунуть в Utils что бы можно было переиспользовать.
-                                                                // Вот здесь будет код ошибки или успеха нашей системы!
-                                                                // Его надо конвертировать в систему кодирования ошибок ОСМП и отправить им ответ.
-                                                                long resultCode = checkResponse.getResultCode();
-
-                                                                prv_txn = paymentKey.getId();
-                                                                result = Const.OSMP_RETURN_CODE_OK;
-                                                                comment = Const.STRING_PAYMENT_COMPLETED;
+                                                                // TODO: int
+                                                                long emarketplaceResultCode = checkResponse.getResultCode(); 
+                                                                // TODO: int и так должно быть
+                                                                CheckResponseReturnCodes checkResponseReturnCode =
+                                                                        handler.convertEmarketplaceReturnCodeToTLSMReturnCode((int)emarketplaceResultCode);
+                                                                if (checkResponseReturnCode == CheckResponseReturnCodes.ORDER_IS_VALID_AND_RESPONSE_CONTAINS_AMOUNT) {
+                                                                    // TODO: тут должна быть проверка суммы заказа - для каждого ИМ-а надо проверять на вхождение в рамки мин. и макс. суммы заказа
+                                                                    sum = checkResponse.getAmount();
+                                                                    result = Const.OSMP_RETURN_CODE_OK;
+                                                                    comment = "";
+                                                                } else {
+                                                                    if (checkResponseReturnCode == CheckResponseReturnCodes.ORDER_IS_INVALID) {
+                                                                        result = Const.OSMP_RETURN_CODE_ACCOUNT_DISABLED;
+                                                                        comment = Const.STRING_ORDER_IS_INVALID_FOR_EMARKETPLACE;
+                                                                    } else {
+                                                                        if (checkResponseReturnCode == CheckResponseReturnCodes.ORDER_IS_VALID_AND_PROCESSING) {
+                                                                            result = Const.OSMP_RETURN_CODE_TEMPORARY_ERROR;
+                                                                            comment = Const.STRING_ORDER_IS_PROCESSING_IN_EMARKETPLACE;
+                                                                        } else {
+                                                                            if (checkResponseReturnCode == CheckResponseReturnCodes.ORDER_IS_COMPLETED_AND_TLSM_NOTIFIED) {
+                                                                                // TODO:!!! Денис - подумать вместе с Суликом - почему для ИМ-на заказ завершён а для ТЛСМ - нет и что с этим делать
+//                                                                                result = ;
+//                                                                                comment = ;
+                                                                            }
+                                                                            else {
+                                                                                // TODO: !!!
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
                                                             } else {
-                                                                // Что то не то, не должен вернуться null.
-                                                                // Если вернулся нуль, значит проблемы со связью до ИМ или ещё по каким причинам недоступен ИМ.
+                                                                // Не удалось получить ответ от ИМ на запрос
+                                                                result = Const.OSMP_RETURN_CODE_TEMPORARY_ERROR;
+                                                                comment = Const.STRING_UNABLE_TO_REQUEST_EMARKETPLACE_FOR_ORDER_STATUS;
                                                             }
-                                                            /////////// Код Сулика важный для меня для понимания
-
                                                         } else {
                                                             if (paymentKey.getOrderStatus() == com.rsc.moneta.Const.ORDER_STATUS_NOT_PAID_AND_REJECTED_BY_EMARKETPLACE) {
                                                                 result = Const.OSMP_RETURN_CODE_PAY_SUPPRESS;
@@ -118,7 +133,7 @@ public class OSMPInputHandler implements InputHandler {
                                                                 if (paymentKey.getOrderStatus() == com.rsc.moneta.Const.ORDER_STATUS_PAID_AND_COMPLETED) {
                                                                     prv_txn = paymentKey.getId();
                                                                     result = Const.OSMP_RETURN_CODE_OK;
-                                                                    comment = Const.STRING_PAYMENT_COMPLETED;
+                                                                    comment = Const.STRING_ORDER_PAID_AND_COMPLETED;
                                                                 } else {
                                                                     if (paymentKey.getOrderStatus() == com.rsc.moneta.Const.ORDER_STATUS_PAID_BUT_NOT_COMPLETED_AND_STILL_PROCESSING) {
                                                                         // TODO: Сулик, Денис - Обдумать, что в это случае делать
@@ -126,7 +141,7 @@ public class OSMPInputHandler implements InputHandler {
                                                                     } else {
                                                                         if (paymentKey.getOrderStatus() == com.rsc.moneta.Const.ORDER_STATUS_PAID_BUT_REJECTED_BY_EMARKETPLACE) {
                                                                             result = Const.OSMP_RETURN_CODE_PAY_SUPPRESS;
-                                                                            comment = Const.STRING_ORDER_REJECTED_BY_EMARKETPLACE_AFTER_TLSM__PAYMENT;
+                                                                            comment = Const.STRING_ORDER_REJECTED_BY_EMARKETPLACE_AFTER_TLSM_PAYMENT;
                                                                         } else {
                                                                             result = Const.OSMP_RETURN_CODE_OTHER_ERROR;
                                                                             comment = Const.STRING_DB_ERROR;
@@ -148,7 +163,7 @@ public class OSMPInputHandler implements InputHandler {
 
                                     } catch (Exception ex) {
                                         result = Const.OSMP_RETURN_CODE_ACCOUNT_ILLEGAL_FORMAT;
-                                        comment = Const.STRING_ENTERED_NUMBER_DOES_NOT_CONFORM_TO_CARD_FORMAT;
+                                        comment = Const.STRING_ENTERED_NUMBER_DOES_NOT_CONFORM_TO_ORDER_FORMAT;
                                     }
                                 }
                             } catch (Exception ex) {
