@@ -1,14 +1,11 @@
 
 import com.rsc.moneta.module.CheckResponse;
 import com.rsc.moneta.module.MonetaOutputHandler;
-import com.rsc.moneta.module.MonetaReponse;
 import java.io.IOException;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParserFactory;
 import junit.framework.Assert;
 import org.junit.Test;
 import org.w3c.dom.Document;

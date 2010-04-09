@@ -25,8 +25,16 @@ public class Login extends BaseAction {
             return Action.LOGIN;
         }
         setUser(new UserDao(em).getUserByPhoneAndPassword(phonenumber, password));
+        if (user == null)
+            return "login";
         session.put("user", user);
-        return (user != null) ? Action.SUCCESS : Action.LOGIN;
+        switch (user.getRole()){
+            case User.USER: return "private";
+            case User.IMOWNER: return "private";
+            case User.BUHGALTER: return "admin";
+            case User.ADMINISTRATOR: return "admin";
+            default: return "login";
+        }        
     }
 
     public String getPassword() {

@@ -33,10 +33,17 @@ public class InitTestData {
 
     @Test
     public void initTestData() throws MalformedURLException, IOException {
+        EntityManager em = EMF.getEntityManager();
+        User u = new User();
+        u.setPhone("admin");
+        u.setPassword("12345");
+        u.setRole(User.ADMINISTRATOR);
+        if (new UserDao(em).getUserByPhone("admin") == null) {
+            new Dao(em).persist(u);
+        }
         User user = new User();
         user.setPhone("test");
-        user.setPassword("12345");
-        EntityManager em = EMF.getEntityManager();
+        user.setPassword("12345");        
         if (new UserDao(em).getUserByPhone("test") == null) {
             new Dao(em).persist(user);
         }
@@ -73,6 +80,7 @@ public class InitTestData {
         market.setSignable(true);
         market.setSuccessUrl("http://localhost:8084/testIM/success.jsp");
         market.setPassword("12345");
+        market.setOutputHandlerType(0);
         //market.setAccounts(market.getUser().getAccounts());
         if (new MarketDao(em).getMarketByName("test") == null) {
             new Dao(em).persist(market);

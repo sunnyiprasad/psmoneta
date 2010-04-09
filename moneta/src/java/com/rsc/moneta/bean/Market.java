@@ -49,6 +49,11 @@ public class Market implements Serializable {
     @Column(nullable=false) // Данное поле показывает требовать ли обязательно подпись при каждом запросе от магазина.
     private boolean signable;
 
+    // Тип протокола по которому мы взаимодействуем с Магазином.
+    @Column(nullable=false)
+    private int outputHandlerType = 0;
+
+
 
     @ManyToOne
     private User user;
@@ -58,6 +63,14 @@ public class Market implements Serializable {
 
     @ManyToMany
     private List<Account> accounts;
+
+    public int getOutputHandlerType() {
+        return outputHandlerType;
+    }
+
+    public void setOutputHandlerType(int outputHandlerType) {
+        this.outputHandlerType = outputHandlerType;
+    }
 
     public List<Account> getAccounts() {
         return accounts;

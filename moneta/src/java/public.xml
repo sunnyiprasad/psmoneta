@@ -18,7 +18,8 @@
         <default-interceptor-ref name="main" />
 
         <action name="Login" class="com.rsc.moneta.action.site.Login">
-            <result name="success" type="redirectAction">/private/main</result>
+            <result name="private" type="redirectAction">../private/</result>
+            <result name="admin" type="redirectAction">../admin/</result>
             <result name="login">/pages/public/login.jsp</result>
         </action>
 

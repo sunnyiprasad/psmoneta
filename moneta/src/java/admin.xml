@@ -8,6 +8,38 @@
     <!-- Add your configuration elements here -->
     <package name="admin" namespace="/admin" extends="struts-default">
 
+        <interceptors>
+            <interceptor name="initem" class="com.rsc.moneta.interceptor.InitEntityManager"/>
+            <interceptor-stack name="main">
+                <interceptor-ref name="defaultStack"/>
+                <interceptor-ref name="initem"/>
+            </interceptor-stack>
+        </interceptors>
+        <default-interceptor-ref name="main" />
 
+        <default-action-ref name="ViewCashOrderList" />
+
+        <action name="ChangeCashOrderStatusForm">
+            <result>/pages/admin/changeOrderStatusForm.jsp</result>
+        </action>
+
+        <action name="ChangeCashOrderStatus" class="com.rsc.moneta.action.admin.ChangeCashOrderStatus">
+            <result name="success" type="redirectAction">ViewCashOrderList</result>
+            <result name="error" type="redirectAction">ViewCashOrderList</result>
+            <result name="next" type="redirectAction">ViewNextUnprocessedCashOrder</result>
+        </action>
+
+        <action name="ViewCashOrderList" class="com.rsc.moneta.action.admin.ViewCashOrderList">
+            <result>/pages/admin/viewCashOrderList.jsp</result>
+        </action>
+
+        <action name="ViewCashOrder" class="com.rsc.moneta.action.admin.ViewCashOrder">
+            <result>/pages/admin/viewCashOrder.jsp</result>
+        </action>
+
+        <action name="ViewNextUnprocessedCashOrder" class="com.rsc.moneta.action.admin.ViewCashOrder" method="nextUnprocessedCashOrder">
+            <result name="success">/pages/admin/viewCashOrder.jsp</result>
+            <result name="error" type="redirectAction">ViewCashOrderList</result>
+        </action>
     </package>
 </struts>
