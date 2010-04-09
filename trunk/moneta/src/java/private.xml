@@ -39,6 +39,13 @@
             <result name="success">/pages/private/viewCashOrder.jsp</result>
             <result name="error" type="redirectAction">ViewCashOrderList</result>
         </action>
+        <action name="userPrivateOffice" class="com.rsc.moneta.action.userPrivateOffice">
+            <result>/pages/private/userPrivateOffice.jsp</result>
+        </action>
+
+        <action name="viewUserAccountsList" class="com.rsc.moneta.action.viewUserAccountsList">
+            <result>/pages/private/viewUserAccountsList.jsp</result>
+        </action>
 
     </package>
 </struts>
