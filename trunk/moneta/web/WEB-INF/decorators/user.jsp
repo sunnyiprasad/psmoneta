@@ -4,7 +4,9 @@
     Author     : sulic
 --%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=windows-1251" language="java" %>
+<%@ taglib prefix="decorator" uri="http://www.opensymphony.com/sitemesh/decorator" %>
+<%@ taglib prefix="s" uri="/struts-tags" %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -15,5 +17,6 @@
     </head>
     <body>
         <h1>Hello World!</h1>
+        <decorator:body/>
     </body>
 </html>

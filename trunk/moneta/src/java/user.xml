@@ -8,13 +8,24 @@
     <!-- Add your configuration elements here -->
     <package name="user" namespace="/user" extends="struts-default">
 
-        <default-action-ref name="main" />
+        <interceptors>
+            <interceptor name="initem" class="com.rsc.moneta.interceptor.InitEntityManager"/>
+            <interceptor name="auth" class="com.rsc.moneta.interceptor.AASInterceptor"/>
+            <interceptor-stack name="main">
+                <interceptor-ref name="defaultStack"/>
+                <interceptor-ref name="initem"/>
+                <interceptor-ref name="auth"/>
+             </interceptor-stack>
+        </interceptors>
 
-        <action name="main">
-            <result>/pages/user/main.jsp</result>
-        </action>       
+        <default-interceptor-ref name="main" />
 
-        <action name="viewUserAccountsList" class="com.rsc.moneta.action.ViewUserAccountsList">
+        <default-action-ref name="ViewUserAccountsList" />
+        <global-results>
+            <result name="login" type="redirectAction">../public/LoginForm</result>
+        </global-results>        
+
+        <action name="ViewUserAccountsList" class="com.rsc.moneta.action.ViewUserAccountsList">
             <result>/pages/user/viewUserAccountsList.jsp</result>
         </action>
 
