@@ -24,8 +24,6 @@
 
         <action name="Logout" class="com.rsc.moneta.action.site.Logout">            
             <result>/</result>
-        </action>
-
-       
+        </action>       
     </package>
 </struts>
