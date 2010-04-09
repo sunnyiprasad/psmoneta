@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.rsc.moneta.action;
 
 import com.opensymphony.xwork2.Action;
@@ -23,14 +22,12 @@ public class ViewUserAccountsList extends BaseListAction {
 
     @Override
     public String execute() throws Exception {
-//        AccountDao accountDao = new AccountDao(em);
         User user = (User) session.get("user");
         accounts = user.getAccounts();
         /*
          * TODO: Должна быть проверка пользователя
          * userId = Session.user.id;
          */
-//        accounts = accountDao.getAccountsByUserId(1);
         return Action.SUCCESS;
     }
 
@@ -41,6 +38,4 @@ public class ViewUserAccountsList extends BaseListAction {
     public void setAccounts(Collection<Account> accounts) {
         this.accounts = accounts;
     }
-
-    
 }

@@ -29,8 +29,8 @@ public class Login extends BaseAction {
             return "login";
         session.put("user", user);
         switch (user.getRole()){
-            case User.USER: return "private";
-            case User.IMOWNER: return "private";
+            case User.USER: return "user";
+            case User.IMOWNER: return "user";
             case User.BUHGALTER: return "admin";
             case User.ADMINISTRATOR: return "admin";
             default: return "login";

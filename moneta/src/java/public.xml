@@ -17,8 +17,13 @@
         </interceptors>
         <default-interceptor-ref name="main" />
 
+
+         <action name="LoginForm">
+            <result>/pages/public/login.jsp</result>
+        </action>
+
         <action name="Login" class="com.rsc.moneta.action.site.Login">
-            <result name="private" type="redirectAction">../private/</result>
+            <result name="user" type="redirectAction">../user/</result>
             <result name="admin" type="redirectAction">../admin/</result>
             <result name="login">/pages/public/login.jsp</result>
         </action>
