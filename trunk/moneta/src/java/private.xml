@@ -14,9 +14,12 @@
             <result>/pages/admin/main.jsp</result>
         </action>       
 
-        <action name="viewUserAccountsList" class="com.rsc.moneta.action.viewUserAccountsList">
+        <action name="viewUserAccountsList" class="com.rsc.moneta.action.ViewUserAccountsList">
             <result>/pages/private/viewUserAccountsList.jsp</result>
         </action>
 
+        <action name="userPrivateOffice" class="com.rsc.moneta.action.UserPrivateOffice">
+            <result>/pages/private/userPrivateOffice.jsp</result>
+        </action>
     </package>
 </struts>
