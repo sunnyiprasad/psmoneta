@@ -36,11 +36,27 @@ public class AccountDao extends Dao{
         }
     }
 
+
     public List<Account> getAccountsFilterByAutoCheckoutMoney(int when) {
         Query q = getEntityManager().createQuery("select u from Account u where u.autoCheckoutMoney=:when");
         try {
             q.setParameter("when", when);
             return  q.getResultList();
+        } catch (NoResultException e1) {
+            return null;
+        } catch (NonUniqueResultException e2) {
+            return null;
+        }
+    }
+    /*
+     * Rashid
+     * Получаем списко счетов по user.id
+     */
+    public Collection<Account> getAccountsByUserId(long userId) {
+        Query q = getEntityManager().createQuery("select u from Account u where u.user.id = :uid");
+        try{
+            q.setParameter("uid", userId);
+            return q.getResultList();
         } catch (NoResultException e1) {
             return null;
         } catch (NonUniqueResultException e2) {
