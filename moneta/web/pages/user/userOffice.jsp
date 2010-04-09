@@ -15,7 +15,7 @@
     <body>
         <dl>
             <dt>Личный кабинет пользователя</dt>
-            <dd><s:a action="viewUserAccountsList" >Счета</s:a></dd>
+            <dd><s:a action="ViewUserAccountsList" >Счета</s:a></dd>
         </dl>
     </body>
 </html>
