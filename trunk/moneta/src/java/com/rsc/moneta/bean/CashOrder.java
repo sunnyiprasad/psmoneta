@@ -29,16 +29,18 @@ public class CashOrder implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-
     @ManyToOne
     private User user;
 
     @ManyToOne
     private Account account;
+
     @Column(nullable=false)
     private double amount;
+
     @Column(nullable=false)
     private int status;
+
     @Column(name="_date")
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date date;
