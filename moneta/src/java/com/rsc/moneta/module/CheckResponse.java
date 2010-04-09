@@ -61,6 +61,7 @@ public class CheckResponse {
         this.operationId = operationId;
     }
 
+    // TODO: почему не int - статусов будет 2 в 64-ой степени ?)
     public Long getResultCode() {
         return resultCode;
     }

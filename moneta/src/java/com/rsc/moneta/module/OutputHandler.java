@@ -17,4 +17,5 @@ public interface OutputHandler {
     CheckResponse pay(PaymentKey key);
     int convertForeignCodeToBase(int code)throws UnknownStatusException;
     int convertBaseCodeToForeign(int code)throws UnknownStatusException;
+    CheckResponseReturnCodes convertEmarketplaceReturnCodeToTLSMReturnCode(int emarketplaceReturnCode) throws UnknownStatusException;
 }
