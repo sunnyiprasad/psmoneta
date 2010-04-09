@@ -23,13 +23,14 @@ public class ViewUserAccountsList extends BaseListAction {
 
     @Override
     public String execute() throws Exception {
-        AccountDao accountDao = new AccountDao(em);
-
+//        AccountDao accountDao = new AccountDao(em);
+        User user = (User) session.get("user");
+        accounts = user.getAccounts();
         /*
          * TODO: Должна быть проверка пользователя
          * userId = Session.user.id;
          */
-        accounts = accountDao.getAccountsByUserId(1);
+//        accounts = accountDao.getAccountsByUserId(1);
         return Action.SUCCESS;
     }
 
