@@ -6,7 +6,7 @@
  
 <struts>
     <include file="admin.xml" />
-    <include file="private.xml"/>
+    <include file="user.xml"/>
     <include file="public.xml" />
     <!-- Add your configuration elements here -->
     <package name="main" namespace="/" extends="struts-default">
