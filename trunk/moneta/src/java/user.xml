@@ -6,20 +6,20 @@
 
 <struts>
     <!-- Add your configuration elements here -->
-    <package name="private" namespace="/private" extends="struts-default">
+    <package name="user" namespace="/user" extends="struts-default">
 
         <default-action-ref name="main" />
 
         <action name="main">
-            <result>/pages/admin/main.jsp</result>
+            <result>/pages/user/main.jsp</result>
         </action>       
 
         <action name="viewUserAccountsList" class="com.rsc.moneta.action.ViewUserAccountsList">
-            <result>/pages/private/viewUserAccountsList.jsp</result>
+            <result>/pages/user/viewUserAccountsList.jsp</result>
         </action>
 
-        <action name="userPrivateOffice" class="com.rsc.moneta.action.UserPrivateOffice">
-            <result>/pages/private/userPrivateOffice.jsp</result>
+        <action name="userOffice" class="com.rsc.moneta.action.UserOffice">
+            <result>/pages/user/userOffice.jsp</result>
         </action>
     </package>
 </struts>
