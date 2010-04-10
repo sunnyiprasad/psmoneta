@@ -1,3 +1,4 @@
+package com.rsc.moneta.test;
 
 import com.rsc.moneta.Const;
 import com.rsc.moneta.bean.Account;
@@ -32,7 +33,7 @@ import org.junit.Test;
 public class InitTestData {
 
     @Test
-    public void initTestData() throws MalformedURLException, IOException {
+    public void testCreateUser() throws MalformedURLException, IOException {
         EntityManager em = EMF.getEntityManager();
         User u = new User();
         u.setPhone("admin");
@@ -43,7 +44,7 @@ public class InitTestData {
         }
         User user = new User();
         user.setPhone("test");
-        user.setPassword("12345");        
+        user.setPassword("12345");
         if (new UserDao(em).getUserByPhone("test") == null) {
             new Dao(em).persist(user);
         }
@@ -51,7 +52,7 @@ public class InitTestData {
     }
 
     @Test
-    public void test() throws MalformedURLException, IOException {
+    public void testCreateAccount() throws MalformedURLException, IOException {
         EntityManager em = EMF.getEntityManager();
         Account account = new Account();
         account.setType(Const.RUB);
@@ -69,25 +70,43 @@ public class InitTestData {
 
     @Test
     public void testCreateMarket() throws Exception {
+        TestConf.initConfig();
         EntityManager em = EMF.getEntityManager();
-        Market market = new Market();
-        market.setName("test");
-        Assert.assertNotNull(new UserDao(em).getUserByPhone("test"));
-        market.setUser(new UserDao(em).getUserByPhone("test"));
-        market.setCheckUrl("http://localhost:8084/testIM/Check");
-        market.setFailUrl("http://localhost:8084/testIM/fail.jsp");
-        market.setPayUrl("http://localhost:8084/testIM/Pay");
-        market.setSignable(true);
-        market.setSuccessUrl("http://localhost:8084/testIM/success.jsp");
-        market.setPassword("12345");
-        market.setOutputHandlerType(0);
-        //market.setAccounts(market.getUser().getAccounts());
         if (new MarketDao(em).getMarketByName("test") == null) {
+            Market market = new Market();
+            market.setName("test");
+            Assert.assertNotNull(new UserDao(em).getUserByPhone("test"));
+            market.setUser(new UserDao(em).getUserByPhone("test"));
+            market.setCheckUrl("http://localhost:8084/testIM/Check");
+            market.setFailUrl("http://localhost:8084/testIM/fail.jsp");
+            market.setPayUrl("http://localhost:8084/testIM/Pay");
+            market.setSignable(true);
+            market.setSuccessUrl("http://localhost:8084/testIM/success.jsp");
+            market.setPassword("12345");
+            market.setOutputHandlerType(0);
             new Dao(em).persist(market);
             Vector vec = new Vector();
             vec.addAll(market.getUser().getAccounts());
             market.setAccounts(vec);
             new Dao(em).persist(market);
+        }
+        if (new MarketDao(em).getMarketByName("tais") == null) {
+            Market market = new Market();
+            market.setName("tais");
+            market.setCheckUrl("http://195.68.159.98:50049/bitrix/components/travelshop/ibe.backoffice/callback_moneta.php");
+            market.setPayUrl("http://195.68.159.98:50049/bitrix/components/travelshop/ibe.backoffice/callback_moneta.php");
+            market.setOutputHandlerType(0);
+            market.setSignable(true);
+            market.setPassword("TravelShop23481");
+            market.setSuccessUrl("http://www.success.ru/");
+            market.setFailUrl("http://www.fail.ru/");
+            Assert.assertNotNull(new UserDao(em).getUserByPhone("test"));
+            market.setUser(new UserDao(em).getUserByPhone("test"));            
+            new Dao(em).persist(market);
+            Vector vec = new Vector();
+            vec.addAll(market.getUser().getAccounts());
+            market.setAccounts(vec);
+            new Dao(em).persist(market);            
         }
         em.close();
     }

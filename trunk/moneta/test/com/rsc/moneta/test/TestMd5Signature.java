@@ -1,3 +1,5 @@
+package com.rsc.moneta.test;
+
 
 import com.rsc.moneta.util.Utils;
 import java.security.NoSuchAlgorithmException;

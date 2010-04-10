@@ -15,7 +15,6 @@ import com.rsc.moneta.bean.PaymentKey;
 public interface OutputHandler {
     CheckResponse check(PaymentKey key);
     CheckResponse pay(PaymentKey key);
-    int convertForeignCodeToBase(int code)throws UnknownStatusException;
-    int convertBaseCodeToForeign(int code)throws UnknownStatusException;
+    int convertForeignCodeToBase(int code)throws UnknownStatusException;    
     CheckResponseReturnCodes convertEmarketplaceReturnCodeToTLSMReturnCode(int emarketplaceReturnCode) throws UnknownStatusException;
 }

@@ -1,3 +1,5 @@
+package com.rsc.moneta.test.module;
+
 
 import com.rsc.moneta.module.CheckResponse;
 import com.rsc.moneta.module.MonetaOutputHandler;

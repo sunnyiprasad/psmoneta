@@ -6,9 +6,11 @@ package com.rsc.moneta.action.moneta;
 
 import com.rsc.moneta.bean.Market;
 import com.opensymphony.xwork2.Action;
+import com.rsc.moneta.Const;
 import com.rsc.moneta.action.BaseAction;
 import com.rsc.moneta.dao.Dao;
 import com.rsc.moneta.bean.PaymentKey;
+import com.rsc.moneta.dao.MarketDao;
 import com.rsc.moneta.util.Utils;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
@@ -75,6 +77,11 @@ public class Assistant extends BaseAction {
         market = em.find(Market.class, MNT_ID);
         if (market == null) {
             addActionError(getText("market_not_found"));
+            return Action.ERROR;
+        }
+
+        if (!new MarketDao(em).isMarketHaveAccount(Utils.currencyStringToAccountType(MNT_CURRENCY_CODE), market)){
+            addActionError(getText("market_not_have_account"));
             return Action.ERROR;
         }
         if (MNT_SIGNATURE != null && market.isSignable()) {
