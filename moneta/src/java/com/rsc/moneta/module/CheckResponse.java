@@ -12,11 +12,22 @@ package com.rsc.moneta.module;
 public class CheckResponse {
     private Long marketId;
     private String transactionId;
-    private Long resultCode;
+    private int resultCode;
     private Double amount;
     private Long operationId;
     private String name;
     private String signature;
+    private String comment;
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+
 
     public String getSignature() {
         return signature;
@@ -61,12 +72,11 @@ public class CheckResponse {
         this.operationId = operationId;
     }
 
-    // TODO: почему не int - статусов будет 2 в 64-ой степени ?)
-    public Long getResultCode() {
+    public int getResultCode() {
         return resultCode;
     }
 
-    public void setResultCode(Long resultCode) {
+    public void setResultCode(int resultCode) {
         this.resultCode = resultCode;
     }
 

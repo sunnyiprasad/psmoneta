@@ -5,6 +5,7 @@
 
 package com.rsc.moneta.dao;
 
+import com.rsc.moneta.bean.Account;
 import com.rsc.moneta.bean.Market;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -31,6 +32,15 @@ public class MarketDao extends Dao{
         } catch (NonUniqueResultException e2) {
             return null;
         }
+    }
+
+    public boolean isMarketHaveAccount(int type, Market market) {
+        for (Account account : market.getAccounts()) {
+            if (account.getType() == type){
+                return true;
+            }
+        }
+        return false;
     }
 
 }

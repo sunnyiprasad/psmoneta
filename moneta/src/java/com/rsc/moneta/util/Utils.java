@@ -53,6 +53,16 @@ public class Utils {
         }
     }
 
+    public static Integer getIntValue(String tagName, Document doc) {
+        NodeList list = doc.getElementsByTagName(tagName);
+        try {
+            Node node = list.item(0);
+            return Integer.parseInt(node.getTextContent());
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
     public static Double getDoubleValue(String tagName, Document doc) {
         NodeList list = doc.getElementsByTagName(tagName);
         try {

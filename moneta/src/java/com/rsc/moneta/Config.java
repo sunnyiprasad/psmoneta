@@ -23,10 +23,10 @@ public class Config {
         outputHandlers.put(id, outputHandler);
     }
 
-    public static OutputHandler buildOutputHandler(int type) throws ClassNotFoundException, InstantiationException, IllegalAccessException, OutputHandlerNotFoundException {
+    public OutputHandler buildOutputHandler(int type) throws ClassNotFoundException, InstantiationException, IllegalAccessException, OutputHandlerNotFoundException {
         String className = outputHandlers.get(type);
         if (className != null) {
-             return (OutputHandler)System.class.getClassLoader().loadClass(className).newInstance();
+             return (OutputHandler)this.getClass().getClassLoader().loadClass(className).newInstance();
         }
         throw new OutputHandlerNotFoundException(type);
     }

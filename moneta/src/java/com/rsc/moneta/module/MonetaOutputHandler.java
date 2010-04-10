@@ -101,7 +101,7 @@ public class MonetaOutputHandler implements OutputHandler {
         CheckResponse response = new CheckResponse();
         response.setMarketId(Utils.getLongValue("MNT_ID", doc));
         response.setTransactionId(doc.getElementsByTagName("MNT_TRANSACTION_ID").item(0).getTextContent());
-        response.setResultCode(Utils.getLongValue("MNT_RESULT_CODE", doc));
+        response.setResultCode(Utils.getIntValue("MNT_RESULT_CODE", doc));
         response.setAmount(Utils.getDoubleValue("MNT_AMOUNT", doc));
         response.setOperationId(Utils.getLongValue("MNT_OPERATION_ID", doc));
         response.setTransactionId(doc.getElementsByTagName("MNT_SIGNATURE").item(0).getTextContent());
@@ -169,34 +169,17 @@ public class MonetaOutputHandler implements OutputHandler {
     public int convertForeignCodeToBase(int code) throws UnknownStatusException {
         switch (code) {
             case MonetaOutputHandler.ANSWER_CONTAINS_AMOUNT:
-                return com.rsc.moneta.Const.ORDER_STATUS_ACCEPTED;
+                return ResultCode.SUCCESS_WIH_AMOUNT;
             case MonetaOutputHandler.ORDER_IS_CREATE:
-                return com.rsc.moneta.Const.ORDER_STATUS_ACCEPTED;
+                return ResultCode.SUCCESS_WITHOUT_AMOUNT;
             case MonetaOutputHandler.ORDER_NOT_ACTUAL:
-                return com.rsc.moneta.Const.ORDER_STATUS_NOT_PAID_AND_REJECTED_BY_EMARKETPLACE;
+                return ResultCode.ORDER_NOT_ACTUAL;
             case MonetaOutputHandler.PAYMENT_SUCCESS:
-                return com.rsc.moneta.Const.ORDER_STATUS_PAID_AND_COMPLETED;
+                return ResultCode.SUCCESS_WIH_AMOUNT;
             case MonetaOutputHandler.UNKNOWN_STATUS:
-                return com.rsc.moneta.Const.ORDER_STATUS_PAID_BUT_NOT_COMPLETED_AND_STILL_PROCESSING;
+                return ResultCode.ERROR_TRY_AGAIN;
             default:
                 throw new UnknownStatusException(code);
         }
-    }
-
-    public int convertBaseCodeToForeign(int code) throws UnknownStatusException {
-        switch (code) {
-            case com.rsc.moneta.Const.ORDER_STATUS_ACCEPTED:
-                return MonetaOutputHandler.ORDER_IS_CREATE;
-            case com.rsc.moneta.Const.ORDER_STATUS_NOT_PAID_AND_REJECTED_BY_EMARKETPLACE:
-                return MonetaOutputHandler.ORDER_NOT_ACTUAL;
-            case com.rsc.moneta.Const.ORDER_STATUS_PAID_AND_COMPLETED:
-                return MonetaOutputHandler.PAYMENT_SUCCESS;
-            case com.rsc.moneta.Const.ORDER_STATUS_PAID_BUT_NOT_COMPLETED_AND_STILL_PROCESSING:
-                return MonetaOutputHandler.UNKNOWN_STATUS;
-            case com.rsc.moneta.Const.ORDER_STATUS_PAID_BUT_REJECTED_BY_EMARKETPLACE:
-                return MonetaOutputHandler.ORDER_NOT_ACTUAL;
-            default:
-                throw new UnknownStatusException(code);
-        }
-    }
+    }    
 }
