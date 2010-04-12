@@ -9,7 +9,7 @@ import com.opensymphony.xwork2.Action;
 import com.rsc.moneta.Const;
 import com.rsc.moneta.action.BaseAction;
 import com.rsc.moneta.dao.Dao;
-import com.rsc.moneta.bean.PaymentKey;
+import com.rsc.moneta.bean.PaymentOrder;
 import com.rsc.moneta.dao.MarketDao;
 import com.rsc.moneta.util.Utils;
 import java.security.NoSuchAlgorithmException;
@@ -43,7 +43,7 @@ public class Assistant extends BaseAction {
     private String monetaLocale = null;
     private String paymentSystemUnitId = null;
     private String paymentSystemLimitIds = null;
-    private PaymentKey paymentKey;
+    private PaymentOrder paymentKey;
     private Market market;
 
     @Override
@@ -107,10 +107,10 @@ public class Assistant extends BaseAction {
             return Action.ERROR;
         }
 
-        paymentKey = new PaymentKey();
+        paymentKey = new PaymentOrder();
         paymentKey.setDate(new Date(System.currentTimeMillis()));
         paymentKey.setAmount(MNT_AMOUNT);
-        paymentKey.setKey(MNT_TRANSACTION_ID);
+        paymentKey.setTransactionId(MNT_TRANSACTION_ID);
         paymentKey.setMarket(market);
         paymentKey.setCustom1(MNT_CUSTOM1);
         paymentKey.setCustom2(MNT_CUSTOM2);
@@ -122,7 +122,6 @@ public class Assistant extends BaseAction {
             paymentKey.setSuccessUrl(MNT_SUCCESS_URL);
         else
             paymentKey.setSuccessUrl(market.getSuccessUrl());
-        paymentKey.setMonetaLocale(_monetaLocale);
         paymentKey.setPaymentSystemLimitIds(_paymentSystemLimitIds);
         paymentKey.setPaymentSystemUnitId(_paymentSystemUnitId);
         paymentKey.setTest(MNT_TEST_MODE);
@@ -141,11 +140,11 @@ public class Assistant extends BaseAction {
         this.market = market;
     }
 
-    public PaymentKey getPaymentKey() {
+    public PaymentOrder getPaymentKey() {
         return paymentKey;
     }
 
-    public void setPaymentKey(PaymentKey paymentKey) {
+    public void setPaymentKey(PaymentOrder paymentKey) {
         this.paymentKey = paymentKey;
     }
 

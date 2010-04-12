@@ -5,7 +5,7 @@
 package com.rsc.moneta.util;
 
 import com.rsc.moneta.Const;
-import com.rsc.moneta.bean.PaymentKey;
+import com.rsc.moneta.bean.PaymentOrder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import org.w3c.dom.Document;
@@ -47,6 +47,10 @@ public class Utils {
         NodeList list = doc.getElementsByTagName(tagName);
         try {
             Node node = list.item(0);
+            if (node == null)
+                return null;
+            if (node.getTextContent() == null || "".equals(node.getTextContent()))
+                return null;
             return Long.parseLong(node.getTextContent());
         } catch (NumberFormatException e) {
             return null;
@@ -57,6 +61,10 @@ public class Utils {
         NodeList list = doc.getElementsByTagName(tagName);
         try {
             Node node = list.item(0);
+            if (node == null)
+                return null;
+            if (node.getTextContent() == null || "".equals(node.getTextContent()))
+                return null;
             return Integer.parseInt(node.getTextContent());
         } catch (NumberFormatException e) {
             return null;
@@ -67,21 +75,25 @@ public class Utils {
         NodeList list = doc.getElementsByTagName(tagName);
         try {
             Node node = list.item(0);
+            if (node == null)
+                return null;
+            if (node.getTextContent() == null || "".equals(node.getTextContent()))
+                return null;
             return Double.parseDouble(node.getTextContent());
         } catch (NumberFormatException e) {
             return null;
         }
     }
 
-    public static String createSignature(PaymentKey key) throws NoSuchAlgorithmException {
+    public static String createSignature(PaymentOrder key) throws NoSuchAlgorithmException {
         return createSignature(null, key);
     }
 
-    public static String createSignature(String command, PaymentKey key) throws NoSuchAlgorithmException {
+    public static String createSignature(String command, PaymentOrder key) throws NoSuchAlgorithmException {
         String str = "";
         if (command != null)
             str  += command;
-        str += key.getMarket().getId()+key.getKey()+key.getId();
+        str += key.getMarket().getId()+key.getTransactionId()+key.getId();
         if (key.getAmount() != null){
             str += key.getAmount();
         }

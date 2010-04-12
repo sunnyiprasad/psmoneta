@@ -5,20 +5,20 @@
 
 package com.rsc.moneta.module;
 
-import com.rsc.moneta.bean.PaymentKey;
+import com.rsc.moneta.bean.PaymentOrder;
 
 /**
  *
  * @author sulic
  */
 public class CheckRequest {
-    private PaymentKey paymentKey;
+    private PaymentOrder paymentKey;
 
-    public PaymentKey getPaymentKey() {
+    public PaymentOrder getPaymentKey() {
         return paymentKey;
     }
 
-    public void setPaymentKey(PaymentKey paymentKey) {
+    public void setPaymentKey(PaymentOrder paymentKey) {
         this.paymentKey = paymentKey;
     }
     
