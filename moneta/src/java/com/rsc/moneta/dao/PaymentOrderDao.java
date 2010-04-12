@@ -4,7 +4,7 @@
  */
 package com.rsc.moneta.dao;
 
-import com.rsc.moneta.bean.PaymentKey;
+import com.rsc.moneta.bean.PaymentOrder;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
@@ -13,28 +13,28 @@ import javax.persistence.Query;
  *
  * @author sulic
  */
-public class PaymentKeyDao extends Dao {
+public class PaymentOrderDao extends Dao {
 
-    public PaymentKeyDao(EntityManager em) {
+    public PaymentOrderDao(EntityManager em) {
         super(em);
     }
 
-    public PaymentKey getPaymentKeyByTransactionId(String transactionId) {
+    public PaymentOrder getPaymentKey(String transactionId, long marketId) {
         try {
-            Query q = em.createQuery("select p from PaymentKey p where p.transactionId=:txid");
+            Query q = em.createQuery("select p from PaymentKey p where p.key=:txid and p.market.id=:mid");
             q.setParameter("txid", transactionId);
-            return (PaymentKey)q.getSingleResult();
+            q.setParameter("mid", marketId);
+            return (PaymentOrder) q.getSingleResult();
         } catch (NoResultException ex) {
-            ex.printStackTrace();
             return null;
         }
     }
 
-    public PaymentKey getPaymentById(Long id) {
+    public PaymentOrder getPaymentById(long id) {
         try {
             Query q = em.createQuery("select p from PaymentKey p where p.id=:id");
             q.setParameter("id", id);
-            return (PaymentKey) q.getSingleResult();
+            return (PaymentOrder) q.getSingleResult();
         } catch (NoResultException ex) {
             ex.printStackTrace();
             return null;

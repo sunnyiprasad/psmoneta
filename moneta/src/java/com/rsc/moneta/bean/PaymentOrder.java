@@ -22,12 +22,12 @@ import com.rsc.moneta.Const;
 /**
  *
  * @author sulic
- * PaymentKey это короче говоря один заказ.
+ * PaymentOrder это короче говоря один заказ.
  * Он генерится когда присылает ТАИС мне запрос
  * что пользователь заказ билет и хочет оплатить
  */
 @Entity
-public class PaymentKey implements Serializable {
+public class PaymentOrder implements Serializable {
     @OneToMany(mappedBy = "key")
     private List<PaymentParameter> paymentParameters;
     private static final long serialVersionUID = 1L;
@@ -36,11 +36,11 @@ public class PaymentKey implements Serializable {
     // Идентификатор кода заказа ПС ххх
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private long id;
 
     // Это номер заказа в системе интернет магазина.
-    @Column(name = "_key")
-    private String key;
+    @Column(name = "transactionId")
+    private String transactionId;
 
     // Сумма заказа
     private Double amount;
@@ -55,8 +55,7 @@ public class PaymentKey implements Serializable {
     private String successUrl;
     // Куда отправить пользователь при ошибке об оплате.
     private String failUrl;
-    // Это поле уберу нах. Оно не нужно тут.
-    private String monetaLocale;
+
 
     private String paymentSystemUnitId;
     private String paymentSystemLimitIds;
@@ -66,7 +65,7 @@ public class PaymentKey implements Serializable {
 
     // Статус заказа ТЛСМ
     @Column(name = "orderstatus")
-    private int orderStatus = Const.ORDER_STATUS_ACCEPTED;
+    private int status = Const.ORDER_STATUS_ACCEPTED;
 
     @Column(name = "_date")
     @Temporal(javax.persistence.TemporalType.DATE)
@@ -99,13 +98,15 @@ public class PaymentKey implements Serializable {
         this.market = market;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
+
+
 
     public Double getAmount() {
         return amount;
@@ -123,12 +124,12 @@ public class PaymentKey implements Serializable {
         this.date = date;
     }
 
-    public String getKey() {
-        return key;
+    public String getTransactionId() {
+        return transactionId;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setTransactionId(String transactionId) {
+        this.transactionId = transactionId;
     }
 
     public String getCustom1() {
@@ -171,14 +172,6 @@ public class PaymentKey implements Serializable {
         this.failUrl = failUrl;
     }
 
-    public String getMonetaLocale() {
-        return monetaLocale;
-    }
-
-    public void setMonetaLocale(String monetaLocale) {
-        this.monetaLocale = monetaLocale;
-    }
-
     public String getPaymentSystemLimitIds() {
         return paymentSystemLimitIds;
     }
@@ -211,12 +204,12 @@ public class PaymentKey implements Serializable {
         this.test = test;
     }
 
-    public int getOrderStatus() {
-        return this.orderStatus;
+    public int getStatus() {
+        return this.status;
     }
 
-    public void setOrderStatus(int orderStatus) {
-        this.orderStatus = orderStatus;
+    public void setStatus(int orderStatus) {
+        this.status = orderStatus;
     }
     
     

@@ -4,8 +4,8 @@
  */
 package com.rsc.moneta.module;
 
-import com.rsc.moneta.dao.PaymentKeyDao;
-import com.rsc.moneta.bean.PaymentKey;
+import com.rsc.moneta.dao.PaymentOrderDao;
+import com.rsc.moneta.bean.PaymentOrder;
 import com.rsc.moneta.dao.EMF;
 import com.rsc.moneta.util.Utils;
 import java.io.BufferedReader;
@@ -26,6 +26,7 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import org.apache.commons.io.IOUtils;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -54,20 +55,24 @@ public class MonetaOutputHandler implements OutputHandler {
     public static final int ORDER_NOT_ACTUAL = 500;
 
     // Данный метод отправляет запрос в интернет магазин по протоколу монета. См. MONETA.Assistant стр. 20
-    public CheckResponse check(PaymentKey key) {
+    public CheckResponse check(PaymentOrder key) {
         try {
             String query = key.getMarket().getCheckUrl();
             query += "?MNT_COMMAND=CHECK&MNT_ID=" + key.getMarket().getId() + "&MNT_TRANSACTION_ID="
-                    + key.getKey() + "&MNT_AMOUNT=" + key.getAmount() + "&MNT_CURRENCY_CODE=RUB&MNT_TEST_MODE="
-                    + key.getTest() + "&MNT_SIGNATURE=" + Utils.createSignature("check", key);
+                    + key.getTransactionId() + "&MNT_CURRENCY_CODE=RUB&MNT_TEST_MODE="
+                    + key.getTest();
+            if (key.getAmount() != null) {
+                query += "&MNT_AMOUNT=" + key.getAmount();
+            }
+            query += "&MNT_SIGNATURE=" + Utils.createSignature("check", key);
             URLConnection url = new URL(query).openConnection();
             DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();
             fac.setNamespaceAware(true);
-            Document doc = fac.newDocumentBuilder().parse(url.getInputStream());
+            String xml = IOUtils.toString(url.getInputStream());
+            System.out.println(xml);
+            Document doc = fac.newDocumentBuilder().parse(IOUtils.toInputStream(xml));
             CheckResponse response = parseResponse(doc);
-            if (checkSignature(response)) {
-                return response;
-            }
+            return checkSignature(response);
         } catch (Exception ex) {
             Logger.getLogger(MonetaOutputHandler.class.getName()).log(Level.SEVERE, null, ex);
             ex.printStackTrace();
@@ -76,20 +81,18 @@ public class MonetaOutputHandler implements OutputHandler {
     }
 
     // Данный метод отправляет запрос в интернет магазин по протоколу монета. См. MONETA.Assistant стр. 21
-    public CheckResponse pay(PaymentKey key) {
+    public CheckResponse pay(PaymentOrder key) {
         try {
             String query = key.getMarket().getCheckUrl();
             query += "?MNT_ID=" + key.getMarket().getId() + "&MNT_TRANSACTION_ID="
-                    + key.getKey() + "&MNT_AMOUNT=" + key.getAmount() + "&MNT_CURRENCY_CODE=RUB&MNT_TEST_MODE="
+                    + key.getTransactionId() + "&MNT_AMOUNT=" + key.getAmount() + "&MNT_CURRENCY_CODE=RUB&MNT_TEST_MODE="
                     + key.getTest() + "&MNT_SIGNATURE=" + Utils.createSignature(key);
             URLConnection url = new URL(query).openConnection();
             DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();
             fac.setNamespaceAware(true);
             Document doc = fac.newDocumentBuilder().parse(url.getInputStream());
             CheckResponse response = parseResponse(doc);
-            if (checkSignature(response)) {
-                return response;
-            }
+            return checkSignature(response);
         } catch (Exception ex) {
             Logger.getLogger(MonetaOutputHandler.class.getName()).log(Level.SEVERE, null, ex);
             ex.printStackTrace();
@@ -104,29 +107,44 @@ public class MonetaOutputHandler implements OutputHandler {
         response.setResultCode(Utils.getIntValue("MNT_RESULT_CODE", doc));
         response.setAmount(Utils.getDoubleValue("MNT_AMOUNT", doc));
         response.setOperationId(Utils.getLongValue("MNT_OPERATION_ID", doc));
-        response.setTransactionId(doc.getElementsByTagName("MNT_SIGNATURE").item(0).getTextContent());
+        response.setSignature(doc.getElementsByTagName("MNT_SIGNATURE").item(0).getTextContent());
+        response.setDescription(doc.getElementsByTagName("MNT_DESCRIPTION").item(0).getTextContent());
         return response;
     }
 
-    private boolean checkSignature(CheckResponse response) throws NoSuchAlgorithmException {
+    private CheckResponse checkSignature(CheckResponse response) throws NoSuchAlgorithmException {
         //TODO: Тут необходимо реализовать проверку сигнатуру ответа от ИМ
         if (response.getTransactionId() != null) {
             EntityManager em = EMF.getEntityManager();
-            PaymentKey key = new PaymentKeyDao(em).getPaymentKeyByTransactionId(response.getTransactionId());
-            if (key.getMarket().getId() == response.getMarketId()) {
-                if (response.getSignature() != null) {
-                    String sign = response.getResultCode() + response.getMarketId() + response.getTransactionId() + key.getMarket().getPassword();
-                    return (response.getSignature().equalsIgnoreCase(Utils.getMd5InHexString(sign)));
-                } else {
-                    //Отсуствует подпись ответа
-                }
+            PaymentOrder key = new PaymentOrderDao(em).getPaymentKey(response.getTransactionId(), response.getMarketId());
+            if (key == null) {
+                response.setResultCode(ResultCode.INTERNAL_ERROR);
+                response.setComment("Заказ не найден");
             } else {
-                //Идентификатор магазина не соответствует указанному.
+                if (key.getMarket().getId() == response.getMarketId()) {
+                    if (response.getSignature() != null) {
+                        String sign = response.getResultCode() + response.getMarketId() + response.getTransactionId() + key.getMarket().getPassword();
+                        if (!response.getSignature().equalsIgnoreCase(Utils.getMd5InHexString(sign))){
+                            response.setResultCode(ResultCode.INTERNAL_ERROR);
+                            response.setDescription("Неправильная подпись");
+                        }
+                    } else {
+                        response.setResultCode(ResultCode.INTERNAL_ERROR);
+                        response.setDescription("Отсутствует подпись со стороны интернет магазина");
+                        //Отсуствует подпись ответа
+                    }
+                } else {
+                    //Идентификатор магазина не соответствует указанному.
+                    response.setResultCode(ResultCode.INTERNAL_ERROR);
+                    response.setDescription("Идентификатор магазина не соответствует указанному.");
+                }
             }
         } else {
             // Не указан Идентификатор транзакции
+            response.setResultCode(ResultCode.INTERNAL_ERROR);
+            response.setDescription("Не указан Идентификатор транзакции");
         }
-        return false;
+        return response;
     }
 
     // Метод соотнесения статуса заказа, возвращённого Интернет-Магазином и
@@ -169,17 +187,17 @@ public class MonetaOutputHandler implements OutputHandler {
     public int convertForeignCodeToBase(int code) throws UnknownStatusException {
         switch (code) {
             case MonetaOutputHandler.ANSWER_CONTAINS_AMOUNT:
-                return ResultCode.SUCCESS_WIH_AMOUNT;
+                return ResultCode.SUCCESS_WITH_AMOUNT;
             case MonetaOutputHandler.ORDER_IS_CREATE:
                 return ResultCode.SUCCESS_WITHOUT_AMOUNT;
             case MonetaOutputHandler.ORDER_NOT_ACTUAL:
                 return ResultCode.ORDER_NOT_ACTUAL;
             case MonetaOutputHandler.PAYMENT_SUCCESS:
-                return ResultCode.SUCCESS_WIH_AMOUNT;
+                return ResultCode.SUCCESS_WITH_AMOUNT;
             case MonetaOutputHandler.UNKNOWN_STATUS:
                 return ResultCode.ERROR_TRY_AGAIN;
             default:
                 throw new UnknownStatusException(code);
         }
-    }    
+    }
 }

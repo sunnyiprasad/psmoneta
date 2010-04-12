@@ -5,7 +5,7 @@
 
 package com.rsc.moneta.module;
 
-import com.rsc.moneta.bean.PaymentKey;
+import com.rsc.moneta.bean.PaymentOrder;
 
 
 /**
@@ -13,8 +13,8 @@ import com.rsc.moneta.bean.PaymentKey;
  * @author sulic
  */
 public interface OutputHandler {
-    CheckResponse check(PaymentKey key);
-    CheckResponse pay(PaymentKey key);
+    CheckResponse check(PaymentOrder key);
+    CheckResponse pay(PaymentOrder key);
     int convertForeignCodeToBase(int code)throws UnknownStatusException;    
     CheckResponseReturnCodes convertEmarketplaceReturnCodeToTLSMReturnCode(int emarketplaceReturnCode) throws UnknownStatusException;
 }

@@ -11,7 +11,7 @@ package com.rsc.moneta.module;
  */
 public class ResultCode {
 
-    public static final int SUCCESS_WIH_AMOUNT = 0;
+    public static final int SUCCESS_WITH_AMOUNT = 0;
     public static final int SUCCESS_WITHOUT_AMOUNT = 3;
     public static final int ORDER_ALREADY_PAID = 1;
     public static final int ORDER_PROCESSING = 2;

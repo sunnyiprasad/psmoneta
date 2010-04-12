@@ -9,7 +9,7 @@ import javax.persistence.EntityManager;
 import java.util.regex.*;
 
 import com.rsc.moneta.dao.EMF;
-import com.rsc.moneta.bean.PaymentKey;
+import com.rsc.moneta.bean.PaymentOrder;
 
 /**
  * Класс представляет собой класс - обработчик запросов, поступающих от терминала ОСМП
@@ -70,7 +70,7 @@ public class OSMPInputHandler implements InputHandler {
                                                 EntityManager em = EMF.getEntityManager();
 
                                                 //Поиск по первичному ключу для всеъ объектов уже реализован JPA
-                                                PaymentKey paymentKey = em.find(PaymentKey.class, paymentKeyId);
+                                                PaymentOrder paymentKey = em.find(PaymentOrder.class, paymentKeyId);
 
                                                 if (paymentKey == null) {
                                                     // Заказ не найден. Введен несуществующий код заказа.
@@ -79,12 +79,12 @@ public class OSMPInputHandler implements InputHandler {
                                                 } else {
                                                     // Денис: Сулик, вот так не пиши, это во-первых неправильно, во-вторых, если считаешь,
                                                     // что этот статус не нужен, спроси хотя бы у меня накой я его ввёл
-                                                    // if (paymentKey.getOrderStatus() == com.rsc.moneta.Const.ORDER_STATUS_ACCEPTED) {
-                                                    if (paymentKey.getOrderStatus() == com.rsc.moneta.Const.ORDER_STATUS_UNDEFINED) {
+                                                    // if (paymentKey.getStatus() == com.rsc.moneta.Const.ORDER_STATUS_ACCEPTED) {
+                                                    if (paymentKey.getStatus() == com.rsc.moneta.Const.ORDER_STATUS_UNDEFINED) {
                                                         result = Const.OSMP_RETURN_CODE_ACCOUNT_NOT_FOUND;
                                                         comment = Const.STRING_ORDER_DOES_NOT_EXIST_ERROR;
                                                     } else {
-                                                        if (paymentKey.getOrderStatus() == com.rsc.moneta.Const.ORDER_STATUS_ACCEPTED) {
+                                                        if (paymentKey.getStatus() == com.rsc.moneta.Const.ORDER_STATUS_ACCEPTED) {
 
                                                             // Заказ в ПС ТЛСМ найден. Проверка его статуса в ИМ - отправка запроса "чек"
                                                             MonetaOutputHandler handler = new MonetaOutputHandler(); // TODO: !! Денис - заменить на класс из класса Config
@@ -126,20 +126,20 @@ public class OSMPInputHandler implements InputHandler {
                                                                 comment = Const.STRING_UNABLE_TO_REQUEST_EMARKETPLACE_FOR_ORDER_STATUS;
                                                             }
                                                         } else {
-                                                            if (paymentKey.getOrderStatus() == com.rsc.moneta.Const.ORDER_STATUS_NOT_PAID_AND_REJECTED_BY_EMARKETPLACE) {
+                                                            if (paymentKey.getStatus() == com.rsc.moneta.Const.ORDER_STATUS_NOT_PAID_AND_REJECTED_BY_EMARKETPLACE) {
                                                                 result = Const.OSMP_RETURN_CODE_PAY_SUPPRESS;
                                                                 comment = Const.STRING_ORDER_REJECTED_BY_EMARKETPLACE_BEFORE_TLSM_PAYMENT;
                                                             } else {
-                                                                if (paymentKey.getOrderStatus() == com.rsc.moneta.Const.ORDER_STATUS_PAID_AND_COMPLETED) {
+                                                                if (paymentKey.getStatus() == com.rsc.moneta.Const.ORDER_STATUS_PAID_AND_COMPLETED) {
                                                                     prv_txn = paymentKey.getId();
                                                                     result = Const.OSMP_RETURN_CODE_OK;
                                                                     comment = Const.STRING_ORDER_PAID_AND_COMPLETED;
                                                                 } else {
-                                                                    if (paymentKey.getOrderStatus() == com.rsc.moneta.Const.ORDER_STATUS_PAID_BUT_NOT_COMPLETED_AND_STILL_PROCESSING) {
+                                                                    if (paymentKey.getStatus() == com.rsc.moneta.Const.ORDER_STATUS_PAID_BUT_NOT_COMPLETED_AND_STILL_PROCESSING) {
                                                                         // TODO: Сулик, Денис - Обдумать, что в это случае делать
                                                                         throw new UnsupportedOperationException("Not supported yet.");
                                                                     } else {
-                                                                        if (paymentKey.getOrderStatus() == com.rsc.moneta.Const.ORDER_STATUS_PAID_BUT_REJECTED_BY_EMARKETPLACE) {
+                                                                        if (paymentKey.getStatus() == com.rsc.moneta.Const.ORDER_STATUS_PAID_BUT_REJECTED_BY_EMARKETPLACE) {
                                                                             result = Const.OSMP_RETURN_CODE_PAY_SUPPRESS;
                                                                             comment = Const.STRING_ORDER_REJECTED_BY_EMARKETPLACE_AFTER_TLSM_PAYMENT;
                                                                         } else {

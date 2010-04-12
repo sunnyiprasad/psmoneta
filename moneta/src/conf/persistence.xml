@@ -3,7 +3,6 @@
   <persistence-unit name="monetaPU" transaction-type="RESOURCE_LOCAL">
     <provider>org.hibernate.ejb.HibernatePersistence</provider>
     <class>com.rsc.moneta.bean.Market</class>
-    <class>com.rsc.moneta.bean.PaymentKey</class>
     <class>com.rsc.moneta.bean.PaymentTransaction</class>
     <class>com.rsc.moneta.bean.Provider</class>
     <class>com.rsc.moneta.bean.Sms</class>
@@ -11,6 +10,7 @@
     <class>com.rsc.moneta.bean.PaymentParameter</class>
     <class>com.rsc.moneta.bean.Account</class>
     <class>com.rsc.moneta.bean.CashOrder</class>
+    <class>com.rsc.moneta.bean.PaymentOrder</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <property name="hibernate.connection.username" value="postgres"/>

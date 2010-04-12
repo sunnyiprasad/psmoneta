@@ -5,7 +5,7 @@
 package com.rsc.moneta.module;
 
 import com.rsc.moneta.Config;
-import com.rsc.moneta.bean.PaymentKey;
+import com.rsc.moneta.bean.PaymentOrder;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,12 +17,12 @@ public class MainPaymentHandler {
 
     public CheckResponse check(CheckRequest request) {
         CheckResponse checkResponse = new CheckResponse();
-        PaymentKey paymentKey = request.getPaymentKey();
-        if (paymentKey.getOrderStatus() == com.rsc.moneta.Const.ORDER_STATUS_UNDEFINED) {
+        PaymentOrder paymentKey = request.getPaymentKey();
+        if (paymentKey.getStatus() == com.rsc.moneta.Const.ORDER_STATUS_UNDEFINED) {
             checkResponse.setResultCode(Const.OSMP_RETURN_CODE_ACCOUNT_NOT_FOUND);
             checkResponse.setComment(Const.STRING_ORDER_DOES_NOT_EXIST_ERROR);
         } else {
-            switch (paymentKey.getOrderStatus()) {
+            switch (paymentKey.getStatus()) {
                 case com.rsc.moneta.Const.ORDER_STATUS_ACCEPTED: {
                     try {                        
                         OutputHandler outputHandler = new Config().buildOutputHandler(paymentKey.getMarket().getOutputHandlerType());

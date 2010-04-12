@@ -18,6 +18,15 @@ public class CheckResponse {
     private String name;
     private String signature;
     private String comment;
+    private String description;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public String getComment() {
         return comment;

@@ -59,7 +59,7 @@ public class Market implements Serializable {
     private User user;
 
     @OneToMany(mappedBy = "market")
-    private List<PaymentKey> paymentKeys;
+    private List<PaymentOrder> paymentKeys;
 
     @ManyToMany
     private List<Account> accounts;
@@ -136,11 +136,11 @@ public class Market implements Serializable {
         this.name = name;
     }
 
-    public List<PaymentKey> getPaymentKeys() {
+    public List<PaymentOrder> getPaymentKeys() {
         return paymentKeys;
     }
 
-    public void setPaymentKeys(List<PaymentKey> paymentKeys) {
+    public void setPaymentKeys(List<PaymentOrder> paymentKeys) {
         this.paymentKeys = paymentKeys;
     }
 

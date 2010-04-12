@@ -25,7 +25,7 @@ public class PaymentParameter implements Serializable {
     private String name;
     private String val;
     @ManyToOne
-    private PaymentKey key;
+    private PaymentOrder key;
 
     public Long getId() {
         return id;
@@ -51,11 +51,11 @@ public class PaymentParameter implements Serializable {
         this.val = val;
     }
 
-    public PaymentKey getKey() {
+    public PaymentOrder getKey() {
         return key;
     }
 
-    public void setKey(PaymentKey key) {
+    public void setKey(PaymentOrder key) {
         this.key = key;
     }
     
