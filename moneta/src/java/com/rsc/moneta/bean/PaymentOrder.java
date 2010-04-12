@@ -18,6 +18,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 
 import com.rsc.moneta.Const;
+import javax.persistence.JoinColumn;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 /**
  *
@@ -27,6 +30,7 @@ import com.rsc.moneta.Const;
  * что пользователь заказ билет и хочет оплатить
  */
 @Entity
+@Table(uniqueConstraints={@UniqueConstraint(columnNames={"transactionId", "marketId"})})
 public class PaymentOrder implements Serializable {
     @OneToMany(mappedBy = "key")
     private List<PaymentParameter> paymentParameters;
@@ -71,8 +75,19 @@ public class PaymentOrder implements Serializable {
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date date;
 
+    @Column(insertable=false, updatable=false)
+    private long marketId;
     @ManyToOne
+    @JoinColumn(name = "marketId")
     private Market market;
+
+    public long getMarketId() {
+        return marketId;
+    }
+
+    public void setMarketId(long marketId) {
+        this.marketId = marketId;
+    }
 
     public int getCurrency() {
         return currency;
