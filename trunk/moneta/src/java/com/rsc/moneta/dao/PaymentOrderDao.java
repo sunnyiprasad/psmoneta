@@ -19,9 +19,9 @@ public class PaymentOrderDao extends Dao {
         super(em);
     }
 
-    public PaymentOrder getPaymentKey(String transactionId, long marketId) {
+    public PaymentOrder getPaymentOrder(String transactionId, long marketId) {
         try {
-            Query q = em.createQuery("select p from PaymentKey p where p.key=:txid and p.market.id=:mid");
+            Query q = em.createQuery("select p from PaymentOrder p where p.transactionId=:txid and p.market.id=:mid");
             q.setParameter("txid", transactionId);
             q.setParameter("mid", marketId);
             return (PaymentOrder) q.getSingleResult();
@@ -30,9 +30,9 @@ public class PaymentOrderDao extends Dao {
         }
     }
 
-    public PaymentOrder getPaymentById(long id) {
+    public PaymentOrder getPaymentOrderById(long id) {
         try {
-            Query q = em.createQuery("select p from PaymentKey p where p.id=:id");
+            Query q = em.createQuery("select p from PaymentOrder p where p.id=:id");
             q.setParameter("id", id);
             return (PaymentOrder) q.getSingleResult();
         } catch (NoResultException ex) {

@@ -2,8 +2,8 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.rsc.moneta.module;
 
+package com.rsc.moneta.module;
 import com.rsc.moneta.bean.PaymentOrder;
 import com.rsc.moneta.dao.EMF;
 import com.rsc.moneta.util.Utils;
@@ -16,13 +16,11 @@ import javax.persistence.EntityManager;
 import org.w3c.dom.Document;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.commons.io.IOUtils;
-
 /**
  *
  * @author sulic
  */
-public class MonetaOutputHandler implements OutputHandler {
-
+public class TaisOutputHandler implements OutputHandler{
     /*
      * Ответ содержит сумму заказа для оплаты. Данным кодом следует отвечать,
     когда в параметрах проверочного запроса не был указан параметр MNT_AMOUNT
@@ -59,7 +57,7 @@ public class MonetaOutputHandler implements OutputHandler {
             System.out.println(xml);
             Document doc = fac.newDocumentBuilder().parse(IOUtils.toInputStream(xml));
             CheckResponse response = parseResponse(doc);
-            return checkSignature(response, order);
+            return process(response, order);
         } catch (Exception ex) {
             Logger.getLogger(MonetaOutputHandler.class.getName()).log(Level.SEVERE, null, ex);
             ex.printStackTrace();
@@ -81,7 +79,7 @@ public class MonetaOutputHandler implements OutputHandler {
             System.out.println(xml);
             Document doc = fac.newDocumentBuilder().parse(IOUtils.toInputStream(xml));
             CheckResponse response = parseResponse(doc);
-            return checkSignature(response, order);
+            return process(response, order);
         } catch (Exception ex) {
             Logger.getLogger(MonetaOutputHandler.class.getName()).log(Level.SEVERE, null, ex);
             ex.printStackTrace();
@@ -101,7 +99,7 @@ public class MonetaOutputHandler implements OutputHandler {
         return response;
     }
 
-    private CheckResponse checkSignature(CheckResponse response, PaymentOrder order) throws NoSuchAlgorithmException {
+    private CheckResponse process(CheckResponse response, PaymentOrder order) throws NoSuchAlgorithmException {
         if (response.getTransactionId() != null) {
             EntityManager em = EMF.getEntityManager();
             if (order == null) {
@@ -132,8 +130,8 @@ public class MonetaOutputHandler implements OutputHandler {
                     }
                 } else {
                     //Идентификатор магазина не соответствует указанному.
-                    response.setResultCode(ResultCode.MARKET_ID_NOT_DEFINE);
-                    response.setDescription("Идентификатор магазина не соответствует указанному.");
+                    response.setResultCode(ResultCode.ORDER_NOT_FOUND);
+                    response.setDescription("Идентификатор магазина не соответствует указанному. Скорее всего неправильно введен код заказа.");
                 }
             }
         } else {
@@ -142,26 +140,26 @@ public class MonetaOutputHandler implements OutputHandler {
             response.setDescription("Не указан Идентификатор транзакции");
         }
         return response;
-    }    
+    }
 
-    
+
     public int convertForeignCodeToBase(int code) {
         switch (code) {
-            case MonetaOutputHandler.ANSWER_CONTAINS_AMOUNT:
+            case ANSWER_CONTAINS_AMOUNT:
                 return ResultCode.SUCCESS_WITH_AMOUNT;
-            case MonetaOutputHandler.ORDER_IS_CREATE:
+            case ORDER_IS_CREATE:
                 return ResultCode.SUCCESS_WITHOUT_AMOUNT;
-            case MonetaOutputHandler.ORDER_NOT_ACTUAL:
+            case ORDER_NOT_ACTUAL:
                 return ResultCode.ORDER_NOT_ACTUAL;
-            case MonetaOutputHandler.PAYMENT_SUCCESS:
+            case PAYMENT_SUCCESS:
                 return ResultCode.SUCCESS_WITH_AMOUNT;
-            case MonetaOutputHandler.UNKNOWN_STATUS:
+            case UNKNOWN_STATUS:
                 return ResultCode.ERROR_TRY_AGAIN;
             default:
                 return ResultCode.UNKNOWN_CODE;
         }
     }
-    
+
     // TODO: Денис, ИМХО неправильно такой метод иметь, так как я считаю, что:
     //18:19:15] Denis Solodovnikov говорит: мое
     //мнение такое что неправильно сопоставлять статус ответа от ИМ со статусом соотвествующего ему будущего нашего ответа терминальной ПС, так как один и тот же статус ответа от ИМ может соотвествовать разным статусам ответа терминальной ПС

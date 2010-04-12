@@ -17,7 +17,7 @@ package com.rsc.moneta.module;
  * @author Солодовников Д.А.
  */
 
-enum CheckResponseReturnCodes {
+public enum CheckResponseReturnCodes {
     // Заказ валиден в информационной системе Интернет-Магазина,
     // ответ Интернет-Магазина содержит сумму заказа для оплаты
     ORDER_IS_VALID_AND_RESPONSE_CONTAINS_AMOUNT,

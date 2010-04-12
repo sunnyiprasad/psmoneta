@@ -14,6 +14,6 @@ import com.rsc.moneta.Config;
 public class TestConf {
     static String serverUrl = "http://localhost:8084/moneta";
     public static void initConfig(){
-        Config.addOutputHandler(0, "com.rsc.moneta.module.MonetaOutputHandler");
+        Config.addOutputHandler(0, "com.rsc.moneta.module.TaisOutputHandler");
     }
 }
