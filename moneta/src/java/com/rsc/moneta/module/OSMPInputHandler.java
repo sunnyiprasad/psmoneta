@@ -45,6 +45,14 @@ public class OSMPInputHandler implements InputHandler {
     public final static String STRING_ORDER_PAID_AND_COMPLETED = "Этот заказ уже обработан и оплачен";
     public final static String STRING_ORDER_IS_PROCESSING_IN_EMARKETPLACE = "Заказ находится в стадии обработки";
 
+//    public final static String STRING_TXN_DATE_PARAMETER_ERROR = "Отсутствует или неправильный параметр 'txn_date'";
+//    public final static String STRING_DB_CONNECTION_ERROR = "Отсутствует соединение с БД";
+//    public final static String STRING_CARD_IS_NOT_ASSIGNED_TO_USER = "Карта не активирована (не принадлежит абоненту)";
+//    public final static String STRING_ABONENT_LOCKEDOUT = "Абонент заблокирован";
+//    public final static String STRING_SUM_TOO_SMALL = "Сумма слишком мала";
+//    public final static String STRING_SUM_TOO_BIG = "Сумма слишком велика";
+
+
     // Данный метод проверяет возможность платежа.
     // См. ОПИСАНИЕ ИНТЕРФЕЙСА ОСМП стр. 6.
     public String check(Map inputData) {
