@@ -26,6 +26,8 @@ import javax.persistence.OneToMany;
  */
 @Entity
 public class Account implements Serializable{
+    @OneToMany(mappedBy = "account")
+    private List<PaymentOrder> paymentOrders;
 
     // Типы возможного периода обналичивания средств.
     public static int EVERYDAY = 0;

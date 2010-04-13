@@ -5,7 +5,7 @@
 
 package com.rsc.moneta.test.module;
 
-import com.rsc.moneta.module.OSMPInputHandler;
+import com.rsc.moneta.module.inputhandler.OSMPInputHandler;
 import java.util.Map;
 import java.util.Properties;
 import junit.framework.Assert;

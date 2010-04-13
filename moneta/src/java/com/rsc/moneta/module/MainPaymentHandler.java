@@ -5,9 +5,16 @@
 package com.rsc.moneta.module;
 
 import com.rsc.moneta.Config;
+import com.rsc.moneta.bean.Account;
 import com.rsc.moneta.bean.PaymentOrder;
+import com.rsc.moneta.dao.AccountDao;
+import com.rsc.moneta.dao.Dao;
+import com.rsc.moneta.dao.EMF;
+import com.rsc.moneta.dao.PaymentOrderDao;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.persistence.Entity;
+import javax.persistence.EntityManager;
 
 /**
  *
@@ -15,10 +22,10 @@ import java.util.logging.Logger;
  */
 public class MainPaymentHandler {
 
-    public CheckResponse check(PaymentOrder paymentOrder) {
+    public CheckResponse check(PaymentOrder paymentOrder, Double amount) {
         CheckResponse checkResponse = new CheckResponse();
         switch (paymentOrder.getStatus()) {
-            case com.rsc.moneta.Const.ORDER_STATUS_ACCEPTED: {
+            case PaymentOrder.ORDER_STATUS_ACCEPTED: {
                 try {
                     OutputHandler outputHandler = new Config().buildOutputHandler(paymentOrder.getMarket().getOutputHandlerType());
                     CheckResponse monetaResponse = outputHandler.check(paymentOrder);
@@ -34,23 +41,23 @@ public class MainPaymentHandler {
                 }
                 break;
             }
-            case com.rsc.moneta.Const.ORDER_STATUS_NOT_PAID_AND_REJECTED_BY_EMARKETPLACE: {
+            case PaymentOrder.ORDER_STATUS_NOT_PAID_AND_REJECTED_BY_EMARKETPLACE: {
                 checkResponse.setResultCode(ResultCode.ORDER_NOT_ACTUAL);
                 break;
             }
-            case com.rsc.moneta.Const.ORDER_STATUS_PAID_AND_COMPLETED: {
+            case PaymentOrder.ORDER_STATUS_PAID_AND_COMPLETED: {
                 checkResponse.setResultCode(ResultCode.ORDER_ALREADY_PAID);
                 break;
             }
-            case com.rsc.moneta.Const.ORDER_STATUS_PAID_BUT_NOT_COMPLETED_AND_STILL_PROCESSING: {
+            case PaymentOrder.ORDER_STATUS_PAID_BUT_NOT_COMPLETED_AND_STILL_PROCESSING: {
                 checkResponse.setResultCode(ResultCode.ORDER_ALREADY_PAID);
                 break;
             }
-            case com.rsc.moneta.Const.ORDER_STATUS_PAID_BUT_REJECTED_BY_EMARKETPLACE: {
+            case PaymentOrder.ORDER_STATUS_PAID_BUT_REJECTED_BY_EMARKETPLACE: {
                 checkResponse.setResultCode(ResultCode.ORDER_ALREADY_PAID);
                 break;
             }
-            case com.rsc.moneta.Const.ORDER_STATUS_UNDEFINED: {
+            case PaymentOrder.ORDER_STATUS_UNDEFINED: {
                 checkResponse.setResultCode(ResultCode.ERROR_TRY_AGAIN);
                 break;
             }
@@ -62,42 +69,84 @@ public class MainPaymentHandler {
         return checkResponse;
     }
 
-    public CheckResponse pay(PaymentOrder order) {
+    public CheckResponse pay(PaymentOrder order, double amount) {
         CheckResponse checkResponse = new CheckResponse();
         switch (order.getStatus()) {
-            case com.rsc.moneta.Const.ORDER_STATUS_ACCEPTED: {
+            case PaymentOrder.ORDER_STATUS_ACCEPTED: {
                 try {
+                    EntityManager em = EMF.getEntityManager();
+                    order.setStatus(PaymentOrder.ORDER_STATUS_PAID_BUT_NOT_COMPLETED_AND_STILL_PROCESSING);
+                    new Dao(em).persist(order);
                     OutputHandler outputHandler = new Config().buildOutputHandler(order.getMarket().getOutputHandlerType());
                     CheckResponse response = outputHandler.pay(order);
+                    debug(" ResultCode = "+response.getResultCode());
+                    debug(" Description = "+response.getDescription());
                     if (response != null) {
-                        checkResponse.setResultCode(response.getResultCode());
+                        if (response.getResultCode() == ResultCode.SUCCESS_WITHOUT_AMOUNT
+                                || response.getResultCode() == ResultCode.SUCCESS_WITH_AMOUNT) {
+
+                        } else if (response.getResultCode() == ResultCode.ORDER_NOT_ACTUAL) {
+                            order.setStatus(PaymentOrder.ORDER_STATUS_PAID_BUT_REJECTED_BY_EMARKETPLACE);
+                            new Dao(em).persist(order);
+                        } else if (response.getResultCode() == ResultCode.ORDER_NOT_FOUND_IN_EMARKEPLACE) {
+                            order.setStatus(PaymentOrder.ORDER_STATUS_PAID_BUT_ORDER_NOT_FOUND);
+                            new Dao(em).persist(order);
+                        } else {
+                            order.setStatus(PaymentOrder.ORDER_STATUS_PAID_BUT_EMARKETPLACE_CANNOT_PROCESS_IT);
+                        }
                     } else {
                         checkResponse.setResultCode(ResultCode.ERROR_TRY_AGAIN);
+                        checkResponse.setDescription("В ответ пришел нуль");
+                    }
+                    try {
+                        if (order.getAccount() == null) {
+                            order.setStatus(PaymentOrder.ORDER_STATUS_PAID_AND_COMPLETED_BUT_NOT_FOUND_MARKET_ACCOUNT);
+                            new Dao(em).persist(order);
+                        } else {
+                            if (order.getAmount() == amount) {
+                                new PaymentOrderDao(em).processOrderPay(order);
+                            } else if (order.getAmount() < amount) {
+                                new PaymentOrderDao(em).processOrderPayWithOddMoney(order, order.getAmount() - amount);
+                            } else {
+                                if (order.getUser().getAccount(order.getCurrency()).getBalance() + amount > order.getAmount()) {
+                                    new PaymentOrderDao(em).processOrderFromBalance(order, amount);
+                                } else {
+                                    new PaymentOrderDao(em).addUserAccountBalance(order.getUser().getAccount(order.getCurrency()).getId(), amount);
+                                    checkResponse.setResultCode(ResultCode.SUCCESS_WITH_AMOUNT);
+                                    checkResponse.setDescription("Деньги зачислены на счет абонента в нашей системе, т.к. внесенных средств недостаточно для оплаты заказа.");
+                                    checkResponse.setTransactionId(order.getTransactionId());
+                                    checkResponse.setMarketId(order.getMarketId());
+                                    return checkResponse;
+                                }
+                            }
+                        }
+                    } finally {
+                        em.close();
                     }
                 } catch (Exception ex) {
-                    Logger.getLogger(MainPaymentHandler.class.getName()).log(Level.SEVERE, "Ошибка при создании обработчика", ex);
+                    debug("Ошибка при создании обработчика");
                     ex.printStackTrace();
                     checkResponse.setResultCode(ResultCode.INTERNAL_ERROR);
                 }
                 break;
             }
-            case com.rsc.moneta.Const.ORDER_STATUS_NOT_PAID_AND_REJECTED_BY_EMARKETPLACE: {
+            case PaymentOrder.ORDER_STATUS_NOT_PAID_AND_REJECTED_BY_EMARKETPLACE: {
                 checkResponse.setResultCode(ResultCode.ORDER_NOT_ACTUAL);
                 break;
             }
-            case com.rsc.moneta.Const.ORDER_STATUS_PAID_AND_COMPLETED: {
+            case PaymentOrder.ORDER_STATUS_PAID_AND_COMPLETED: {
                 checkResponse.setResultCode(ResultCode.ORDER_ALREADY_PAID);
                 break;
             }
-            case com.rsc.moneta.Const.ORDER_STATUS_PAID_BUT_NOT_COMPLETED_AND_STILL_PROCESSING: {
+            case PaymentOrder.ORDER_STATUS_PAID_BUT_NOT_COMPLETED_AND_STILL_PROCESSING: {
                 checkResponse.setResultCode(ResultCode.ORDER_ALREADY_PAID);
                 break;
             }
-            case com.rsc.moneta.Const.ORDER_STATUS_PAID_BUT_REJECTED_BY_EMARKETPLACE: {
+            case PaymentOrder.ORDER_STATUS_PAID_BUT_REJECTED_BY_EMARKETPLACE: {
                 checkResponse.setResultCode(ResultCode.ORDER_ALREADY_PAID);
                 break;
             }
-            case com.rsc.moneta.Const.ORDER_STATUS_UNDEFINED: {
+            case PaymentOrder.ORDER_STATUS_UNDEFINED: {
                 checkResponse.setResultCode(ResultCode.ERROR_TRY_AGAIN);
                 break;
             }
@@ -108,4 +157,13 @@ public class MainPaymentHandler {
         }
         return checkResponse;
     }
+
+    public void debug(String msg){
+        Logger.getLogger(MainPaymentHandler.class.getName()).log(Level.SEVERE, msg);
+    }
+
+    public void info(String msg){
+        Logger.getLogger(MainPaymentHandler.class.getName()).log(Level.INFO, msg);
+    }
+
 }

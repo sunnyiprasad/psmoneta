@@ -159,4 +159,12 @@ public class Market implements Serializable {
     public void setUser(User user) {
         this.user = user;
     }
+
+    public Account getAccount(int currency){
+        for (Account account : accounts) {
+            if (account.getType()==currency)
+                return account;
+        }
+        return null;
+    }
 }

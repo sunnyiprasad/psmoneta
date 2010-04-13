@@ -4,7 +4,7 @@
  */
 package com.rsc.moneta.util;
 
-import com.rsc.moneta.Const;
+import com.rsc.moneta.Currency;
 import com.rsc.moneta.bean.PaymentOrder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -103,9 +103,9 @@ public class Utils {
 
     public static String accountTypeToString(int accountType){
         switch (accountType){
-            case Const.EURO: return "EURO";
-            case Const.USD: return "USD";
-            case Const.RUB: return "RUB";
+            case Currency.EURO: return "EURO";
+            case Currency.USD: return "USD";
+            case Currency.RUB: return "RUB";
             default:
                     return "UNKNOWN";
         }
@@ -113,11 +113,11 @@ public class Utils {
 
     public static int currencyStringToAccountType(String MNT_CURRENCY_CODE) throws UnknownCurrencyException {
         if (MNT_CURRENCY_CODE.equalsIgnoreCase("RUB"))
-            return Const.RUB;
+            return Currency.RUB;
         if (MNT_CURRENCY_CODE.equalsIgnoreCase("EURO"))
-            return Const.EURO;
+            return Currency.EURO;
         if (MNT_CURRENCY_CODE.equalsIgnoreCase("USD"))
-            return Const.USD;
+            return Currency.USD;
         throw new UnknownCurrencyException(MNT_CURRENCY_CODE);
     }
 

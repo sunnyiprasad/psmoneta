@@ -21,6 +21,8 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "t_User")
 public class User implements Serializable {
+    @OneToMany(mappedBy = "user")
+    private List<PaymentOrder> paymentOrders;
 
     public static final int USER = 0;
     public static final int IMOWNER = 1;
@@ -121,6 +123,14 @@ public class User implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Account getAccount(int currency) {
+        for (Account account : accounts) {
+            if (account.getType() == currency)
+                return account;
+        }
+        return null;
     }
 
     

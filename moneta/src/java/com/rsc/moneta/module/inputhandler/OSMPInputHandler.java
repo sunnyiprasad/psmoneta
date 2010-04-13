@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.rsc.moneta.module;
+package com.rsc.moneta.module.inputhandler;
 
 import java.util.Map;
 import javax.persistence.EntityManager;
@@ -10,7 +10,10 @@ import java.util.regex.*;
 
 import com.rsc.moneta.dao.EMF;
 import com.rsc.moneta.bean.PaymentOrder;
-import com.rsc.moneta.Const;
+import com.rsc.moneta.Currency;
+import com.rsc.moneta.module.CheckResponse;
+import com.rsc.moneta.module.InputHandler;
+import com.rsc.moneta.module.MainPaymentHandler;
 
 /**
  * Класс представляет собой класс - обработчик запросов, поступающих от терминала ОСМП
@@ -114,17 +117,17 @@ public class OSMPInputHandler implements InputHandler {
                                             } else {
                                                 // Денис: Сулик, вот так не пиши, это во-первых неправильно, во-вторых, если считаешь,
                                                 // что этот статус не нужен, спроси хотя бы у меня накой я его ввёл
-                                                // if (paymentKey.getStatus() == com.rsc.moneta.Const.ORDER_STATUS_ACCEPTED) {
-                                                if (paymentOrder.getStatus() == Const.ORDER_STATUS_ACCEPTED) {
+                                                // if (paymentKey.getStatus() == com.rsc.moneta.Currency.ORDER_STATUS_ACCEPTED) {
+                                                if (paymentOrder.getStatus() == PaymentOrder.ORDER_STATUS_ACCEPTED) {
                                                     result = OSMP_RETURN_CODE_ACCOUNT_NOT_FOUND;
                                                     comment = STRING_ORDER_DOES_NOT_EXIST_ERROR;
                                                 } else {
-                                                    if (paymentOrder.getStatus() == Const.ORDER_STATUS_ACCEPTED) {
+                                                    if (paymentOrder.getStatus() == PaymentOrder.ORDER_STATUS_ACCEPTED) {
                                                         // Заказ в ПС ТЛСМ найден. 
                                                         MainPaymentHandler handler = new MainPaymentHandler();
 
                                                         // Проверка его статуса в ИМ - отправка запроса check
-                                                        CheckResponse checkResponse = handler.check(paymentOrder);
+                                                        CheckResponse checkResponse = handler.check(paymentOrder, 0.0);
 
                                                         if (checkResponse != null) {
                                                             int emarketplaceResultCode = checkResponse.getResultCode();
@@ -133,16 +136,16 @@ public class OSMPInputHandler implements InputHandler {
 //                                                                if (checkResponseReturnCode == CheckResponseReturnCodes.ORDER_IS_VALID_AND_RESPONSE_CONTAINS_AMOUNT) {
 //                                                                    // TODO: тут должна быть проверка суммы заказа - для каждого ИМ-а надо проверять на вхождение в рамки мин. и макс. суммы заказа
 //                                                                    sum = checkResponse.getAmount();
-//                                                                    result = Const.OSMP_RETURN_CODE_OK;
+//                                                                    result = Currency.OSMP_RETURN_CODE_OK;
 //                                                                    comment = "";
 //                                                                } else {
 //                                                                    if (checkResponseReturnCode == CheckResponseReturnCodes.ORDER_IS_INVALID) {
-//                                                                        result = Const.OSMP_RETURN_CODE_ACCOUNT_DISABLED;
-//                                                                        comment = Const.STRING_ORDER_IS_INVALID_FOR_EMARKETPLACE;
+//                                                                        result = Currency.OSMP_RETURN_CODE_ACCOUNT_DISABLED;
+//                                                                        comment = Currency.STRING_ORDER_IS_INVALID_FOR_EMARKETPLACE;
 //                                                                    } else {
 //                                                                        if (checkResponseReturnCode == CheckResponseReturnCodes.ORDER_IS_VALID_AND_PROCESSING) {
-//                                                                            result = Const.OSMP_RETURN_CODE_TEMPORARY_ERROR;
-//                                                                            comment = Const.STRING_ORDER_IS_PROCESSING_IN_EMARKETPLACE;
+//                                                                            result = Currency.OSMP_RETURN_CODE_TEMPORARY_ERROR;
+//                                                                            comment = Currency.STRING_ORDER_IS_PROCESSING_IN_EMARKETPLACE;
 //                                                                        } else {
 //                                                                            if (checkResponseReturnCode == CheckResponseReturnCodes.ORDER_IS_COMPLETED_AND_TLSM_NOTIFIED) {
 //                                                                                // TODO:!!! Денис - подумать вместе с Суликом - почему для ИМ-на заказ завершён а для ТЛСМ - нет и что с этим делать
@@ -161,20 +164,20 @@ public class OSMPInputHandler implements InputHandler {
                                                             comment = STRING_UNABLE_TO_REQUEST_EMARKETPLACE_FOR_ORDER_STATUS;
                                                         }
                                                     } else {
-                                                        if (paymentOrder.getStatus() == com.rsc.moneta.Const.ORDER_STATUS_NOT_PAID_AND_REJECTED_BY_EMARKETPLACE) {
+                                                        if (paymentOrder.getStatus() == PaymentOrder.ORDER_STATUS_NOT_PAID_AND_REJECTED_BY_EMARKETPLACE) {
                                                             result = OSMP_RETURN_CODE_PAY_SUPPRESS;
                                                             comment = STRING_ORDER_REJECTED_BY_EMARKETPLACE_BEFORE_TLSM_PAYMENT;
                                                         } else {
-                                                            if (paymentOrder.getStatus() == com.rsc.moneta.Const.ORDER_STATUS_PAID_AND_COMPLETED) {
+                                                            if (paymentOrder.getStatus() == PaymentOrder.ORDER_STATUS_PAID_AND_COMPLETED) {
                                                                 prv_txn = paymentOrder.getId();
                                                                 result = OSMP_RETURN_CODE_OK;
                                                                 comment = STRING_ORDER_PAID_AND_COMPLETED;
                                                             } else {
-                                                                if (paymentOrder.getStatus() == com.rsc.moneta.Const.ORDER_STATUS_PAID_BUT_NOT_COMPLETED_AND_STILL_PROCESSING) {
+                                                                if (paymentOrder.getStatus() == PaymentOrder.ORDER_STATUS_PAID_BUT_NOT_COMPLETED_AND_STILL_PROCESSING) {
                                                                     // TODO: Сулик, Денис - Обдумать, что в это случае делать
                                                                     throw new UnsupportedOperationException("Not supported yet.");
                                                                 } else {
-                                                                    if (paymentOrder.getStatus() == com.rsc.moneta.Const.ORDER_STATUS_PAID_BUT_REJECTED_BY_EMARKETPLACE) {
+                                                                    if (paymentOrder.getStatus() == PaymentOrder.ORDER_STATUS_PAID_BUT_REJECTED_BY_EMARKETPLACE) {
                                                                         result = OSMP_RETURN_CODE_PAY_SUPPRESS;
                                                                         comment = STRING_ORDER_REJECTED_BY_EMARKETPLACE_AFTER_TLSM_PAYMENT;
                                                                     } else {

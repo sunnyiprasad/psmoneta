@@ -6,7 +6,7 @@ package com.rsc.moneta.action.moneta;
 
 import com.rsc.moneta.bean.Market;
 import com.opensymphony.xwork2.Action;
-import com.rsc.moneta.Const;
+import com.rsc.moneta.Currency;
 import com.rsc.moneta.action.BaseAction;
 import com.rsc.moneta.dao.Dao;
 import com.rsc.moneta.bean.PaymentOrder;
