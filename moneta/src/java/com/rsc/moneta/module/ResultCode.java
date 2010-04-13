@@ -61,4 +61,8 @@ public class ResultCode {
     // корректный номер транзакции - в информационной системе Интернет-Магазина
     // же
     public static final int TRANSACTIONID_WAS_NOT_PROVIDED_BY_EMARKEPLACE = 16;
+    
+    // Денег было слишком мало для оплаты заказа и они были зачислены на счет
+    // абонента в нашей системе
+    public static final int SUCCESS_BUT_MONEY_LESS_THAN_MUST_BE = 17;
 }
