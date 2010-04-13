@@ -12,6 +12,7 @@ package com.rsc.moneta.module;
 public class CheckResponse {
     private Long marketId;
     private String transactionId;
+    // private ResultCode resultCode;
     private int resultCode;
     private Double amount;
     private Long operationId;
@@ -81,6 +82,13 @@ public class CheckResponse {
         this.operationId = operationId;
     }
 
+//    public ResultCode getResultCode() {
+//        return resultCode;
+//    }
+//
+//    public void setResultCode(ResultCode resultCode) {
+//        this.resultCode = resultCode;
+//    }
     public int getResultCode() {
         return resultCode;
     }
@@ -88,6 +96,7 @@ public class CheckResponse {
     public void setResultCode(int resultCode) {
         this.resultCode = resultCode;
     }
+
 
     public String getTransactionId() {
         return transactionId;

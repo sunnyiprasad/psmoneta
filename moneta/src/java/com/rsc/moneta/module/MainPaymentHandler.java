@@ -55,7 +55,7 @@ public class MainPaymentHandler {
                 break;
             }
             default: {
-                checkResponse.setResultCode(ResultCode.UNKNOWN_CODE);
+                checkResponse.setResultCode(ResultCode.UNKNOWN_CODE_RETURNED_BY_EMARKEPLACE);
                 break;
             }
         }
@@ -102,7 +102,7 @@ public class MainPaymentHandler {
                 break;
             }
             default: {
-                checkResponse.setResultCode(ResultCode.UNKNOWN_CODE);
+                checkResponse.setResultCode(ResultCode.UNKNOWN_CODE_RETURNED_BY_EMARKEPLACE);
                 break;
             }
         }
