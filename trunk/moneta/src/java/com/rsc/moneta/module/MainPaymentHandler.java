@@ -22,15 +22,24 @@ import javax.persistence.EntityManager;
  */
 public class MainPaymentHandler {
 
-    public CheckResponse check(PaymentOrder paymentOrder, Double amount) {
+    public CheckResponse check(PaymentOrder order, Double amount) {
         CheckResponse checkResponse = new CheckResponse();
-        switch (paymentOrder.getStatus()) {
+        switch (order.getStatus()) {
             case PaymentOrder.ORDER_STATUS_ACCEPTED: {
                 try {
-                    OutputHandler outputHandler = new Config().buildOutputHandler(paymentOrder.getMarket().getOutputHandlerType());
-                    CheckResponse monetaResponse = outputHandler.check(paymentOrder);
-                    if (monetaResponse != null) {
-                        checkResponse.setResultCode(monetaResponse.getResultCode());
+                    OutputHandler outputHandler = new Config().buildOutputHandler(order.getMarket().getOutputHandlerType());
+                    CheckResponse response = outputHandler.check(order);
+                    if (response != null) {
+                        if (response.getResultCode() == ResultCode.ORDER_NOT_ACTUAL ||
+                                response.getResultCode() == ResultCode.ORDER_NOT_FOUND_IN_EMARKEPLACE) {
+                            order.setStatus(PaymentOrder.ORDER_STATUS_NOT_PAID_AND_REJECTED_BY_EMARKETPLACE);
+                            EntityManager em = EMF.getEntityManager();
+                            new Dao(em).persist(order);
+                            em.close();
+                        } else {
+                            checkResponse.setResultCode(response.getResultCode());
+                            checkResponse.setDescription(response.getDescription());
+                        }
                     } else {
                         checkResponse.setResultCode(ResultCode.ERROR_TRY_AGAIN);
                     }
@@ -103,11 +112,12 @@ public class MainPaymentHandler {
                                         } else {
                                             debug("Денег не достаточно, поэтому вся сумма остается на счету абонента в нашей системе.");
                                             new PaymentOrderDao(em).addUserAccountBalance(order.getUser().getAccount(order.getCurrency()).getId(), amount);
+                                            order.setStatus(PaymentOrder.ORDER_STATUS_PAID_AND_COMPLETED_BUT_MONEY_ADDED_ON_ACCOUNT_BALANCE);
+                                            new Dao(em).persist(em);
                                             checkResponse.setResultCode(ResultCode.SUCCESS_BUT_MONEY_LESS_THAN_MUST_BE);
                                             checkResponse.setDescription("Деньги зачислены на счет абонента в нашей системе, т.к. внесенных средств недостаточно для оплаты заказа.");
                                             checkResponse.setTransactionId(order.getTransactionId());
                                             checkResponse.setMarketId(order.getMarketId());
-                                            return checkResponse;
                                         }
                                     }
                                 }
@@ -120,12 +130,11 @@ public class MainPaymentHandler {
                         } else if (response.getResultCode() == ResultCode.ORDER_NOT_FOUND_IN_EMARKEPLACE) {
                             order.setStatus(PaymentOrder.ORDER_STATUS_PAID_BUT_ORDER_NOT_FOUND);
                             new Dao(em).persist(order);
-                        } else if (response.getResultCode() == ResultCode.ERROR_TRY_AGAIN ||
-                                response.getResultCode() == ResultCode.ORDER_PROCESSING){
-                            
-                        }else {
-
+                        } else if (response.getResultCode() == ResultCode.ERROR_TRY_AGAIN
+                                || response.getResultCode() == ResultCode.ORDER_PROCESSING) {
+                        } else {
                             order.setStatus(PaymentOrder.ORDER_STATUS_PAID_BUT_EMARKETPLACE_CANNOT_PROCESS_IT);
+                            new Dao(em).persist(order);
                         }
                     } else {
                         checkResponse.setResultCode(ResultCode.ERROR_TRY_AGAIN);
@@ -147,7 +156,7 @@ public class MainPaymentHandler {
                 break;
             }
             case PaymentOrder.ORDER_STATUS_PAID_BUT_NOT_COMPLETED_AND_STILL_PROCESSING: {
-                checkResponse.setResultCode(ResultCode.ORDER_ALREADY_PAID);
+                checkResponse.setResultCode(ResultCode.ORDER_PROCESSING);
                 break;
             }
             case PaymentOrder.ORDER_STATUS_PAID_BUT_REJECTED_BY_EMARKETPLACE: {
