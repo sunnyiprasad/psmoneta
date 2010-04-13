@@ -110,7 +110,7 @@ public class MonetaOutputHandler implements OutputHandler {
         if (response.getTransactionId() != null) {
             EntityManager em = EMF.getEntityManager();
             if (order == null) {
-                response.setResultCode(ResultCode.ORDER_NOT_FOUND);
+                response.setResultCode(ResultCode.ORDER_NOT_FOUND_IN_EMARKEPLACE);
                 response.setComment("Заказ не найден");
             } else {
                 if (response.getMarketId() != null) {
@@ -121,14 +121,14 @@ public class MonetaOutputHandler implements OutputHandler {
                             sign += response.getTransactionId() + order.getMarket().getPassword();
                             String md5 = Utils.getMd5InHexString(sign);
                             if (!response.getSignature().equalsIgnoreCase(md5)) {
-                                response.setResultCode(ResultCode.INVALID_SIGN);
+                                response.setResultCode(ResultCode.INVALID_SIGN_RETURNED_BY_EMARKEPLACE);
                                 response.setDescription("Неправильная подпись");
                                 System.out.println("Invalid sign \n" + response.getSignature() + " my sign\n" + md5 + "\n" + sign);
                             } else {
                                 response.setResultCode(convertForeignCodeToBase(response.getResultCode()));
                             }
                         } else {
-                            response.setResultCode(ResultCode.INVALID_SIGN);
+                            response.setResultCode(ResultCode.INVALID_SIGN_RETURNED_BY_EMARKEPLACE);
                             response.setDescription("Отсутствует подпись со стороны интернет магазина");
                             //Отсуствует подпись ответа
                         }
@@ -137,13 +137,13 @@ public class MonetaOutputHandler implements OutputHandler {
                     }
                 } else {
                     //Идентификатор магазина не соответствует указанному.
-                    response.setResultCode(ResultCode.MARKET_ID_NOT_DEFINE);
+                    response.setResultCode(ResultCode.MARKET_ID_WAS_NOT_PROVIDED_BY_EMARKEPLACE);
                     response.setDescription("Идентификатор магазина не соответствует указанному.");
                 }
             }
         } else {
             // Не указан Идентификатор транзакции
-            response.setResultCode(ResultCode.TRANSACTIONID_NOT_DEFINE);
+            response.setResultCode(ResultCode.TRANSACTIONID_WAS_NOT_PROVIDED_BY_EMARKEPLACE);
             response.setDescription("Не указан Идентификатор транзакции");
         }
         return response;
@@ -163,7 +163,7 @@ public class MonetaOutputHandler implements OutputHandler {
             case MonetaOutputHandler.UNKNOWN_STATUS:
                 return ResultCode.ERROR_TRY_AGAIN;
             default:
-                return ResultCode.UNKNOWN_CODE;
+                return ResultCode.UNKNOWN_CODE_RETURNED_BY_EMARKEPLACE;
         }
     }
     
