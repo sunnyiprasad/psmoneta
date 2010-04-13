@@ -4,6 +4,7 @@
  */
 package com.rsc.moneta.module;
 
+import com.rsc.moneta.module.outputhandler.MonetaOutputHandler;
 import java.util.Map;
 import javax.persistence.EntityManager;
 import java.util.regex.*;

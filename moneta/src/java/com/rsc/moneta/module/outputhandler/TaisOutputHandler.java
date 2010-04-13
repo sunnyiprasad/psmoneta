@@ -2,10 +2,16 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.rsc.moneta.module;
 
+package com.rsc.moneta.module.outputhandler;
+import com.rsc.moneta.module.outputhandler.MonetaOutputHandler;
 import com.rsc.moneta.bean.PaymentOrder;
 import com.rsc.moneta.dao.EMF;
+import com.rsc.moneta.module.CheckResponse;
+import com.rsc.moneta.module.CheckResponseReturnCodes;
+import com.rsc.moneta.module.OutputHandler;
+import com.rsc.moneta.module.ResultCode;
+import com.rsc.moneta.module.UnknownStatusException;
 import com.rsc.moneta.util.Utils;
 import java.net.URL;
 import java.net.URLConnection;
@@ -16,13 +22,12 @@ import javax.persistence.EntityManager;
 import org.w3c.dom.Document;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.commons.io.IOUtils;
-
+import org.w3c.dom.NodeList;
 /**
  *
  * @author sulic
  */
-public class MonetaOutputHandler implements OutputHandler {
-
+public class TaisOutputHandler implements OutputHandler{
     /*
      * Ответ содержит сумму заказа для оплаты. Данным кодом следует отвечать,
     когда в параметрах проверочного запроса не был указан параметр MNT_AMOUNT
@@ -59,7 +64,7 @@ public class MonetaOutputHandler implements OutputHandler {
             System.out.println(xml);
             Document doc = fac.newDocumentBuilder().parse(IOUtils.toInputStream(xml));
             CheckResponse response = parseResponse(doc);
-            return checkSignature(response, order);
+            return process(response, order);
         } catch (Exception ex) {
             Logger.getLogger(MonetaOutputHandler.class.getName()).log(Level.SEVERE, null, ex);
             ex.printStackTrace();
@@ -81,7 +86,7 @@ public class MonetaOutputHandler implements OutputHandler {
             System.out.println(xml);
             Document doc = fac.newDocumentBuilder().parse(IOUtils.toInputStream(xml));
             CheckResponse response = parseResponse(doc);
-            return checkSignature(response, order);
+            return process(response, order);
         } catch (Exception ex) {
             Logger.getLogger(MonetaOutputHandler.class.getName()).log(Level.SEVERE, null, ex);
             ex.printStackTrace();
@@ -92,16 +97,29 @@ public class MonetaOutputHandler implements OutputHandler {
     public CheckResponse parseResponse(Document doc) {
         CheckResponse response = new CheckResponse();
         response.setMarketId(Utils.getLongValue("MNT_ID", doc));
-        response.setTransactionId(doc.getElementsByTagName("MNT_TRANSACTION_ID").item(0).getTextContent());
+
+        NodeList nodeList = doc.getElementsByTagName("MNT_TRANSACTION_ID");
+        if (nodeList != null)
+            if (nodeList.getLength() > 0)
+                response.setTransactionId(nodeList.item(0).getTextContent());
+        
+        nodeList = doc.getElementsByTagName("MNT_SIGNATURE");
+        if (nodeList != null)
+            if (nodeList.getLength() > 0)
+                response.setSignature(nodeList.item(0).getTextContent());
+
+        nodeList = doc.getElementsByTagName("MNT_DESCRIPTION");
+        if (nodeList != null)
+            if (nodeList.getLength() > 0)
+                response.setDescription(nodeList.item(0).getTextContent());
+
         response.setResultCode(Utils.getIntValue("MNT_RESULT_CODE", doc));
         response.setAmount(Utils.getDoubleValue("MNT_AMOUNT", doc));
-        response.setOperationId(Utils.getLongValue("MNT_OPERATION_ID", doc));
-        response.setSignature(doc.getElementsByTagName("MNT_SIGNATURE").item(0).getTextContent());
-        response.setDescription(doc.getElementsByTagName("MNT_DESCRIPTION").item(0).getTextContent());
+        response.setOperationId(Utils.getLongValue("MNT_OPERATION_ID", doc));        
         return response;
     }
 
-    private CheckResponse checkSignature(CheckResponse response, PaymentOrder order) throws NoSuchAlgorithmException {
+    private CheckResponse process(CheckResponse response, PaymentOrder order) throws NoSuchAlgorithmException {
         if (response.getTransactionId() != null) {
             EntityManager em = EMF.getEntityManager();
             if (order == null) {
@@ -132,8 +150,8 @@ public class MonetaOutputHandler implements OutputHandler {
                     }
                 } else {
                     //Идентификатор магазина не соответствует указанному.
-                    response.setResultCode(ResultCode.MARKET_ID_NOT_DEFINE);
-                    response.setDescription("Идентификатор магазина не соответствует указанному.");
+                    response.setResultCode(ResultCode.ORDER_NOT_FOUND);
+                    response.setDescription("Идентификатор магазина не соответствует указанному. Скорее всего неправильно введен код заказа.");
                 }
             }
         } else {
@@ -142,26 +160,26 @@ public class MonetaOutputHandler implements OutputHandler {
             response.setDescription("Не указан Идентификатор транзакции");
         }
         return response;
-    }    
+    }
 
-    
+
     public int convertForeignCodeToBase(int code) {
         switch (code) {
-            case MonetaOutputHandler.ANSWER_CONTAINS_AMOUNT:
+            case ANSWER_CONTAINS_AMOUNT:
                 return ResultCode.SUCCESS_WITH_AMOUNT;
-            case MonetaOutputHandler.ORDER_IS_CREATE:
+            case ORDER_IS_CREATE:
                 return ResultCode.SUCCESS_WITHOUT_AMOUNT;
-            case MonetaOutputHandler.ORDER_NOT_ACTUAL:
+            case ORDER_NOT_ACTUAL:
                 return ResultCode.ORDER_NOT_ACTUAL;
-            case MonetaOutputHandler.PAYMENT_SUCCESS:
+            case PAYMENT_SUCCESS:
                 return ResultCode.SUCCESS_WITH_AMOUNT;
-            case MonetaOutputHandler.UNKNOWN_STATUS:
+            case UNKNOWN_STATUS:
                 return ResultCode.ERROR_TRY_AGAIN;
             default:
                 return ResultCode.UNKNOWN_CODE;
         }
     }
-    
+
     // TODO: Денис, ИМХО неправильно такой метод иметь, так как я считаю, что:
     //18:19:15] Denis Solodovnikov говорит: мое
     //мнение такое что неправильно сопоставлять статус ответа от ИМ со статусом соотвествующего ему будущего нашего ответа терминальной ПС, так как один и тот же статус ответа от ИМ может соотвествовать разным статусам ответа терминальной ПС
