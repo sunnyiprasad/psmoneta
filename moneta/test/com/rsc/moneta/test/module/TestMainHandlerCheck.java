@@ -10,7 +10,6 @@ import com.rsc.moneta.bean.PaymentOrder;
 import com.rsc.moneta.dao.EMF;
 import com.rsc.moneta.dao.MarketDao;
 import com.rsc.moneta.dao.PaymentOrderDao;
-import com.rsc.moneta.module.CheckRequest;
 import com.rsc.moneta.module.CheckResponse;
 import com.rsc.moneta.module.MainPaymentHandler;
 import com.rsc.moneta.module.ResultCode;
@@ -38,9 +37,8 @@ public class TestMainHandlerCheck {
         }
         PaymentOrder paymentOrder = new PaymentOrderDao(em).getPaymentOrder("97665487", market.getId());        
         MainPaymentHandler handler = new MainPaymentHandler();
-        CheckRequest request = new CheckRequest();
-        request.setPaymentKey(paymentOrder);
-        CheckResponse checkResponse = handler.check(request);
+       
+        CheckResponse checkResponse = handler.check(paymentOrder);
         Assert.assertNotNull(checkResponse);
         Assert.assertEquals(ResultCode.ORDER_NOT_FOUND, checkResponse.getResultCode());
     }
@@ -58,9 +56,7 @@ public class TestMainHandlerCheck {
         }
         PaymentOrder paymentOrder = new PaymentOrderDao(em).getPaymentOrder("97665487", market.getId());
         MainPaymentHandler handler = new MainPaymentHandler();
-        CheckRequest request = new CheckRequest();
-        request.setPaymentKey(paymentOrder);
-        CheckResponse checkResponse = handler.check(request);
+        CheckResponse checkResponse = handler.check(paymentOrder);
         Assert.assertNotNull(checkResponse);
         Assert.assertEquals(ResultCode.ORDER_NOT_FOUND, checkResponse.getResultCode());
     }
@@ -77,10 +73,8 @@ public class TestMainHandlerCheck {
         }
         PaymentOrder paymentOrder = new PaymentOrderDao(em).getPaymentOrder("1561", market.getId());
         MainPaymentHandler handler = new MainPaymentHandler();
-        CheckRequest request = new CheckRequest();
-        request.setPaymentKey(paymentOrder);
         paymentOrder.setAmount(null);
-        CheckResponse checkResponse = handler.check(request);
+        CheckResponse checkResponse = handler.check(paymentOrder);
         Assert.assertNotNull(checkResponse);
         Assert.assertEquals(ResultCode.SUCCESS_WITH_AMOUNT, checkResponse.getResultCode());
     }
@@ -97,9 +91,7 @@ public class TestMainHandlerCheck {
         }
         PaymentOrder paymentOrder = new PaymentOrderDao(em).getPaymentOrder("1561", market.getId());
         MainPaymentHandler handler = new MainPaymentHandler();
-        CheckRequest request = new CheckRequest();
-        request.setPaymentKey(paymentOrder);
-        CheckResponse checkResponse = handler.check(request);
+        CheckResponse checkResponse = handler.check(paymentOrder);
         Assert.assertNotNull(checkResponse);
         Assert.assertEquals(ResultCode.SUCCESS_WITHOUT_AMOUNT, checkResponse.getResultCode());
     }

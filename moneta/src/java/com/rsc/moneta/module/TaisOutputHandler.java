@@ -16,6 +16,7 @@ import javax.persistence.EntityManager;
 import org.w3c.dom.Document;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.commons.io.IOUtils;
+import org.w3c.dom.NodeList;
 /**
  *
  * @author sulic
@@ -90,12 +91,25 @@ public class TaisOutputHandler implements OutputHandler{
     public CheckResponse parseResponse(Document doc) {
         CheckResponse response = new CheckResponse();
         response.setMarketId(Utils.getLongValue("MNT_ID", doc));
-        response.setTransactionId(doc.getElementsByTagName("MNT_TRANSACTION_ID").item(0).getTextContent());
+
+        NodeList nodeList = doc.getElementsByTagName("MNT_TRANSACTION_ID");
+        if (nodeList != null)
+            if (nodeList.getLength() > 0)
+                response.setTransactionId(nodeList.item(0).getTextContent());
+        
+        nodeList = doc.getElementsByTagName("MNT_SIGNATURE");
+        if (nodeList != null)
+            if (nodeList.getLength() > 0)
+                response.setSignature(nodeList.item(0).getTextContent());
+
+        nodeList = doc.getElementsByTagName("MNT_DESCRIPTION");
+        if (nodeList != null)
+            if (nodeList.getLength() > 0)
+                response.setDescription(nodeList.item(0).getTextContent());
+
         response.setResultCode(Utils.getIntValue("MNT_RESULT_CODE", doc));
         response.setAmount(Utils.getDoubleValue("MNT_AMOUNT", doc));
-        response.setOperationId(Utils.getLongValue("MNT_OPERATION_ID", doc));
-        response.setSignature(doc.getElementsByTagName("MNT_SIGNATURE").item(0).getTextContent());
-        response.setDescription(doc.getElementsByTagName("MNT_DESCRIPTION").item(0).getTextContent());
+        response.setOperationId(Utils.getLongValue("MNT_OPERATION_ID", doc));        
         return response;
     }
 

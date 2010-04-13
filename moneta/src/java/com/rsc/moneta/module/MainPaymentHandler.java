@@ -15,14 +15,13 @@ import java.util.logging.Logger;
  */
 public class MainPaymentHandler {
 
-    public CheckResponse check(CheckRequest request) {
+    public CheckResponse check(PaymentOrder paymentOrder) {
         CheckResponse checkResponse = new CheckResponse();
-        PaymentOrder paymentKey = request.getPaymentKey();
-        switch (paymentKey.getStatus()) {
+        switch (paymentOrder.getStatus()) {
             case com.rsc.moneta.Const.ORDER_STATUS_ACCEPTED: {
                 try {
-                    OutputHandler outputHandler = new Config().buildOutputHandler(paymentKey.getMarket().getOutputHandlerType());
-                    CheckResponse monetaResponse = outputHandler.check(paymentKey);
+                    OutputHandler outputHandler = new Config().buildOutputHandler(paymentOrder.getMarket().getOutputHandlerType());
+                    CheckResponse monetaResponse = outputHandler.check(paymentOrder);
                     if (monetaResponse != null) {
                         checkResponse.setResultCode(monetaResponse.getResultCode());
                     } else {
