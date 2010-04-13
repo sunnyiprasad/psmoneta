@@ -79,49 +79,57 @@ public class MainPaymentHandler {
                     new Dao(em).persist(order);
                     OutputHandler outputHandler = new Config().buildOutputHandler(order.getMarket().getOutputHandlerType());
                     CheckResponse response = outputHandler.pay(order);
-                    debug(" ResultCode = "+response.getResultCode());
-                    debug(" Description = "+response.getDescription());
+                    debug(" ResultCode = " + response.getResultCode());
+                    debug(" Description = " + response.getDescription());
                     if (response != null) {
                         if (response.getResultCode() == ResultCode.SUCCESS_WITHOUT_AMOUNT
                                 || response.getResultCode() == ResultCode.SUCCESS_WITH_AMOUNT) {
-
+                            try {
+                                if (order.getAccount() == null) {
+                                    order.setStatus(PaymentOrder.ORDER_STATUS_PAID_AND_COMPLETED_BUT_NOT_FOUND_MARKET_ACCOUNT);
+                                    new Dao(em).persist(order);
+                                } else {
+                                    if (order.getAmount() == amount) {
+                                        debug("Сумма совершенно одинаковая просто производим начисление на счет");
+                                        new PaymentOrderDao(em).processOrderPay(order);
+                                    } else if (order.getAmount() < amount) {
+                                        debug("Сумма больше чем нужно, поэтому сдачу начисляем на счет абонента в системе");
+                                        new PaymentOrderDao(em).processOrderPayWithOddMoney(order, order.getAmount() - amount);
+                                    } else {
+                                        debug("Суммы меньше чем нужно. Проверяем есть ли деньги на счету абонента в нашей системе");
+                                        if (order.getUser().getAccount(order.getCurrency()).getBalance() + amount > order.getAmount()) {
+                                            debug("Денег на счету достаточно, можно проводить платеж с тех средств");
+                                            new PaymentOrderDao(em).processOrderFromBalance(order, amount);
+                                        } else {
+                                            debug("Денег не достаточно, поэтому вся сумма остается на счету абонента в нашей системе.");
+                                            new PaymentOrderDao(em).addUserAccountBalance(order.getUser().getAccount(order.getCurrency()).getId(), amount);
+                                            checkResponse.setResultCode(ResultCode.SUCCESS_BUT_MONEY_LESS_THAN_MUST_BE);
+                                            checkResponse.setDescription("Деньги зачислены на счет абонента в нашей системе, т.к. внесенных средств недостаточно для оплаты заказа.");
+                                            checkResponse.setTransactionId(order.getTransactionId());
+                                            checkResponse.setMarketId(order.getMarketId());
+                                            return checkResponse;
+                                        }
+                                    }
+                                }
+                            } finally {
+                                em.close();
+                            }
                         } else if (response.getResultCode() == ResultCode.ORDER_NOT_ACTUAL) {
                             order.setStatus(PaymentOrder.ORDER_STATUS_PAID_BUT_REJECTED_BY_EMARKETPLACE);
                             new Dao(em).persist(order);
                         } else if (response.getResultCode() == ResultCode.ORDER_NOT_FOUND_IN_EMARKEPLACE) {
                             order.setStatus(PaymentOrder.ORDER_STATUS_PAID_BUT_ORDER_NOT_FOUND);
                             new Dao(em).persist(order);
-                        } else {
+                        } else if (response.getResultCode() == ResultCode.ERROR_TRY_AGAIN ||
+                                response.getResultCode() == ResultCode.ORDER_PROCESSING){
+                            
+                        }else {
+
                             order.setStatus(PaymentOrder.ORDER_STATUS_PAID_BUT_EMARKETPLACE_CANNOT_PROCESS_IT);
                         }
                     } else {
                         checkResponse.setResultCode(ResultCode.ERROR_TRY_AGAIN);
                         checkResponse.setDescription("В ответ пришел нуль");
-                    }
-                    try {
-                        if (order.getAccount() == null) {
-                            order.setStatus(PaymentOrder.ORDER_STATUS_PAID_AND_COMPLETED_BUT_NOT_FOUND_MARKET_ACCOUNT);
-                            new Dao(em).persist(order);
-                        } else {
-                            if (order.getAmount() == amount) {
-                                new PaymentOrderDao(em).processOrderPay(order);
-                            } else if (order.getAmount() < amount) {
-                                new PaymentOrderDao(em).processOrderPayWithOddMoney(order, order.getAmount() - amount);
-                            } else {
-                                if (order.getUser().getAccount(order.getCurrency()).getBalance() + amount > order.getAmount()) {
-                                    new PaymentOrderDao(em).processOrderFromBalance(order, amount);
-                                } else {
-                                    new PaymentOrderDao(em).addUserAccountBalance(order.getUser().getAccount(order.getCurrency()).getId(), amount);
-                                    checkResponse.setResultCode(ResultCode.SUCCESS_WITH_AMOUNT);
-                                    checkResponse.setDescription("Деньги зачислены на счет абонента в нашей системе, т.к. внесенных средств недостаточно для оплаты заказа.");
-                                    checkResponse.setTransactionId(order.getTransactionId());
-                                    checkResponse.setMarketId(order.getMarketId());
-                                    return checkResponse;
-                                }
-                            }
-                        }
-                    } finally {
-                        em.close();
                     }
                 } catch (Exception ex) {
                     debug("Ошибка при создании обработчика");
@@ -158,12 +166,11 @@ public class MainPaymentHandler {
         return checkResponse;
     }
 
-    public void debug(String msg){
+    public void debug(String msg) {
         Logger.getLogger(MainPaymentHandler.class.getName()).log(Level.SEVERE, msg);
     }
 
-    public void info(String msg){
+    public void info(String msg) {
         Logger.getLogger(MainPaymentHandler.class.getName()).log(Level.INFO, msg);
     }
-
 }
