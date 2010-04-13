@@ -16,8 +16,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
-
-import com.rsc.moneta.Currency;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -80,6 +78,9 @@ public class PaymentOrder implements Serializable {
     //      В данном случае средства не будут зачислены на счет ИМ в ТЛСМ.
     //
     public static int ORDER_STATUS_PAID_BUT_EMARKETPLACE_CANNOT_PROCESS_IT = 8;
+    //   9: Данный код будет выставлен если платеж прошел успешно но до ИМ не дошел.
+    //      Денег было слишком мало и их зачислили на счет абонента в ТЛСМ
+    public static int ORDER_STATUS_PAID_AND_COMPLETED_BUT_MONEY_ADDED_ON_ACCOUNT_BALANCE = 9;
 
 
     @OneToMany(mappedBy = "key")
