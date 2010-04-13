@@ -1,6 +1,6 @@
 package com.rsc.moneta.test;
 
-import com.rsc.moneta.Const;
+import com.rsc.moneta.Currency;
 import com.rsc.moneta.bean.Account;
 import com.rsc.moneta.dao.Dao;
 import com.rsc.moneta.dao.EMF;
@@ -55,10 +55,10 @@ public class InitTestData {
     public void testCreateAccount() throws MalformedURLException, IOException {
         EntityManager em = EMF.getEntityManager();
         Account account = new Account();
-        account.setType(Const.RUB);
+        account.setType(Currency.RUB);
         User user = new UserDao(em).getUserByPhone("test");
         Assert.assertNotNull(user);
-        Collection<Account> accounts = new AccountDao(em).getAccounts(user.getId(), Const.RUB);
+        Collection<Account> accounts = new AccountDao(em).getAccounts(user.getId(), Currency.RUB);
         if (accounts.size() == 1) {
             return;
         }

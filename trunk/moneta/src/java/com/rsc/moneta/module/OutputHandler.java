@@ -14,7 +14,5 @@ import com.rsc.moneta.bean.PaymentOrder;
  */
 public interface OutputHandler {
     CheckResponse check(PaymentOrder key);
-    CheckResponse pay(PaymentOrder key);
-    int convertForeignCodeToBase(int code)throws UnknownStatusException;    
-    CheckResponseReturnCodes convertEmarketplaceReturnCodeToTLSMReturnCode(int emarketplaceReturnCode) throws UnknownStatusException;
+    CheckResponse pay(PaymentOrder key);    
 }

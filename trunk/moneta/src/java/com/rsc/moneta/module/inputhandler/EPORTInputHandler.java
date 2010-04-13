@@ -3,8 +3,9 @@
  * and open the template in the editor.
  */
 
-package com.rsc.moneta.module;
+package com.rsc.moneta.module.inputhandler;
 
+import com.rsc.moneta.module.InputHandler;
 import java.util.Map;
 
 /**

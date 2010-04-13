@@ -17,7 +17,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 
-import com.rsc.moneta.Const;
+import com.rsc.moneta.Currency;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -32,6 +32,56 @@ import javax.persistence.UniqueConstraint;
 @Entity
 @Table(uniqueConstraints={@UniqueConstraint(columnNames={"transactionId", "marketId"})})
 public class PaymentOrder implements Serializable {
+
+    // Статус заказа ТЛСМ - возможные варианты
+    // TODO: Сулик, статусы, проверь и добавь статусы если нужно, пжлст
+    //  -1: неопределён
+    //у нас не должно быть не определенного статуса!!!
+    // Денис: на пока всё-таки раскомментирую и попробую объяснить зачем этот статус Сулику :-)
+    public final static int ORDER_STATUS_UNDEFINED = -1;
+
+    //   1: заказ от покупателя принят, сохранён в системе ТЛСМ, заказ забронирован в Интернет-Магазине,
+    //      Интернет-Магазине об этом "знает", следующий шаг - оплата брони и получение документа об оплате
+    //      (билета, чека и т.п.)
+    public final static int ORDER_STATUS_ACCEPTED = 1;
+
+    //   2: забронированный ранее но еще не оплаченный заказ Интернет-Магазином признан
+    //      инвалидным и отменён
+    public final static int ORDER_STATUS_NOT_PAID_AND_REJECTED_BY_EMARKETPLACE = 2;
+
+    //   3: заказ оплачен покупателем, деньги получены в терминальной ПС и ТЛСМ об этом известно,
+    //      системой ТЛСМ передано сообщение Интернет-магазину об оплате
+    //      В данном случае средства зачисляются на счет ИМ в ТЛСМ.
+    public final static int ORDER_STATUS_PAID_AND_COMPLETED = 3;
+
+    //   4: заказ оплачен покупателем, деньги получены в терминальной ПС и ТЛСМ об этом известно,
+    //      но системой ТЛСМ не передано сообщение Интернет-магазину об оплате
+    //      при этом продолжается обработка платежа. т.е. платеж не закрыт, и должен быть
+    //      передан в ИМ.
+    //      В данном случае средства не будут зачислены на счет ИМ в ТЛСМ.
+    public final static int ORDER_STATUS_PAID_BUT_NOT_COMPLETED_AND_STILL_PROCESSING = 4;
+
+    //   5: заказ оплачен покупателем, деньги получены в терминальной ПС и ТЛСМ об этом известно,
+    //      но заказ Интернет-Магазином признан инвалидным и отменён
+    //      В данном случае средства не будут зачислены на счет ИМ в ТЛСМ.
+    public final static int ORDER_STATUS_PAID_BUT_REJECTED_BY_EMARKETPLACE = 5;
+    //   6: заказ успешно оплачен, однако зачислить эти деньги на счет не удалось
+    //      по причине отсуствия кошелька у ИМ в нашей системе с данным типом валюты.
+    //      Данная ситуация по идее не может быть, однако на всякий случай код введен.
+    //      В данном случае средства не будут зачислены на счет ИМ в ТЛСМ.
+    public static int ORDER_STATUS_PAID_AND_COMPLETED_BUT_NOT_FOUND_MARKET_ACCOUNT = 6;
+    //   7: данный код по сути наврятли возможен. Эта возможно может быть только в ситуации
+    //      если запрос пей был отправлен без предварительного чека, либо при чеке ИМ вернул
+    //      нормальный ответ, а после чека вернул код не найден заказ
+    //      В данном случае средства не будут зачислены на счет ИМ в ТЛСМ.
+    public static int ORDER_STATUS_PAID_BUT_ORDER_NOT_FOUND = 7;
+    //   8: Данный код маловероятен. Он будет получен в случае если ИМ не нормально отрабатывает запросы нашей системы.
+    //      Например в ситуации когда ответ присланный ИМ не соотвествует протоколу
+    //      В данном случае средства не будут зачислены на счет ИМ в ТЛСМ.
+    //
+    public static int ORDER_STATUS_PAID_BUT_EMARKETPLACE_CANNOT_PROCESS_IT = 8;
+
+
     @OneToMany(mappedBy = "key")
     private List<PaymentParameter> paymentParameters;
     private static final long serialVersionUID = 1L;
@@ -69,7 +119,7 @@ public class PaymentOrder implements Serializable {
 
     // Статус заказа ТЛСМ
     @Column(name = "orderstatus")
-    private int status = Const.ORDER_STATUS_ACCEPTED;
+    private int status = ORDER_STATUS_ACCEPTED;
 
     @Column(name = "_date")
     @Temporal(javax.persistence.TemporalType.DATE)
@@ -81,6 +131,29 @@ public class PaymentOrder implements Serializable {
     @JoinColumn(name = "marketId")
     private Market market;
 
+    @ManyToOne
+    private Account account;
+
+    @ManyToOne
+    private User user;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+    
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
+    
     public long getMarketId() {
         return marketId;
     }

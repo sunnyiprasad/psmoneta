@@ -18,7 +18,6 @@ public class CheckResponse {
     private Long operationId;
     private String name;
     private String signature;
-    private String comment;
     private String description;
 
     public String getDescription() {
@@ -28,16 +27,6 @@ public class CheckResponse {
     public void setDescription(String description) {
         this.description = description;
     }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
-
 
     public String getSignature() {
         return signature;

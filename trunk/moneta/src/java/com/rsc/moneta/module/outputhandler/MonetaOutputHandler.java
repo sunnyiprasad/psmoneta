@@ -7,10 +7,8 @@ package com.rsc.moneta.module.outputhandler;
 import com.rsc.moneta.bean.PaymentOrder;
 import com.rsc.moneta.dao.EMF;
 import com.rsc.moneta.module.CheckResponse;
-import com.rsc.moneta.module.CheckResponseReturnCodes;
 import com.rsc.moneta.module.OutputHandler;
 import com.rsc.moneta.module.ResultCode;
-import com.rsc.moneta.module.UnknownStatusException;
 import com.rsc.moneta.util.Utils;
 import java.net.URL;
 import java.net.URLConnection;
@@ -111,7 +109,7 @@ public class MonetaOutputHandler implements OutputHandler {
             EntityManager em = EMF.getEntityManager();
             if (order == null) {
                 response.setResultCode(ResultCode.ORDER_NOT_FOUND_IN_EMARKEPLACE);
-                response.setComment("Заказ не найден");
+                response.setDescription("Заказ не найден");
             } else {
                 if (response.getMarketId() != null) {
                     if (order.getMarket().isSignable()) {
@@ -167,42 +165,6 @@ public class MonetaOutputHandler implements OutputHandler {
         }
     }
     
-    // TODO: Денис, ИМХО неправильно такой метод иметь, так как я считаю, что:
-    //18:19:15] Denis Solodovnikov говорит: мое
-    //мнение такое что неправильно сопоставлять статус ответа от ИМ со статусом соотвествующего ему будущего нашего ответа терминальной ПС, так как один и тот же статус ответа от ИМ может соотвествовать разным статусам ответа терминальной ПС
-    //
-    //- в зависимости от нашей логики[18:
-    //
-    //21:43] Denis Solodovnikov говорит: в
-    //итоге можно сделать класс либо енум наших статусов ответа от ИМ[18:
-    //
-    //22:06] Denis Solodovnikov говорит: и
-    //вот к ним приводить статусы ответа от реальных ИМ в твоей функции[
-    //
-    //18:23:00] Denis Solodovnikov говорит: а
-    //затем эти наши статусы ответа я анализирую в хендлере и решаю чего отправлять терминальной ПС
-
-    // Метод соотнесения статуса заказа, возвращённого Интернет-Магазином и
-    // статусов заказов ПС ТЛСМ, возвращаемых информационной системой
-    // Интернет - Магазина в ответ на  запросы "check" от ПС ТЛСМ
-    public CheckResponseReturnCodes convertEmarketplaceReturnCodeToTLSMReturnCode(int emarketplaceReturnCode) throws UnknownStatusException {
-        if (emarketplaceReturnCode == ANSWER_CONTAINS_AMOUNT) {
-            return CheckResponseReturnCodes.ORDER_IS_VALID_AND_RESPONSE_CONTAINS_AMOUNT;
-        } else {
-            if (emarketplaceReturnCode == PAYMENT_SUCCESS) {
-                return CheckResponseReturnCodes.ORDER_IS_COMPLETED_AND_TLSM_NOTIFIED;
-            } else {
-                if (emarketplaceReturnCode == UNKNOWN_STATUS || emarketplaceReturnCode == ORDER_IS_CREATE) {
-                    return CheckResponseReturnCodes.ORDER_IS_VALID_AND_PROCESSING;
-                } else {
-                    if (emarketplaceReturnCode == ORDER_NOT_ACTUAL) {
-                        return CheckResponseReturnCodes.ORDER_IS_INVALID;
-                    } else {
-                        throw new UnknownStatusException(emarketplaceReturnCode);
-                    }
-                }
-            }
-        }
-    }
+    
 
 }
