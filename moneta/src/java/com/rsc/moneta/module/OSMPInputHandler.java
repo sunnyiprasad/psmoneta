@@ -127,11 +127,7 @@ public class OSMPInputHandler implements InputHandler {
                                                         CheckResponse checkResponse = handler.check(paymentOrder);
 
                                                         if (checkResponse != null) {
-                                                            // TODO:!!!
-                                                            // TODO: int
                                                             int emarketplaceResultCode = checkResponse.getResultCode();
-                                                            // ResultCode emarketplaceResultCode = checkResponse.getResultCode();
-                                                            // TODO: int и так должно быть
 //                                                                CheckResponseReturnCodes checkResponseReturnCode =
 //                                                                        handler.convertEmarketplaceReturnCodeToTLSMReturnCode((int)emarketplaceResultCode);
 //                                                                if (checkResponseReturnCode == CheckResponseReturnCodes.ORDER_IS_VALID_AND_RESPONSE_CONTAINS_AMOUNT) {
