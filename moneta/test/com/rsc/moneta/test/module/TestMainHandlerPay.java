@@ -28,7 +28,7 @@ public class TestMainHandlerPay {
         EntityManager em = EMF.getEntityManager();
         PaymentOrder order = new PaymentOrderDao(em).getPaymentOrder("97665487", 67699912);
         Assert.assertNotNull(order);
-        MainPaymentHandler handler = new MainPaymentHandler();
+        MainPaymentHandler handler = new MainPaymentHandler(em);
         CheckResponse response = handler.pay(order, order.getAmount());
         Assert.assertNotNull(response);
         Assert.assertEquals(ResultCode.ORDER_NOT_FOUND_IN_EMARKEPLACE , response.getResultCode());
@@ -40,7 +40,7 @@ public class TestMainHandlerPay {
         EntityManager em = EMF.getEntityManager();
         PaymentOrder order = new PaymentOrderDao(em).getPaymentOrder("1561", 67699912);
         Assert.assertNotNull(order);
-        MainPaymentHandler handler = new MainPaymentHandler();
+        MainPaymentHandler handler = new MainPaymentHandler(em);
         CheckResponse response = handler.pay(order, order.getAmount());
         Assert.assertNotNull(response);
         Assert.assertEquals(ResultCode.SUCCESS_WITH_AMOUNT , response.getResultCode());
@@ -53,7 +53,7 @@ public class TestMainHandlerPay {
         PaymentOrder order = new PaymentOrderDao(em).getPaymentOrder("1561", 67699912);
         Assert.assertNotNull(order);
         order.setAmount(null);
-        MainPaymentHandler handler = new MainPaymentHandler();
+        MainPaymentHandler handler = new MainPaymentHandler(em);
         CheckResponse response = handler.pay(order, order.getAmount());
         Assert.assertNotNull(response);
         Assert.assertEquals(ResultCode.SUCCESS_WITH_AMOUNT , response.getResultCode());
