@@ -47,14 +47,7 @@ public class Assistant extends BaseAction {
     private Market market;
 
     @Override
-    public String execute() throws Exception {
-        //  Здесь должен быть обработчик.
-        // Сюда придет запрос от ТАИСа с том, что билет куплен
-        // и необходио быть готовым принять платеж за него.
-        // описание параметров смотрите в MONETA.Assistant
-        // см.стр. 13
-        // По идее после обработки у пользователя необходимо запросить номер телефона
-        // И отправить пользователя на страницу с поддерживаемыми платежными системами.        
+    public String execute() throws Exception {          
         HttpServletRequest request = ServletActionContext.getRequest();
         String _monetaLocale = request.getParameter("moneta.locale");
         if (_monetaLocale != null) {
@@ -116,8 +109,9 @@ public class Assistant extends BaseAction {
         paymentKey.setCustom2(MNT_CUSTOM2);
         paymentKey.setCustom3(MNT_CUSTOM3);
         paymentKey.setDescription(MNT_DESCRIPTION);
-        paymentKey.setFailUrl(MNT_FAIL_URL);
+        paymentKey.setFailUrl(MNT_FAIL_URL);        
         paymentKey.setCurrency(Utils.currencyStringToAccountType(MNT_CURRENCY_CODE));
+        paymentKey.setAccount(market.getAccount(paymentKey.getCurrency()));
         if (MNT_SUCCESS_URL != null)
             paymentKey.setSuccessUrl(MNT_SUCCESS_URL);
         else

@@ -31,7 +31,7 @@ public class TestMainHandlerPay {
         MainPaymentHandler handler = new MainPaymentHandler(em);
         CheckResponse response = handler.pay(order, order.getAmount());
         Assert.assertNotNull(response);
-        Assert.assertEquals(ResultCode.ORDER_NOT_FOUND_IN_EMARKEPLACE , response.getResultCode());
+        Assert.assertEquals(ResultCode.ORDER_NOT_FOUND_IN_EMARKETPLACE, response.getResultCode());
     }
 
     @Test
