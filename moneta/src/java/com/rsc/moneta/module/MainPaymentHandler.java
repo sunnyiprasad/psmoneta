@@ -28,7 +28,7 @@ public class MainPaymentHandler {
         this.em = em;
     }
 
-    public CheckResponse check(PaymentOrder order, Double amount) {
+    public CheckResponse check(PaymentOrder order) {
         CheckResponse checkResponse = new CheckResponse();
         switch (order.getStatus()) {
             case PaymentOrder.ORDER_STATUS_ACCEPTED: {
@@ -36,8 +36,8 @@ public class MainPaymentHandler {
                     OutputHandler outputHandler = new Config().buildOutputHandler(order.getMarket().getOutputHandlerType());
                     CheckResponse response = outputHandler.check(order);
                     if (response != null) {
-                        if (response.getResultCode() == ResultCode.ORDER_NOT_ACTUAL
-                                || response.getResultCode() == ResultCode.ORDER_NOT_FOUND_IN_EMARKEPLACE) {
+                        if (response.getResultCode() == ResultCode.ORDER_NOT_ACTUAL ||
+                                response.getResultCode() == ResultCode.ORDER_NOT_FOUND_IN_EMARKETPLACE) {
                             order.setStatus(PaymentOrder.ORDER_STATUS_NOT_PAID_AND_REJECTED_BY_EMARKETPLACE);
                             new Dao(em).persist(order);
                         } else {
@@ -127,11 +127,9 @@ public class MainPaymentHandler {
                         } else if (response.getResultCode() == ResultCode.ORDER_NOT_ACTUAL) {
                             order.setStatus(PaymentOrder.ORDER_STATUS_PAID_BUT_REJECTED_BY_EMARKETPLACE);
                             new Dao(em).persist(order);
-                        } else if (response.getResultCode() == ResultCode.ORDER_NOT_FOUND_IN_EMARKEPLACE) {
                             order.setStatus(PaymentOrder.ORDER_STATUS_PAID_BUT_ORDER_NOT_FOUND);
                             new Dao(em).persist(order);
-                        } else if (response.getResultCode() == ResultCode.ERROR_TRY_AGAIN
-                                || response.getResultCode() == ResultCode.ORDER_PROCESSING) {
+                        } else if (response.getResultCode() == ResultCode.ERROR_TRY_AGAIN) {
                         } else {
                             order.setStatus(PaymentOrder.ORDER_STATUS_PAID_BUT_EMARKETPLACE_CANNOT_PROCESS_IT);
                             new Dao(em).persist(order);
@@ -156,7 +154,6 @@ public class MainPaymentHandler {
                 break;
             }
             case PaymentOrder.ORDER_STATUS_PAID_BUT_NOT_COMPLETED_AND_STILL_PROCESSING: {
-                checkResponse.setResultCode(ResultCode.ORDER_PROCESSING);
                 break;
             }
             case PaymentOrder.ORDER_STATUS_PAID_BUT_REJECTED_BY_EMARKETPLACE: {

@@ -128,7 +128,7 @@ public class TaisOutputHandler implements OutputHandler {
         if (response.getTransactionId() != null) {
             EntityManager em = EMF.getEntityManager();
             if (order == null) {
-                response.setResultCode(ResultCode.ORDER_NOT_FOUND_IN_EMARKEPLACE);
+                response.setResultCode(ResultCode.ORDER_NOT_FOUND_IN_EMARKETPLACE);
                 response.setDescription("Заказ не найден");
             } else {
                 if (response.getMarketId() != null) {
@@ -139,14 +139,14 @@ public class TaisOutputHandler implements OutputHandler {
                             sign += response.getTransactionId() + order.getMarket().getPassword();
                             String md5 = Utils.getMd5InHexString(sign);
                             if (!response.getSignature().equalsIgnoreCase(md5)) {
-                                response.setResultCode(ResultCode.INVALID_SIGN_RETURNED_BY_EMARKEPLACE);
+                                response.setResultCode(ResultCode.INVALID_SIGN_RETURNED_BY_EMARKETPLACE);
                                 response.setDescription("Неправильная подпись");
                                 System.out.println("Invalid sign \n" + response.getSignature() + " my sign\n" + md5 + "\n" + sign);
                             } else {
                                 response.setResultCode(convertCheckForeignCodeToBase(response.getResultCode(), isCheck));
                             }
                         } else {
-                            response.setResultCode(ResultCode.INVALID_SIGN_RETURNED_BY_EMARKEPLACE);
+                            response.setResultCode(ResultCode.INVALID_SIGN_RETURNED_BY_EMARKETPLACE);
                             response.setDescription("Отсутствует подпись со стороны интернет магазина");
                             //Отсуствует подпись ответа
                         }
@@ -155,13 +155,13 @@ public class TaisOutputHandler implements OutputHandler {
                     }
                 } else {
                     //Идентификатор магазина не соответствует указанному.
-                    response.setResultCode(ResultCode.ORDER_NOT_FOUND_IN_EMARKEPLACE);
+                    response.setResultCode(ResultCode.ORDER_NOT_FOUND_IN_EMARKETPLACE);
                     response.setDescription("Идентификатор магазина не соответствует указанному. Скорее всего неправильно введен код заказа.");
                 }
             }
         } else {
             // Не указан Идентификатор транзакции
-            response.setResultCode(ResultCode.TRANSACTIONID_WAS_NOT_PROVIDED_BY_EMARKEPLACE);
+            response.setResultCode(ResultCode.TRANSACTIONID_WAS_NOT_PROVIDED_BY_EMARKETPLACE);
             response.setDescription("Не указан Идентификатор транзакции");
         }
         return response;

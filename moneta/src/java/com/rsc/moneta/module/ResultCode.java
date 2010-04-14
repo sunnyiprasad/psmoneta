@@ -26,7 +26,7 @@ public class ResultCode {
 
     // Заказ валиден в информационной системе Интернет-Магазина и находится в
     // обработке
-    public static final int ORDER_PROCESSING = 2;
+    public static final int ORDER_VALID_AND_PROCESSING = 2;
 
     // Заказ существует, но не валиден в информационной системе
     // Интернет-Магазина (отменён и т.д.)
@@ -47,22 +47,22 @@ public class ResultCode {
 
 
     // Заказ не найден в информационной системе Интернет-Магазина
-    public static final int ORDER_NOT_FOUND_IN_EMARKEPLACE = 13;
+    public static final int ORDER_NOT_FOUND_IN_EMARKETPLACE = 13;
 
     // В ответе на запрос информационная система Интернет-Магазина возвратила
     // неправильную подпись
-    public static final int INVALID_SIGN_RETURNED_BY_EMARKEPLACE = 14;
+    public static final int INVALID_SIGN_RETURNED_BY_EMARKETPLACE = 14;
 
     // В ответе на запрос информационная система Интернет-Магазина не возвратила
     // корректный идентификатор Интернет-Магазина в ПС ТЛСМ
-    public static final int MARKET_ID_WAS_NOT_PROVIDED_BY_EMARKEPLACE = 15;
+    public static final int MARKET_ID_WAS_NOT_PROVIDED_BY_EMARKETPLACE = 15;
 
     // В ответе на запрос информационная система Интернет-Магазина не возвратила
     // корректный номер транзакции - в информационной системе Интернет-Магазина
     // же
-    public static final int TRANSACTIONID_WAS_NOT_PROVIDED_BY_EMARKEPLACE = 16;
+    public static final int TRANSACTIONID_WAS_NOT_PROVIDED_BY_EMARKETPLACE = 16;
     
-    // Денег было слишком мало для оплаты заказа и они были зачислены на счет
-    // абонента в нашей системе
+    // Введённая в терминальную ПС сумма меньше чем сумма заказа, поэтому 
+    // выполнено зачисление на счет абонента в ПС ТЛСМ вместо оплаты заказа
     public static final int SUCCESS_BUT_MONEY_LESS_THAN_MUST_BE = 17;
 }
