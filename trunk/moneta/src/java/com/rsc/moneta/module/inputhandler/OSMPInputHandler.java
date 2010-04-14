@@ -124,7 +124,7 @@ public class OSMPInputHandler implements InputHandler {
                                                 } else {
                                                     if (paymentOrder.getStatus() == PaymentOrder.ORDER_STATUS_ACCEPTED) {
                                                         // Заказ в ПС ТЛСМ найден. 
-                                                        MainPaymentHandler handler = new MainPaymentHandler();
+                                                        MainPaymentHandler handler = new MainPaymentHandler(em);
 
                                                         // Проверка его статуса в ИМ - отправка запроса check
                                                         CheckResponse checkResponse = handler.check(paymentOrder, 0.0);
