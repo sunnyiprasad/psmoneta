@@ -126,7 +126,7 @@ public class PaymentOrder implements Serializable {
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date date;
 
-    @Column(insertable=false, updatable=false)
+    @Column(insertable=false, updatable=false, nullable=false)
     private long marketId;
     @ManyToOne
     @JoinColumn(name = "marketId")
