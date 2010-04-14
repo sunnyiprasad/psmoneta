@@ -53,7 +53,7 @@ public class ResultCode {
     // неправильную подпись
     public static final int INVALID_SIGN_RETURNED_BY_EMARKETPLACE = 14;
 
-    // В ответе на запрос информационная система Интернет-Магазина не возвратила
+    // В ответе на запрос информационная система Интернет-Магазина возвратила не
     // корректный идентификатор Интернет-Магазина в ПС ТЛСМ
     public static final int MARKET_ID_WAS_NOT_PROVIDED_BY_EMARKETPLACE = 15;
 
@@ -64,5 +64,5 @@ public class ResultCode {
     
     // Введённая в терминальную ПС сумма меньше чем сумма заказа, поэтому 
     // выполнено зачисление на счет абонента в ПС ТЛСМ вместо оплаты заказа
-    public static final int SUCCESS_BUT_MONEY_LESS_THAN_MUST_BE = 17;
+    public static final int SUCCESS_BUT_AMOUNT_LESS_THAN_MUST_BE = 17;
 }

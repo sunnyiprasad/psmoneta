@@ -117,7 +117,7 @@ public class MainPaymentHandler {
                                         new PaymentOrderDao(em).addUserAccountBalance(order.getUser().getAccount(order.getCurrency()).getId(), amount);
                                         order.setStatus(PaymentOrder.ORDER_STATUS_PAID_AND_COMPLETED_BUT_MONEY_ADDED_ON_ACCOUNT_BALANCE);
                                         new Dao(em).persist(em);
-                                        checkResponse.setResultCode(ResultCode.SUCCESS_BUT_MONEY_LESS_THAN_MUST_BE);
+                                        checkResponse.setResultCode(ResultCode.SUCCESS_BUT_AMOUNT_LESS_THAN_MUST_BE);
                                         checkResponse.setDescription("Деньги зачислены на счет абонента в нашей системе, т.к. внесенных средств недостаточно для оплаты заказа.");
                                         checkResponse.setTransactionId(order.getTransactionId());
                                         checkResponse.setMarketId(order.getMarketId());
