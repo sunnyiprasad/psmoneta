@@ -16,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 
 /**
  *
@@ -25,6 +26,10 @@ import javax.persistence.OneToMany;
  * евро, доллар, рублевый и т.д.
  */
 @Entity
+@SequenceGenerator(
+    name="seq_account",
+    sequenceName="seq_account"
+)
 public class Account implements Serializable{
     @OneToMany(mappedBy = "account")
     private List<PaymentOrder> paymentOrders;
@@ -35,7 +40,7 @@ public class Account implements Serializable{
     public static int EVERYMONTH = 2;
     
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO, generator="seq_account")
     private Long id;
     
     // Это тип валюты счета

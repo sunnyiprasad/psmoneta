@@ -11,8 +11,8 @@
     <body>
         <p><s:text name="selectpayment.order_registered" /> <br/>
             <s:text name="selectpayment.main_message" />
-            <s:text name="selectpayment.enter_payment_key" /><s:property value="%{paymentKey.key}" />
+            <s:text name="selectpayment.enter_payment_key" /><s:property value="%{paymentOrderId}" />
         </p>
-        <p><s:a href="%{paymentKey.successUrl}" >Вернуться в магазин</s:a></p>
+        <p><s:a href="%{paymentOrder.successUrl}" >Вернуться в магазин</s:a></p>
     </body>
 </html>

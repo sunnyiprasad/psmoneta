@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 
 /**
@@ -20,13 +21,17 @@ import javax.persistence.Temporal;
  * @author sulic
  */
 @Entity
+@SequenceGenerator(
+    name="seq_cash_order",
+    sequenceName="seq_cash_order"
+)
 public class CashOrder implements Serializable {
     public static int OPEN = 0;
     public static int PROCESSED = 1;
     public static int CANCEL = 2;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO, generator="seq_cash_order")
     private Long id;
 
     @ManyToOne

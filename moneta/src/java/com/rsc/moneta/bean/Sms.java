@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 
 /**
  *
@@ -16,10 +17,14 @@ import javax.persistence.Id;
  * Это очередь смс сообщений для отправки
  */
 @Entity
+@SequenceGenerator(
+    name="seq_sms",
+    sequenceName="seq_sms"
+)
 public class Sms implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO, generator="seq_sms")
     private Long id;
     private String phone;
     private String message;
