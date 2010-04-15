@@ -15,16 +15,21 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 
 /**
  *
  * @author sulic
  */
 @Entity
+@SequenceGenerator(
+    name="seq_market",
+    sequenceName="seq_market"
+)
 public class Market implements Serializable {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO, generator="seq_market")
     private Long id;
     @Column(nullable=false)
     private String name;

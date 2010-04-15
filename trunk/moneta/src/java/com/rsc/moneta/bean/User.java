@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
@@ -19,6 +20,10 @@ import javax.persistence.Table;
  * @author sulic
  */
 @Entity
+@SequenceGenerator(
+    name="seq_user",
+    sequenceName="seq_user"
+)
 @Table(name = "t_User")
 public class User implements Serializable {
     @OneToMany(mappedBy = "user")
@@ -33,7 +38,7 @@ public class User implements Serializable {
     private List<CashOrder> cashOrders;
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO, generator="seq_user")
     private Long id;
     private String phone;
     private String password;

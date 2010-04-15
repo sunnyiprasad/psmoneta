@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 
 /**
  *
@@ -18,14 +19,18 @@ import javax.persistence.ManyToOne;
  * Это дополнительные параметры, которые могут быть присланы во время запроса чек к интернет магазину.
  */
 @Entity
+@SequenceGenerator(
+    name="seq_payment_parameter",
+    sequenceName="seq_payment_parameter"
+)
 public class PaymentParameter implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO, generator="seq_payment_parameter")
     private Long id;
     private String name;
     private String val;
     @ManyToOne
-    private PaymentOrder key;
+    private PaymentOrder paymentOrder;
 
     public Long getId() {
         return id;
@@ -51,12 +56,14 @@ public class PaymentParameter implements Serializable {
         this.val = val;
     }
 
-    public PaymentOrder getKey() {
-        return key;
+    public PaymentOrder getPaymentOrder() {
+        return paymentOrder;
     }
 
-    public void setKey(PaymentOrder key) {
-        this.key = key;
+    public void setPaymentOrder(PaymentOrder paymentOrder) {
+        this.paymentOrder = paymentOrder;
     }
+
+   
     
 }

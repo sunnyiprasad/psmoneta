@@ -17,6 +17,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.JoinColumn;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -28,6 +29,10 @@ import javax.persistence.UniqueConstraint;
  * что пользователь заказ билет и хочет оплатить
  */
 @Entity
+@SequenceGenerator(
+    name="seq_payment_order",
+    sequenceName="seq_payment_order"
+)
 @Table(uniqueConstraints={@UniqueConstraint(columnNames={"transactionId", "marketId"})})
 public class PaymentOrder implements Serializable {
 
@@ -83,14 +88,14 @@ public class PaymentOrder implements Serializable {
     public static int ORDER_STATUS_PAID_AND_COMPLETED_BUT_MONEY_ADDED_ON_ACCOUNT_BALANCE = 9;
 
 
-    @OneToMany(mappedBy = "key")
+    @OneToMany(mappedBy = "paymentOrder")
     private List<PaymentParameter> paymentParameters;
     private static final long serialVersionUID = 1L;
 
     // TODO: изменить ххх на нормальное название проекта
     // Идентификатор кода заказа ПС ххх
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO, generator="seq_payment_order")
     private long id;
 
     // Это номер заказа в системе интернет магазина.

@@ -23,11 +23,25 @@ public class RegisterByPhoneNumber extends BaseAction {
 
     private String phone;
     private Long paymentId;
-    private PaymentOrder paymentKey;
+    private PaymentOrder paymentOrder;
     private String password;
+    private String paymentOrderId;
 
     @Override
     public String execute() throws Exception {
+
+        if (paymentId != null) {
+            paymentOrder = em.find(PaymentOrder.class, paymentId);
+            if (paymentOrder == null) {
+                addActionError(getText("payment_key_not_found"));
+                return Action.ERROR;
+            }else{
+                paymentOrderId = String.format("%019d", paymentId);
+            }
+        } else {
+            addActionError(getText("payment_key_not_found"));
+            return Action.ERROR;
+        }
         if (phone != null && !"".equals(phone)) {
             User user = new UserDao(em).getUserByPhone(phone);
             if (user == null) {
@@ -55,31 +69,35 @@ public class RegisterByPhoneNumber extends BaseAction {
                 sms.setPhone(phone);
                 sms.setMessage(getText("reg_phone_sms_message", user.getPassword()));
                 dao.persist(sms);
-                if (paymentId != null) {
-                    paymentKey = em.find(PaymentOrder.class, paymentId);
-                    if (paymentKey == null) {
-                        addActionError(getText("payment_key_not_found"));
-                        return Action.ERROR;
-                    }
-                    paymentKey.setUser(user);
-                }
+                paymentOrder.setUser(user);
+                dao.persist(paymentOrder);
             } else {
                 if (user.getPassword().equals(password)) {
-                    if (paymentId != null) {
-                        paymentKey = em.find(PaymentOrder.class, paymentId);
-                        if (paymentKey == null) {
-                            addActionError(getText("payment_key_not_found"));
-                            return Action.ERROR;
-                        }
-                        paymentKey.setUser(user);
-                    }
-                } else  {
+                    paymentOrder.setUser(user);
+                    new Dao(em).persist(paymentOrder);
+                } else {
                     addActionError(getText("incorrect_password_please_try_again"));
                     return Action.LOGIN;
                 }
             }
         }
         return Action.SUCCESS;
+    }
+
+    public PaymentOrder getPaymentOrder() {
+        return paymentOrder;
+    }
+
+    public void setPaymentOrder(PaymentOrder paymentOrder) {
+        this.paymentOrder = paymentOrder;
+    }
+
+    public String getPaymentOrderId() {
+        return paymentOrderId;
+    }
+
+    public void setPaymentOrderId(String paymentOrderId) {
+        this.paymentOrderId = paymentOrderId;
     }
 
     public String getPassword() {
@@ -91,11 +109,11 @@ public class RegisterByPhoneNumber extends BaseAction {
     }
 
     public PaymentOrder getPaymentKey() {
-        return paymentKey;
+        return paymentOrder;
     }
 
     public void setPaymentKey(PaymentOrder paymentKey) {
-        this.paymentKey = paymentKey;
+        this.paymentOrder = paymentKey;
     }
 
     public Long getPaymentId() {

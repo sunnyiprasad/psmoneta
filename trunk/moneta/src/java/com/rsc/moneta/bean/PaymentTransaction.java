@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 
 /**
@@ -23,10 +24,14 @@ import javax.persistence.Temporal;
  * Будет задействовано, когда пользователи будут друг другу проводить платежи.
  */
 @Entity
+@SequenceGenerator(
+    name="seq_payment_transaction",
+    sequenceName="seq_payment_transaction"
+)
 public class PaymentTransaction implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO, generator="seq_payment_transaction")
     private Long id;
 
     @Column
