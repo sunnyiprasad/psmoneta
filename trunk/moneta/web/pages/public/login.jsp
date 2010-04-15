@@ -6,12 +6,12 @@
         <title>JSP Page1</title>
     </head>
     <body>
-        <s:form action="Login" method="get">
-        <table>
-            <s:textfield name="username" label="%{getText('phone')}" required="true" />
-            <s:password name="password" label="%{getText('password')}" required="true" />
-            <s:submit value="%{getText('login')}" />
-        </table>
-        </s:form>
+        <p align="center">
+            <s:form action="Login" method="get" >
+                <s:textfield name="username" label="%{getText('phone')}" required="true" />
+                <s:password name="password" label="%{getText('password')}" required="true" />
+                <s:submit value="%{getText('login')}" />            
+            </s:form>
+        </p>
     </body>
 </html>

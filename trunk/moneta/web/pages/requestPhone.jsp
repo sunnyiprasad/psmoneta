@@ -6,14 +6,20 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Вход в ПС ТЛСМ</title>
     </head>
     <body>
-        <s:form action="RegisterByPhone" method="get">
-            <s:hidden name="paymentId" value="%{paymentKey.id}" />
-            <s:textfield name="phone" label="%{getText('assitant.enter_phone')}"/>
-            <s:submit value="Registation"/>
-            <a href="<s:url action="SelectPaymentSystem"><s:param name="paymentId" value="%{paymentKey.id}"/></s:url>"></a>            
-        </s:form>
+        <p>
+            <s:text name="license_agreement" />
+        </p>
+        <p align="center">
+            <s:form action="RegisterByPhone" method="post">
+                <s:hidden name="paymentId" value="%{paymentKey.id}" />
+                <s:textfield name="phone" label="%{getText('assitant.enter_phone')}"/>
+                <s:password name="password" label="%{getText('enter_password')}" />
+                <s:submit value="Registation"/>
+                <a href="<s:url action="SelectPaymentSystem"><s:param name="paymentId" value="%{paymentKey.id}"/></s:url>"></a>
+            </s:form>
+        </p>
     </body>
 </html>

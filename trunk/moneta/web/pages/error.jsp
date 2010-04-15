@@ -6,10 +6,12 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page111</title>
+        <title>Страница ошибки</title>
     </head>
     <body>
         <s:actionerror />
-        <h1>Hello World!</h1>
+        <p>
+            <s:a action="public/"><s:text name="redirect_to_main" /></s:a>
+        </p>
     </body>
 </html>
