@@ -18,6 +18,7 @@ import com.rsc.moneta.module.inputhandler.OSMPInputHandler;
 import com.rsc.moneta.dao.EMF;
 import com.rsc.moneta.dao.Dao;
 import com.rsc.moneta.dao.MarketDao;
+import com.rsc.moneta.dao.PaymentOrderDao;
 import com.rsc.moneta.dao.UserDao;
 
 /**
@@ -62,7 +63,8 @@ public class TestOsmpHandler {
 
         // 2. Сэмулировать тестовый запрос "check" к ОСМП-хендлеру по созданному
         // в п.1 номеру заказа
-        String account = String.format("%019d", paymentOrder.getId());
+        long orderId = paymentOrder.getId();
+        String account = String.format("%019d", orderId);
         String txn_id = "1234567";
         OSMPInputHandler handler = new OSMPInputHandler();
         Map map = new Properties();
@@ -73,10 +75,10 @@ public class TestOsmpHandler {
 
         // 3. Удалить созданную в п.1 запись о заказе
         // TODO: Денис - что-то не даёт нормально удалять
-        // java.lang.IllegalArgumentException: Removing a detached instance com.rsc.moneta.bean.PaymentOrder#18
-//        em = EMF.getEntityManager();
-//        new Dao(em).remove(paymentOrder);
-//        em.close();
+        em = EMF.getEntityManager();
+        paymentOrder = new PaymentOrderDao(em).getPaymentOrderById(orderId);
+        new Dao(em).remove(paymentOrder);
+        em.close();
         
 
         // 4. Сравнить полученный response с планируемым
