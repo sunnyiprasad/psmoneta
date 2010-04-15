@@ -32,7 +32,6 @@ public class Assistant extends BaseAction {
     private String MNT_TRANSACTION_ID = null;
     private String MNT_CURRENCY_CODE = null;
     private Double MNT_AMOUNT = null;
-
     private Boolean MNT_TEST_MODE = false;
     private String MNT_DESCRIPTION = null;
     private String MNT_SIGNATURE = null;
@@ -48,7 +47,7 @@ public class Assistant extends BaseAction {
     private Market market;
 
     @Override
-    public String execute() throws Exception {          
+    public String execute() throws Exception {
         HttpServletRequest request = ServletActionContext.getRequest();
         String _monetaLocale = request.getParameter("moneta.locale");
         if (_monetaLocale != null) {
@@ -74,7 +73,7 @@ public class Assistant extends BaseAction {
             return Action.ERROR;
         }
 
-        if (!new MarketDao(em).isMarketHaveAccount(Utils.currencyStringToAccountType(MNT_CURRENCY_CODE), market)){
+        if (!new MarketDao(em).isMarketHaveAccount(Utils.currencyStringToAccountType(MNT_CURRENCY_CODE), market)) {
             addActionError(getText("market_not_have_account"));
             return Action.ERROR;
         }
@@ -102,9 +101,13 @@ public class Assistant extends BaseAction {
         }
 
         paymentKey = new PaymentOrderDao(em).getPaymentOrder(MNT_TRANSACTION_ID, MNT_ID);
-        if (paymentKey != null){
-            addActionError(getText("order_exists"));
-            return Action.ERROR;
+        if (paymentKey != null) {
+            if (paymentKey.getStatus() == PaymentOrder.ORDER_STATUS_ACCEPTED) {
+                return Action.SUCCESS;
+            } else {
+                addActionError(getText("order_exists"));
+                return Action.ERROR;
+            }
         }
 
         paymentKey = new PaymentOrder();
@@ -116,13 +119,14 @@ public class Assistant extends BaseAction {
         paymentKey.setCustom2(MNT_CUSTOM2);
         paymentKey.setCustom3(MNT_CUSTOM3);
         paymentKey.setDescription(MNT_DESCRIPTION);
-        paymentKey.setFailUrl(MNT_FAIL_URL);        
+        paymentKey.setFailUrl(MNT_FAIL_URL);
         paymentKey.setCurrency(Utils.currencyStringToAccountType(MNT_CURRENCY_CODE));
         paymentKey.setAccount(market.getAccount(paymentKey.getCurrency()));
-        if (MNT_SUCCESS_URL != null)
+        if (MNT_SUCCESS_URL != null) {
             paymentKey.setSuccessUrl(MNT_SUCCESS_URL);
-        else
+        } else {
             paymentKey.setSuccessUrl(market.getSuccessUrl());
+        }
         paymentKey.setPaymentSystemLimitIds(_paymentSystemLimitIds);
         paymentKey.setPaymentSystemUnitId(_paymentSystemUnitId);
         paymentKey.setTest(MNT_TEST_MODE);
@@ -278,6 +282,4 @@ public class Assistant extends BaseAction {
         String all = MNT_ID + MNT_TRANSACTION_ID + MNT_AMOUNT + MNT_CURRENCY_CODE + test + market.getPassword();
         return (MNT_SIGNATURE.equalsIgnoreCase(Utils.byteArrayToHexString(Utils.md5(all))));
     }
-
-
 }

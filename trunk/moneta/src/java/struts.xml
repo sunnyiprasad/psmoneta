@@ -28,7 +28,8 @@
         <action name="RegisterByPhone" class="com.rsc.moneta.action.RegisterByPhoneNumber" >
             <result name="success">/pages/selectPaymentSystem.jsp</result>
             <result name="error">/pages/error.jsp</result>
-            <result name="login">/pages/requestPhone.jsp</result>
+            <result name="again">/pages/requestPhone.jsp</result>
+            <result name="login" type="redirectAction" >public/LoginForm</result>
         </action>
 
         <action name="SelectPaymentSystem" class="com.rsc.moneta.action.SelectPaymentSystem">
