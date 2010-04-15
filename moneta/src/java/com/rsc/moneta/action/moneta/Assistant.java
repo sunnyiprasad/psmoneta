@@ -11,6 +11,7 @@ import com.rsc.moneta.action.BaseAction;
 import com.rsc.moneta.dao.Dao;
 import com.rsc.moneta.bean.PaymentOrder;
 import com.rsc.moneta.dao.MarketDao;
+import com.rsc.moneta.dao.PaymentOrderDao;
 import com.rsc.moneta.util.Utils;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
@@ -97,6 +98,12 @@ public class Assistant extends BaseAction {
         }
         if (MNT_AMOUNT == null) {
             addActionError(getText("MNT_AMOUNT_not_defined"));
+            return Action.ERROR;
+        }
+
+        paymentKey = new PaymentOrderDao(em).getPaymentOrder(MNT_TRANSACTION_ID, MNT_ID);
+        if (paymentKey != null){
+            addActionError(getText("order_exists"));
             return Action.ERROR;
         }
 

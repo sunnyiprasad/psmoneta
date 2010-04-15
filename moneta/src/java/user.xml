@@ -29,8 +29,6 @@
             <result>/pages/user/viewUserAccountsList.jsp</result>
         </action>
 
-        <action name="userOffice" class="com.rsc.moneta.action.UserOffice">
-            <result>/pages/user/userOffice.jsp</result>
-        </action>
+       
     </package>
 </struts>

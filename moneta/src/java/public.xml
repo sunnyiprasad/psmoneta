@@ -17,6 +17,12 @@
         </interceptors>
         <default-interceptor-ref name="main" />
 
+        <default-action-ref name="LoginForm" />
+
+        <action name="index">
+            <result>/pages/public/index.jsp</result>
+        </action>
+
 
          <action name="LoginForm">
             <result>/pages/public/login.jsp</result>
