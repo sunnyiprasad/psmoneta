@@ -36,7 +36,9 @@ public class RegisterByPhoneNumber extends BaseAction {
                 addActionError(getText("payment_key_not_found"));
                 return Action.ERROR;
             }else{
-                paymentOrderId = String.format("%019d", paymentId);
+                if (paymentOrder.getUser() != null){
+                    return Action.LOGIN;
+                }
             }
         } else {
             addActionError(getText("payment_key_not_found"));
@@ -77,7 +79,7 @@ public class RegisterByPhoneNumber extends BaseAction {
                     new Dao(em).persist(paymentOrder);
                 } else {
                     addActionError(getText("incorrect_password_please_try_again"));
-                    return Action.LOGIN;
+                    return "again";
                 }
             }
         }
