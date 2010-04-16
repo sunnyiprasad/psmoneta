@@ -309,4 +309,8 @@ public class OSMPInputHandler implements InputHandler {
                 "</response>";
         return response;
     }
+
+    public void setConfig(InputHandlerConfig config) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }
