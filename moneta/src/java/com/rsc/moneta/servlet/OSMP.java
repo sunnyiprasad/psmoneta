@@ -5,6 +5,7 @@ package com.rsc.moneta.servlet;
  * and open the template in the editor.
  */
 import com.rsc.moneta.module.InputHandler;
+import com.rsc.moneta.module.inputhandler.InputHandlerConfig;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.logging.Level;
@@ -36,10 +37,16 @@ public class OSMP extends HttpServlet {
             String password = this.getInitParameter("password");
             String pem = this.getInitParameter("pem");
             String ip = this.getInitParameter("ip");
-            String handlerClass = this.getInitParameter("handler");
-            // todo: Здесь организовать необходимо проверку пароля, ЭЦП, и Айпи адреса
+            String handlerClass = this.getInitParameter("handler");            
+            InputHandlerConfig config = new InputHandlerConfig();
+            config.setLogin(login);
+            config.setPassword(password);
+            config.setIp(ip);
+            config.setHandler(handlerClass);
+            config.setPem(pem);
             try {
                 InputHandler handler = (InputHandler) this.getClass().getClassLoader().loadClass(handlerClass).cast(InputHandler.class);
+                handler.setConfig(config);
                 String xml = handler.check(request.getParameterMap());
                 out.write(xml);
             } catch (ClassNotFoundException exception) {
@@ -61,6 +68,7 @@ public class OSMP extends HttpServlet {
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
+     * 
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

@@ -7,6 +7,7 @@ package com.rsc.moneta.servlet;
 import com.rsc.moneta.module.InputHandler;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -38,6 +39,7 @@ public class OSMPCheck extends HttpServlet {
             String ip = this.getInitParameter("ip");
             String handlerClass = this.getInitParameter("handler");
             // todo: Здесь организовать необходимо проверку пароля, ЭЦП, и Айпи адреса
+            
             try {
                 InputHandler handler = (InputHandler) this.getClass().getClassLoader().loadClass(handlerClass).cast(InputHandler.class);
                 String xml = handler.check(request.getParameterMap());

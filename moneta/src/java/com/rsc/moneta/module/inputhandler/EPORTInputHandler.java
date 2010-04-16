@@ -68,4 +68,8 @@ public class EPORTInputHandler implements InputHandler{
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    public void setConfig(InputHandlerConfig config) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
 }
