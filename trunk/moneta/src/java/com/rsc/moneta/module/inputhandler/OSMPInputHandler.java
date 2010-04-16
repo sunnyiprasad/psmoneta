@@ -79,7 +79,7 @@ public class OSMPInputHandler implements InputHandler {
         String account = "";
 
         // Идентификатор кода заказа ТЛСМ
-        long paymentKeyId = -1;
+        long paymentOrderId = -1;
 
         // command=check – запрос на проверку состояния абонента
         String command = "";
@@ -104,7 +104,7 @@ public class OSMPInputHandler implements InputHandler {
                                     comment = STRING_ENTERED_NUMBER_DOES_NOT_CONFORM_TO_ORDER_FORMAT;
                                 } else {
                                     try {
-                                        paymentKeyId = Long.parseLong(account);
+                                        paymentOrderId = Long.parseLong(account);
                                         // TODO: Денис
                                         // "Платика" параметр sum не должна прислать но параметр sum всё-таки может быть в запросе "check"
                                         //[14:29:29] Denis Solodovnikov говорит: так
@@ -114,7 +114,7 @@ public class OSMPInputHandler implements InputHandler {
                                             EntityManager em = EMF.getEntityManager();
                                             
                                             //Поиск по первичному ключу для всех объектов уже реализован JPA
-                                            PaymentOrder paymentOrder = em.find(PaymentOrder.class, paymentKeyId);
+                                            PaymentOrder paymentOrder = em.find(PaymentOrder.class, paymentOrderId);
 
                                             if (paymentOrder == null) {
                                                 // Заказ не найден. Введен несуществующий код заказа.

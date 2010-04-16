@@ -9,6 +9,10 @@ import com.rsc.moneta.bean.User;
 import com.rsc.moneta.dao.AccountDao;
 import com.rsc.moneta.dao.MarketDao;
 import com.rsc.moneta.dao.UserDao;
+import com.rsc.moneta.bean.PaymentOrder;
+import com.rsc.moneta.bean.OSMPPayment;
+import com.rsc.moneta.dao.OSMPPaymentDao;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -108,6 +112,47 @@ public class InitTestData {
             market.setAccounts(vec);
             new Dao(em).persist(market);            
         }
+        em.close();
+    }
+
+    @Test
+    public void testCreateOSMPPayment() throws Exception {
+        EntityManager em = EMF.getEntityManager();
+
+        // 1. Создать тестовый ИМ-н, записать его в БД
+        Market market = new MarketDao(em).getMarketByName("testMarket1");
+        if (market == null) {
+            market = new Market();
+            market.setName("testMarket1");
+            Assert.assertNotNull(new UserDao(em).getUserByPhone("test"));
+            market.setUser(new UserDao(em).getUserByPhone("test"));
+            market.setCheckUrl("http://localhost:8084/testIM/Check");
+            market.setFailUrl("http://localhost:8084/testIM/fail.jsp");
+            market.setPayUrl("http://localhost:8084/testIM/Pay");
+            market.setSignable(true);
+            market.setSuccessUrl("http://localhost:8084/testIM/success.jsp");
+            market.setPassword("12345");
+            market.setOutputHandlerType(0);
+            new Dao(em).persist(market);
+            Vector vec = new Vector();
+            vec.addAll(market.getUser().getAccounts());
+            market.setAccounts(vec);
+            new Dao(em).persist(market);
+        }
+
+        // 2. Создать запись о заказе в т-це PaymentOrder
+        PaymentOrder paymentOrder = new PaymentOrder();
+        paymentOrder.setStatus(PaymentOrder.ORDER_STATUS_ACCEPTED);
+        paymentOrder.setTest(Boolean.TRUE);
+        paymentOrder.setMarket(market);
+        new Dao(em).persist(paymentOrder);
+        
+        // 3. Создать запись об ОСМП-платеже в т-це OSMPPayment
+        OSMPPayment payment = new OSMPPayment();
+        payment.setOSMPTxnId(123456789);
+        payment.setPaymentOrderId(paymentOrder.getId());
+        new Dao(em).persist(payment);
+
         em.close();
     }
 }
