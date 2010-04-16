@@ -149,8 +149,7 @@ public class PaymentOrder implements Serializable {
 
     public void setUser(User user) {
         this.user = user;
-    }
-    
+    }    
 
     public Account getAccount() {
         return account;

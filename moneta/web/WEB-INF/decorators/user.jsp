@@ -16,6 +16,11 @@
         <title>Личный кабинет: <s:property value="user.name"/></title>
     </head>
     <body>
+        <ul>
+            <li><s:a action="ViewPaymentOrderList"><s:text name="view_payment_order_list" /></s:a></li>
+            <li><s:a action="ViewAccountList"><s:text name="view_account_list" /></s:a></li>
+        </ul>
+            
         <decorator:body/>
     </body>
 </html>
