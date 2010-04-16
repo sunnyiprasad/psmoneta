@@ -11,6 +11,7 @@
     <class>com.rsc.moneta.bean.Account</class>
     <class>com.rsc.moneta.bean.CashOrder</class>
     <class>com.rsc.moneta.bean.PaymentOrder</class>
+    <class>com.rsc.moneta.bean.OSMPPayment</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <property name="hibernate.connection.username" value="tlsm"/>

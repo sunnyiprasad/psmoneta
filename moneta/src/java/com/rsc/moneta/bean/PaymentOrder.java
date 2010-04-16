@@ -92,8 +92,7 @@ public class PaymentOrder implements Serializable {
     private List<PaymentParameter> paymentParameters;
     private static final long serialVersionUID = 1L;
 
-    // TODO: изменить ххх на нормальное название проекта
-    // Идентификатор кода заказа ПС ххх
+    // Идентификатор кода заказа ПС ТЛСМ
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator="seq_payment_order")
     private long id;

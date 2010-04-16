@@ -52,7 +52,7 @@ public class TestOsmpHandler {
             new Dao(em).persist(market);
         }
 
-        // 1. Создать запись о заказе в т-це PaymentOrder, выставить заказу 
+        // 2. Создать запись о заказе в т-це PaymentOrder, выставить заказу
         // статус "ORDER_STATUS_PAID_AND_COMPLETED"
         PaymentOrder paymentOrder = new PaymentOrder();
         paymentOrder.setStatus(PaymentOrder.ORDER_STATUS_PAID_AND_COMPLETED);
@@ -61,7 +61,7 @@ public class TestOsmpHandler {
         new Dao(em).persist(paymentOrder);
         em.close();
 
-        // 2. Сэмулировать тестовый запрос "check" к ОСМП-хендлеру по созданному
+        // 3. Сэмулировать тестовый запрос "check" к ОСМП-хендлеру по созданному
         // в п.1 номеру заказа
         long orderId = paymentOrder.getId();
         String account = String.format("%019d", orderId);
@@ -73,7 +73,7 @@ public class TestOsmpHandler {
         map.put("account", account);
         String response = handler.check(map);
 
-        // 3. Удалить созданную в п.1 запись о заказе
+        // 4. Удалить созданную в п.1 запись о заказе
         // TODO: Денис - что-то не даёт нормально удалять
         em = EMF.getEntityManager();
         paymentOrder = new PaymentOrderDao(em).getPaymentOrderById(orderId);
@@ -81,7 +81,7 @@ public class TestOsmpHandler {
         em.close();
         
 
-        // 4. Сравнить полученный response с планируемым
+        // 5. Сравнить полученный response с планируемым
         Assert.assertEquals("<?xml version='1.0' encoding='UTF-8'?>" + 
                 "<response>" +
                     "<osmp_txn_id>" + txn_id + "</osmp_txn_id>" +
