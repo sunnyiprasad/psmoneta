@@ -9,6 +9,7 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import java.util.Date;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.PrimaryKeyJoinColumn;
@@ -21,8 +22,7 @@ import javax.persistence.Temporal;
  * Класс, представляющий собой запись о пополнении баланса в счёт оплаты заказа
  * посредством терминальной ПС ОСМП
  */
-@Table(uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"osmptxnid"})})
+@Entity
 public class OSMPPayment implements Serializable {
     //userid - ид юзера в ПС ТЛСМ - НЕ НУЖЕН строго говоря
     //account приходящий в запросе от осмп - и есть paymentOrderId
@@ -30,8 +30,8 @@ public class OSMPPayment implements Serializable {
     //paydate - датавремя принятия платежа
     //rejectdate - датавремя отмены платежа
     //osmptxnid - № тр-ции осмп
-
-    @Column(name = "osmptxnid", nullable = false)
+    
+    @Id    
     private double OSMPTxnId;
 
 
