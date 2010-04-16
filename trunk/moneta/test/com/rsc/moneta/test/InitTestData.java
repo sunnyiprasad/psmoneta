@@ -11,7 +11,7 @@ import com.rsc.moneta.dao.MarketDao;
 import com.rsc.moneta.dao.UserDao;
 import com.rsc.moneta.bean.PaymentOrder;
 import com.rsc.moneta.bean.OSMPPayment;
-import com.rsc.moneta.dao.OSMPPaymentDao;
+import com.rsc.moneta.bean.OSMPPayment;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -146,13 +146,13 @@ public class InitTestData {
         paymentOrder.setTest(Boolean.TRUE);
         paymentOrder.setMarket(market);
         new Dao(em).persist(paymentOrder);
-        
+
         // 3. Создать запись об ОСМП-платеже в т-це OSMPPayment
         OSMPPayment payment = new OSMPPayment();
-        payment.setOSMPTxnId(123456789);
-        payment.setPaymentOrderId(paymentOrder.getId());
+        payment.setTransactionId(123456789);
+        payment.setPaymentOrderId(OSMPPayment.OSMP_PS_PLATIKA);
+        payment.setAmount(5200.58);
         new Dao(em).persist(payment);
-
         em.close();
     }
 }

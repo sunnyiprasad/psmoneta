@@ -37,9 +37,7 @@ import javax.persistence.UniqueConstraint;
 public class PaymentOrder implements Serializable {
 
     // Статус заказа ТЛСМ - возможные варианты
-    // TODO: Сулик, статусы, проверь и добавь статусы если нужно, пжлст
     //  -1: неопределён
-    //у нас не должно быть не определенного статуса!!!
     // Денис: на пока всё-таки раскомментирую и попробую объяснить зачем этот статус Сулику :-)
     public final static int ORDER_STATUS_UNDEFINED = -1;
 
