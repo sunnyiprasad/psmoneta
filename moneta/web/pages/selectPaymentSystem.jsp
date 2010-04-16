@@ -6,7 +6,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Выбор платежной системы</title>
     </head>
     <body>
         <p><s:text name="selectpayment.order_registered" /> <br/>
