@@ -20,13 +20,20 @@
 
         <default-interceptor-ref name="main" />
 
-        <default-action-ref name="ViewUserAccountsList" />
+        <default-action-ref name="ViewAccountList" />
         <global-results>
-            <result name="login" type="redirectAction">../public/LoginForm</result>
+            <result name="login" type="redirectAction">
+                <param name="namespace">/public</param>
+                <param name="actionName">LoginForm</param>
+            </result>
         </global-results>        
 
-        <action name="ViewUserAccountsList" class="com.rsc.moneta.action.ViewUserAccountsList">
-            <result>/pages/user/viewUserAccountsList.jsp</result>
+        <action name="ViewAccountList" class="com.rsc.moneta.action.user.ViewAccountList">
+            <result>/pages/user/viewAccountList.jsp</result>
+        </action>
+
+        <action name="ViewPaymentOrderList" class="com.rsc.moneta.action.user.ViewPaymentOrderList">
+            <result>/pages/user/viewPaymentOrderList.jsp</result>
         </action>
 
        
