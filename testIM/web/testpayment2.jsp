@@ -9,7 +9,7 @@
     </head>
     <body>
         <h1>Hello World!</h1>
-        <form method="get" action="http://localhost:8084/moneta/Assistant.html">
+        <form method="get" action="http://localhost:8084/moneta/Assistant">
             <input type="hidden" name="MNT_ID" value="2">
             <input type="hidden" name="MNT_TRANSACTION_ID" value="<%
                 out.print(example.Utils.generateNumber());

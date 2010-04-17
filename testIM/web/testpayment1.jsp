@@ -10,7 +10,7 @@
     </head>
     <body>
         <h1>Hello World!</h1>
-        <s:form action="http://localhost:8084/moneta/Assistant.html" method="get">
+        <s:form action="http://localhost:8084/moneta/Assistant" method="get">
             <!--<form method="post" action="/moneta/Assistant.html">-->
             <input type="hidden" name="MNT_ID" value="2">
             <input type="hidden" name="MNT_TRANSACTION_ID" value="<%
@@ -26,6 +26,9 @@
             <input type="hidden" name="MNT_CUSTOM1" value="1234567890">
             <input type="hidden" name="MNT_CUSTOM2" value="abcdefghij">
             <input type="hidden" name="MNT_CUSTOM3" value="somebody@somewhere.com">
+            <input type="hidden" name="contact.name" value="Suleyman" />
+            <input type="hidden" name="contact.phone" value="+79882970412" />
+            <input type="hidden" name="contact.email" value="sulic@batyrov.ru" />
             <input type="submit" value="Оплатить заказ">
             <!--</form>-->
         </s:form>
