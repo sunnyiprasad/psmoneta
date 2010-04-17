@@ -11,7 +11,7 @@ import com.rsc.moneta.dao.MarketDao;
 import com.rsc.moneta.dao.UserDao;
 import com.rsc.moneta.bean.PaymentOrder;
 import com.rsc.moneta.bean.OSMPPayment;
-import com.rsc.moneta.bean.OSMPPayment;
+
 
 import java.io.BufferedReader;
 import java.io.IOException;
