@@ -68,12 +68,12 @@ public class OSMPPayment implements Serializable {
     // Дата/время выполнения платежа (поступления валидного запроса "pay",
     // обработанного ПС ТЛСМ)
     @Column(name = "paydate")
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date payDate;
 
     // Дата/время отмены ранее выполнного платежа
     @Column(name = "rejectdate")
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date rejectDate;
 
     public long getId() {

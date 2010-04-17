@@ -125,7 +125,7 @@ public class PaymentOrder implements Serializable {
     private int status = ORDER_STATUS_ACCEPTED;
 
     @Column(name = "_date")
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date date;
 
     @Column(insertable=false, updatable=false, nullable=false)
