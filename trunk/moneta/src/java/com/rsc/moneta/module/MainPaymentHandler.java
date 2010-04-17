@@ -103,6 +103,7 @@ public class MainPaymentHandler {
                                 order.setStatus(PaymentOrder.ORDER_STATUS_PAID_AND_COMPLETED_BUT_NOT_FOUND_MARKET_ACCOUNT);
                                 new Dao(em).persist(order);
                             } else {
+                                //TODO: Сулик не реализована поддержка тестовых платежей. Любой платеж идет как не тестовый.
                                 if (order.getAmount() == amount) {
                                     debug("Сумма совершенно одинаковая просто производим начисление на счет");
                                     new PaymentOrderDao(em).processOrderPay(order);
