@@ -16,6 +16,8 @@ import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
+import javax.persistence.OneToOne;
+import javax.persistence.JoinColumn;
 
 
 /**
@@ -34,7 +36,7 @@ import javax.persistence.Temporal;
     @UniqueConstraint(columnNames = {"transactionId", "paymentSystemId"})})
 public class OSMPPayment implements Serializable {
 
-// TODO: Денис - удалить после того как станет ясно, что писать в это поле
+    // TODO: Денис - удалить после того как станет ясно, что писать в это поле
 //    // Терминальные ПС, работающие по протоколу ОСМП:
 //    // ПЛАТИКА
 //    public final static int OSMP_PS_PLATIKA = 1;
@@ -60,6 +62,9 @@ public class OSMPPayment implements Serializable {
     // Идентификатор кода заказа ПС ТЛСМ
     @Column(name = "paymentOrderId", nullable = false)
     private long paymentOrderId;
+    @OneToOne
+    @JoinColumn(name = "paymentOrderId")
+    private PaymentOrder paymentOrder;
 
     // Сумма платежа
     @Column(name = "amount", nullable = false)
@@ -106,6 +111,14 @@ public class OSMPPayment implements Serializable {
 
     public void setPaymentOrderId(long paymentOrderId) {
         this.paymentOrderId = paymentOrderId;
+    }
+
+    public PaymentOrder getPaymentOrder() {
+        return this.paymentOrder;
+    }
+
+    public void setPaymentOrder(PaymentOrder paymentOrder) {
+        this.paymentOrder = paymentOrder;
     }
 
     public Double getAmount() {
