@@ -37,7 +37,7 @@ public class PaymentTransaction implements Serializable {
     @Column
     private Float amount;
 
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     @Column(name = "_date")
     private Date date;
 

@@ -47,7 +47,7 @@ public class CashOrder implements Serializable {
     private int status;
 
     @Column(name="_date")
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date date;
 
     public Date getDate() {
