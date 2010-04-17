@@ -36,6 +36,10 @@ public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator="seq_user")
     private Long id;
+    private String name;
+    @Column(unique=true)
+    private String email;
+    @Column(unique=true)
     private String phone;
     private String password;
     @Column(name="_role", nullable=false)
@@ -57,6 +61,37 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "user")
     private List<CashOrder> cashOrders;
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<AbonentPayment> getAbonentPayments() {
+        return abonentPayments;
+    }
+
+    public void setAbonentPayments(List<AbonentPayment> abonentPayments) {
+        this.abonentPayments = abonentPayments;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public List<PaymentOrder> getPaymentOrders() {
+        return paymentOrders;
+    }
+
+    public void setPaymentOrders(List<PaymentOrder> paymentOrders) {
+        this.paymentOrders = paymentOrders;
+    }
 
     public List<Account> getAccounts() {
         return accounts;

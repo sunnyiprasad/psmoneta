@@ -161,8 +161,6 @@ public class TestOsmpHandler {
         String response = handler.check(map);
 
         System.out.println(response);
-        // 4. Удалить созданную в п.1 запись о заказе
-        // TODO: Денис - что-то не даёт нормально удалять
         paymentOrder = new PaymentOrderDao(em).getPaymentOrderById(orderId);
         new Dao(em).remove(paymentOrder);
         em.close();

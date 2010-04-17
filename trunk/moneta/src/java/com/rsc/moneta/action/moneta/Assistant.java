@@ -10,8 +10,10 @@ import com.rsc.moneta.Currency;
 import com.rsc.moneta.action.BaseAction;
 import com.rsc.moneta.dao.Dao;
 import com.rsc.moneta.bean.PaymentOrder;
+import com.rsc.moneta.bean.User;
 import com.rsc.moneta.dao.MarketDao;
 import com.rsc.moneta.dao.PaymentOrderDao;
+import com.rsc.moneta.dao.UserDao;
 import com.rsc.moneta.util.Utils;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
@@ -43,8 +45,10 @@ public class Assistant extends BaseAction {
     private String monetaLocale = null;
     private String paymentSystemUnitId = null;
     private String paymentSystemLimitIds = null;
-    private PaymentOrder paymentKey;
+    private PaymentOrder paymentOrder;
     private Market market;
+    private boolean _new;
+    private String paymentOrderId;
 
     @Override
     public String execute() throws Exception {
@@ -63,6 +67,12 @@ public class Assistant extends BaseAction {
         if (_paymentSystemLimitIds != null) {
             this.paymentSystemLimitIds = _paymentSystemLimitIds;
         }
+
+        String _contactName = request.getParameter("contact.name");
+        String _contactEmail = request.getParameter("contact.email");
+        String _contactPhone = request.getParameter("contact.phone");
+
+
         if (MNT_ID == null) {
             addActionError(getText("MNT_ID_not_defined"));
             return Action.ERROR;
@@ -100,9 +110,9 @@ public class Assistant extends BaseAction {
             return Action.ERROR;
         }
 
-        paymentKey = new PaymentOrderDao(em).getPaymentOrder(MNT_TRANSACTION_ID, MNT_ID);
-        if (paymentKey != null) {
-            if (paymentKey.getStatus() == PaymentOrder.ORDER_STATUS_ACCEPTED) {
+        paymentOrder = new PaymentOrderDao(em).getPaymentOrder(MNT_TRANSACTION_ID, MNT_ID);
+        if (paymentOrder != null) {
+            if (paymentOrder.getStatus() == PaymentOrder.ORDER_STATUS_ACCEPTED) {
                 return Action.SUCCESS;
             } else {
                 addActionError(getText("order_exists"));
@@ -110,31 +120,77 @@ public class Assistant extends BaseAction {
             }
         }
 
-        paymentKey = new PaymentOrder();
-        paymentKey.setDate(new Date(System.currentTimeMillis()));
-        paymentKey.setAmount(MNT_AMOUNT);
-        paymentKey.setTransactionId(MNT_TRANSACTION_ID);
-        paymentKey.setMarket(market);
-        paymentKey.setCustom1(MNT_CUSTOM1);
-        paymentKey.setCustom2(MNT_CUSTOM2);
-        paymentKey.setCustom3(MNT_CUSTOM3);
-        paymentKey.setDescription(MNT_DESCRIPTION);
-        paymentKey.setFailUrl(MNT_FAIL_URL);
-        paymentKey.setCurrency(Utils.currencyStringToAccountType(MNT_CURRENCY_CODE));
-        paymentKey.setAccount(market.getAccount(paymentKey.getCurrency()));
+
+
+        paymentOrder = new PaymentOrder();
+        paymentOrder.setDate(new Date(System.currentTimeMillis()));
+        paymentOrder.setAmount(MNT_AMOUNT);
+        paymentOrder.setTransactionId(MNT_TRANSACTION_ID);
+        paymentOrder.setMarket(market);
+        paymentOrder.setCustom1(MNT_CUSTOM1);
+        paymentOrder.setCustom2(MNT_CUSTOM2);
+        paymentOrder.setCustom3(MNT_CUSTOM3);
+        paymentOrder.setDescription(MNT_DESCRIPTION);
+        paymentOrder.setFailUrl(MNT_FAIL_URL);
+        paymentOrder.setCurrency(Utils.currencyStringToAccountType(MNT_CURRENCY_CODE));
+        paymentOrder.setAccount(market.getAccount(paymentOrder.getCurrency()));
         if (MNT_SUCCESS_URL != null) {
-            paymentKey.setSuccessUrl(MNT_SUCCESS_URL);
+            paymentOrder.setSuccessUrl(MNT_SUCCESS_URL);
         } else {
-            paymentKey.setSuccessUrl(market.getSuccessUrl());
+            paymentOrder.setSuccessUrl(market.getSuccessUrl());
         }
-        paymentKey.setPaymentSystemLimitIds(_paymentSystemLimitIds);
-        paymentKey.setPaymentSystemUnitId(_paymentSystemUnitId);
-        paymentKey.setTest(MNT_TEST_MODE);
-        if (!new Dao(em).persist(paymentKey)) {
+        paymentOrder.setPaymentSystemLimitIds(_paymentSystemLimitIds);
+        paymentOrder.setPaymentSystemUnitId(_paymentSystemUnitId);
+        paymentOrder.setTest(MNT_TEST_MODE);
+        String result = Action.SUCCESS;
+        if (_contactEmail != null) {
+            UserDao dao = new UserDao(em);
+            User u = dao.getUserByEmail(_contactEmail);
+            if (u != null) {
+                addActionMessage(getText("you_are_already_registred"));
+                _new = false;
+            } else {
+                u = dao.createUserAndSendNotify(_contactPhone, _contactName, _contactEmail);
+                paymentOrder.setUser(u);
+                addActionMessage(getText("you_was_success_registred"));
+                result = "next";
+                _new = true;
+            }
+        }else{
+            _new = false;
+        }
+        if (!new Dao(em).persist(paymentOrder)) {
             addActionError(getText("dbms_save_error"));
             return Action.ERROR;
         }
-        return Action.SUCCESS;
+        if (_new){
+            paymentOrderId = String.format("%019d", paymentOrder.getId());
+        }
+        return result;
+    }
+
+    public PaymentOrder getPaymentOrder() {
+        return paymentOrder;
+    }
+
+    public void setPaymentOrder(PaymentOrder paymentOrder) {
+        this.paymentOrder = paymentOrder;
+    }
+
+    public String getPaymentOrderId() {
+        return paymentOrderId;
+    }
+
+    public void setPaymentOrderId(String paymentOrderId) {
+        this.paymentOrderId = paymentOrderId;
+    }
+
+    public boolean isNew() {
+        return _new;
+    }
+
+    public void setNew(boolean _new) {
+        this._new = _new;
     }
 
     public Market getMarket() {
@@ -146,11 +202,11 @@ public class Assistant extends BaseAction {
     }
 
     public PaymentOrder getPaymentKey() {
-        return paymentKey;
+        return paymentOrder;
     }
 
     public void setPaymentKey(PaymentOrder paymentKey) {
-        this.paymentKey = paymentKey;
+        this.paymentOrder = paymentKey;
     }
 
     public Double getMNT_AMOUNT() {
