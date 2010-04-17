@@ -60,7 +60,7 @@ public class OSMPPayment implements Serializable {
     private short paymentSystemId;
 
     // Идентификатор кода заказа ПС ТЛСМ
-    @Column(name = "paymentOrderId", nullable = false)
+    @Column(insertable = false, updatable = false, nullable = false)
     private long paymentOrderId;
     @OneToOne
     @JoinColumn(name = "paymentOrderId")

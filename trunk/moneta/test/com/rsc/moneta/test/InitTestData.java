@@ -153,8 +153,8 @@ public class InitTestData {
         OSMPPayment payment = new OSMPPayment();
         payment.setAmount(9999.99);
         payment.setPayDate(new GregorianCalendar(2010, 3, 17, 8, 50, 40).getTime());
-        //payment.setPaymentOrder(paymentOrder);
-        payment.setPaymentOrderId(paymentOrder.getId());
+        payment.setPaymentOrder(paymentOrder);
+//        payment.setPaymentOrderId(paymentOrder.getId());
         // TODO: Денис - должен браться из конфигурационных файлов
         short paymentSystemId = 1;
         payment.setPaymentSystemId(paymentSystemId);
