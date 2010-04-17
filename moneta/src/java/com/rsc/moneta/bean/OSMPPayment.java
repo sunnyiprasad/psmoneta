@@ -34,11 +34,12 @@ import javax.persistence.Temporal;
     @UniqueConstraint(columnNames = {"transactionId", "paymentSystemId"})})
 public class OSMPPayment implements Serializable {
 
-    // Терминальные ПС, работающие по протоколу ОСМП:
-    // ПЛАТИКА
-    public final static int OSMP_PS_PLATIKA = 1;
-    // ОСМП
-    public final static int OSMP_PS_OSMP = 2;
+// TODO: Денис - удалить после того как станет ясно, что писать в это поле
+//    // Терминальные ПС, работающие по протоколу ОСМП:
+//    // ПЛАТИКА
+//    public final static int OSMP_PS_PLATIKA = 1;
+//    // ОСМП
+//    public final static int OSMP_PS_OSMP = 2;
 
     // Уникальный идентификатор платежа, выполненного по протоколу ОСМП в ПС
     // ТЛСМ
@@ -48,6 +49,7 @@ public class OSMPPayment implements Serializable {
 
     // Уникальный идентификатор платежа в ПС, работающей по протоколу ОСМП –
     // целое число длиной до 20 знаков.
+    // TODO: Денис - в БД это поле должно быть Numeric 20,0
     @Column(name = "transactionId", nullable = false)
     private double transactionId;
 

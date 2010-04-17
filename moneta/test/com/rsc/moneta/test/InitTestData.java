@@ -19,7 +19,9 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.GregorianCalendar;
 import java.util.Collection;
+import java.util.Calendar;
 import java.util.Vector;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
@@ -149,9 +151,13 @@ public class InitTestData {
 
         // 3. Создать запись об ОСМП-платеже в т-це OSMPPayment
         OSMPPayment payment = new OSMPPayment();
+        payment.setAmount(9999.99);
+        payment.setPayDate(new GregorianCalendar(2010, 3, 17, 8, 50, 40).getTime());
+        payment.setPaymentOrderId(paymentOrder.getId());
+        // TODO: Денис - должен браться из конфигурационных файлов
+        short paymentSystemId = 1;
+        payment.setPaymentSystemId(paymentSystemId);
         payment.setTransactionId(123456789);
-        payment.setPaymentOrderId(OSMPPayment.OSMP_PS_PLATIKA);
-        payment.setAmount(5200.58);
         new Dao(em).persist(payment);
         em.close();
     }
