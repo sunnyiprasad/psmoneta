@@ -26,7 +26,7 @@ public class AASInterceptor implements Interceptor {
         User user = (User) ActionContext.getContext().getSession().get("user");
         if (user == null) {
             return Action.LOGIN;
-        }else{
+        } else {
             return ai.invoke();
         }
     }

@@ -40,6 +40,8 @@ public class MainPaymentHandler {
                                 response.getResultCode() == ResultCode.ORDER_NOT_FOUND_IN_EMARKETPLACE) {
                             order.setStatus(PaymentOrder.ORDER_STATUS_NOT_PAID_AND_REJECTED_BY_EMARKETPLACE);
                             new Dao(em).persist(order);
+                            checkResponse.setResultCode(response.getResultCode());
+                            checkResponse.setDescription(response.getDescription());
                         } else {
                             checkResponse.setResultCode(response.getResultCode());
                             checkResponse.setDescription(response.getDescription());

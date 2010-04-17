@@ -20,7 +20,33 @@
             <li><s:a action="ViewPaymentOrderList"><s:text name="view_payment_order_list" /></s:a></li>
             <li><s:a action="ViewAccountList"><s:text name="view_account_list" /></s:a></li>
         </ul>
-            
-        <decorator:body/>
+        <table>
+            <tr>
+                <td id="header"></td>
+            </tr>
+            <tr>
+                <td id="main">
+                    <table>
+                        <tr>
+                            <td id="left" valign="top" width="100px">
+                                <s:iterator value="%{providerList}" var="provider">
+                                    <table>
+                                        <tr>
+                                            <td valign="top">
+                                                <s:a action="PaymentProviderForm"><s:property value="name" /></s:a>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </s:iterator>
+                            </td>
+                            <td id="right"><decorator:body/></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td id="bottom"></td>
+            </tr>
+        </table>        
     </body>
 </html>

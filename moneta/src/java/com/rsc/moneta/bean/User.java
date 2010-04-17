@@ -4,6 +4,7 @@
  */
 package com.rsc.moneta.bean;
 
+import com.rsc.moneta.module.cyberplat.AbonentPayment;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Column;
@@ -25,18 +26,13 @@ import javax.persistence.Table;
     sequenceName="seq_user"
 )
 @Table(name = "t_User")
-public class User implements Serializable {
-    @OneToMany(mappedBy = "user")
-    private List<PaymentOrder> paymentOrders;
+public class User implements Serializable {    
 
     public static final int USER = 0;
     public static final int IMOWNER = 1;
     public static final int BUHGALTER = 2;
-    public static final int ADMINISTRATOR = 3;
-
-    @OneToMany(mappedBy = "user")
-    private List<CashOrder> cashOrders;
-    private static final long serialVersionUID = 1L;
+    public static final int ADMINISTRATOR = 3;    
+    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator="seq_user")
     private Long id;
@@ -54,8 +50,12 @@ public class User implements Serializable {
     private List<Market> markets;
     @OneToMany(mappedBy = "fromUser")
     private List<PaymentTransaction> paymentTransactionsFrom;
-
-
+    @OneToMany(mappedBy = "user")
+    private List<AbonentPayment> abonentPayments;
+    @OneToMany(mappedBy = "user")
+    private List<PaymentOrder> paymentOrders;
+    @OneToMany(mappedBy = "user")
+    private List<CashOrder> cashOrders;
 
 
     public List<Account> getAccounts() {

@@ -125,4 +125,19 @@ public class Utils {
         return (test) ? 1 : 0;
     }
 
+    public static int getInt(String s){
+        try{
+            return Integer.parseInt(s);
+        }catch (NumberFormatException e){
+            return -1;
+        }
+    }
+
+    public static long getLong(String s){
+        try{
+            return Long.parseLong(s);
+        }catch (NumberFormatException e){
+            return -1;
+        }
+    }
 }
