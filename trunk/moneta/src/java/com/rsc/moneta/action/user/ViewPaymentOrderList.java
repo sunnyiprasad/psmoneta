@@ -25,9 +25,9 @@ public class ViewPaymentOrderList extends BasePeriodListAction{
     @Override
     public String execute() throws Exception {
         PaymentOrderDao paymentOrderDao = new PaymentOrderDao(em);
-        sumAndCount = paymentOrderDao.getPaymentOrdersCountAndSumFilterByStatus(this.getStartDate(), this.getEndDate(), status);
+        sumAndCount = paymentOrderDao.getPaymentOrdersCountAndSumFilterByStatusAndUser(this.getStartDate(), this.getEndDate(), status, user.getId());
         setListPages(sumAndCount.getCount());
-        paymentOrders = paymentOrderDao.getPaymentOrdersPageFilterByStatus(page, this.getStartDate(), this.getEndDate(), status);
+        paymentOrders = paymentOrderDao.getPaymentOrdersPageFilterByStatusAndUser(page, this.getStartDate(), this.getEndDate(), status, user.getId());
         return  Action.SUCCESS;
     }
 

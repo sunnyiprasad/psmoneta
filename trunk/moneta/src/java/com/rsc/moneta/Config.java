@@ -4,9 +4,14 @@
  */
 package com.rsc.moneta;
 
+import com.rsc.moneta.dao.EMF;
+import com.rsc.moneta.dao.ProviderDao;
 import com.rsc.moneta.module.OutputHandler;
+import com.rsc.moneta.module.cyberplat.Provider;
+import java.util.Collection;
 import java.util.Hashtable;
 import java.util.List;
+import javax.persistence.EntityManager;
 
 /**
  *
@@ -15,12 +20,21 @@ import java.util.List;
 public class Config {
 
     private static Hashtable<Integer, String> outputHandlers;
+    private static Collection<Provider> providerList;
 
     public static void addOutputHandler(int id, String outputHandler) {
         if (outputHandlers == null) {
             outputHandlers = new Hashtable<Integer, String>();
         }
         outputHandlers.put(id, outputHandler);
+    }
+
+    public static Collection<Provider> getProviderList() {
+        if (providerList == null){
+            EntityManager em =  EMF.getEntityManager();
+            providerList = new ProviderDao(em).getAllProvider();
+        }
+        return providerList;
     }
 
     public OutputHandler buildOutputHandler(int type) throws ClassNotFoundException, InstantiationException, IllegalAccessException, OutputHandlerNotFoundException {

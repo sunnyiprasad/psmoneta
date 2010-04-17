@@ -23,13 +23,8 @@ public class ViewAccountList extends BaseListAction {
     
 
     @Override
-    public String execute() throws Exception {
-        User user = (User) session.get("user");
-        accounts = user.getAccounts();
-        /*
-         * TODO: Должна быть проверка пользователя
-         * userId = Session.user.id;
-         */
+    public String execute() throws Exception {        
+        accounts = user.getAccounts();        
         return Action.SUCCESS;
     }
 

@@ -182,4 +182,43 @@ public class PaymentOrderDao extends Dao {
             return new Vector<PaymentOrder>();
         }
     }
+
+    public SumAndCount getPaymentOrdersCountAndSumFilterByStatusAndUser(Date startDate, Date endDate, int status, long userId) {
+        Query q = em.createQuery("select count(c), sum(c.amount) from PaymentOrder c where c.date >= :stdt and c.date<=:endt and status=:status and c.user.id=:uid");
+        try {
+            q.setParameter("stdt", startDate);
+            q.setParameter("endt", endDate);
+            q.setParameter("status", status);
+            q.setParameter("uid", userId);
+            List list = q.getResultList();
+            Object[] array = (Object[]) list.get(0);
+            SumAndCount sumAndCount = new SumAndCount();
+            sumAndCount.setCount((Long) array[0]);
+            if (array.length == 2) {
+                if (array[1] != null) {
+                    sumAndCount.setAmount((Double) array[1]);
+                }
+            }
+            return sumAndCount;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    public Collection<PaymentOrder> getPaymentOrdersPageFilterByStatusAndUser(int page, Date startDate, Date endDate, int status, long userId) {
+        Query q = em.createQuery("select c from PaymentOrder c where c.date >= :stdt and c.date<=:endt and c.status = :status and c.user.id=:uid");
+        try {
+            q.setFirstResult(page * Const.ROWS_COUNT);
+            q.setMaxResults(Const.ROWS_COUNT);
+            q.setParameter("stdt", startDate);
+            q.setParameter("endt", endDate);
+            q.setParameter("status", status);
+            q.setParameter("uid", userId);
+            return (Collection<PaymentOrder>) q.getResultList();
+        } catch (NoResultException exception) {
+            exception.printStackTrace();
+            return new Vector<PaymentOrder>();
+        }
+    }
 }
