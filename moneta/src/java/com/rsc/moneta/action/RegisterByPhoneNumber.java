@@ -26,6 +26,9 @@ public class RegisterByPhoneNumber extends BaseAction {
     private PaymentOrder paymentOrder;
     private String password;
     private String paymentOrderId;
+    private String name;
+    private String email;
+    private Boolean _new;
 
     @Override
     public String execute() throws Exception {
@@ -45,37 +48,14 @@ public class RegisterByPhoneNumber extends BaseAction {
             return Action.ERROR;
         }
         if (phone != null && !"".equals(phone)) {
-            User user = new UserDao(em).getUserByPhone(phone);
-            if (user == null) {
-                user = new User();
-                user.setPhone(phone);
-                user.setPassword(generatePassword());
-                Account account = new Account();
-                account.setType(Currency.EURO);
-                account.setUser(user);
-                account.setBalance(0);
-                Dao dao = new Dao(em);
-                dao.persist(user);
-                dao.persist(account);
-                account = new Account();
-                account.setType(Currency.RUB);
-                account.setUser(user);
-                account.setBalance(0);
-                dao.persist(account);
-                account = new Account();
-                account.setType(Currency.USD);
-                account.setUser(user);
-                account.setBalance(0);
-                dao.persist(account);
-                Sms sms = new Sms();
-                sms.setPhone(phone);
-                sms.setMessage(getText("reg_phone_sms_message", user.getPassword()));
-                dao.persist(sms);
-                paymentOrder.setUser(user);
-                dao.persist(paymentOrder);
+            User localUser = new UserDao(em).getUserByPhone(phone);
+            if (localUser == null) {
+                localUser = new UserDao(em).createUserAndSendNotify(phone, name, email);
+                paymentOrder.setUser(localUser);
+                new Dao(em).persist(paymentOrder);
             } else {
-                if (user.getPassword().equals(password)) {
-                    paymentOrder.setUser(user);
+                if (localUser.getPassword().equals(password)) {
+                    paymentOrder.setUser(localUser);
                     new Dao(em).persist(paymentOrder);
                 } else {
                     addActionError(getText("incorrect_password_please_try_again"));
@@ -83,7 +63,32 @@ public class RegisterByPhoneNumber extends BaseAction {
                 }
             }
         }
+        paymentOrderId = String.format("%019d", paymentOrder.getId());
         return Action.SUCCESS;
+    }
+
+    public Boolean getNew() {
+        return _new;
+    }
+
+    public void setNew(Boolean _new) {
+        this._new = _new;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public PaymentOrder getPaymentOrder() {
@@ -110,29 +115,12 @@ public class RegisterByPhoneNumber extends BaseAction {
         this.password = password;
     }
 
-    public PaymentOrder getPaymentKey() {
-        return paymentOrder;
-    }
-
-    public void setPaymentKey(PaymentOrder paymentKey) {
-        this.paymentOrder = paymentKey;
-    }
-
     public Long getPaymentId() {
         return paymentId;
     }
 
     public void setPaymentId(Long paymentId) {
         this.paymentId = paymentId;
-    }
-
-    public String generatePassword() throws InvalidPreferencesFormatException {
-        // Генерация пароля
-        PasswordGenerator passGen = new PasswordGenerator();
-        passGen.clearTemplate();
-        passGen.setNumbersIncluded(true);
-        passGen.generatePassword();
-        return passGen.getPassword();
     }
 
     public String getPhone() {

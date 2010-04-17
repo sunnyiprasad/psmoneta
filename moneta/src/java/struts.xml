@@ -23,6 +23,7 @@
         <action name="Assistant" class="com.rsc.moneta.action.moneta.Assistant">
             <result name="error">/pages/error.jsp</result>
             <result name="success">/pages/requestPhone.jsp</result>
+            <result name="next">/pages/selectPaymentSystem.jsp</result>
         </action>
 
         <action name="RegisterByPhone" class="com.rsc.moneta.action.RegisterByPhoneNumber" >

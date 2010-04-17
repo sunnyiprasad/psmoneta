@@ -4,9 +4,14 @@
  */
 package com.rsc.moneta.dao;
 
+import com.rsc.moneta.Currency;
 import com.rsc.moneta.action.Const;
+import com.rsc.moneta.bean.Account;
+import com.rsc.moneta.bean.Sms;
 import com.rsc.moneta.bean.User;
+import com.rsc.moneta.util.PasswordGenerator;
 import java.util.Collection;
+import java.util.prefs.InvalidPreferencesFormatException;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
@@ -22,6 +27,41 @@ public class UserDao extends Dao {
         super(em);
     }
 
+    public User createUserAndSendNotify(String phone, String name, String email) {
+        em.getTransaction().begin();
+        try {
+            User user = new User();
+            user.setPhone(phone);
+            user.setEmail(email);
+            user.setName(name);
+            user.setPassword(generatePassword());
+            em.persist(user);
+
+            Account account = new Account();
+            account.setType(Currency.EURO);
+            account.setUser(user);
+            account.setBalance(0);            
+            em.persist(account);
+
+            account = new Account();
+            account.setType(Currency.RUB);
+            account.setUser(user);
+            account.setBalance(0);
+            em.persist(account);
+
+            account = new Account();
+            account.setType(Currency.USD);
+            account.setUser(user);
+            account.setBalance(0);
+            em.persist(account);
+            em.getTransaction().commit();
+            return user;
+        } catch(Exception e) {
+            if (em.getTransaction().isActive())
+                em.getTransaction().rollback();
+            return null;
+        }
+    }
 
     public User getUserByPhone(String phone) {
         Query q = getEntityManager().createQuery("select u from User u where u.phone=:phone");
@@ -70,5 +110,26 @@ public class UserDao extends Dao {
         q.setFirstResult(page * Const.ROWS_COUNT);
         q.setMaxResults(Const.ROWS_COUNT);
         return q.getResultList();
+    }
+
+    public String generatePassword() throws InvalidPreferencesFormatException {
+        // Генерация пароля
+        PasswordGenerator passGen = new PasswordGenerator();
+        passGen.clearTemplate();
+        passGen.setNumbersIncluded(true);
+        passGen.generatePassword();
+        return passGen.getPassword();
+    }
+
+    public User getUserByEmail(String _contactEmail) {
+        Query q = getEntityManager().createQuery("select u from User u where u.email=:email");
+        try {
+            q.setParameter("email", _contactEmail);
+            return (User) q.getSingleResult();
+        } catch (NoResultException e1) {
+            return null;
+        } catch (NonUniqueResultException e2) {
+            return null;
+        }
     }
 }

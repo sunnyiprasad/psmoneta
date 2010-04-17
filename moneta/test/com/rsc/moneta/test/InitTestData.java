@@ -155,7 +155,7 @@ public class InitTestData {
         payment.setPayDate(new GregorianCalendar(2010, 3, 17, 8, 50, 40).getTime());
         payment.setPaymentOrder(paymentOrder);
 //        payment.setPaymentOrderId(paymentOrder.getId());
-        // TODO: Денис - должен браться из конфигурационных файлов
+        // TODO1: Денис - должен браться из конфигурационных файлов
         short paymentSystemId = 1;
         payment.setPaymentSystemId(paymentSystemId);
         payment.setTransactionId(123456789);
