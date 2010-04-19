@@ -15,16 +15,15 @@ import com.rsc.moneta.bean.User;
  */
 public class Login extends BaseAction {
 
-    private String phonenumber;
+    private String email;
     private String password;
-    private User user;
 
     @Override
     public String execute() throws Exception {
-        if(phonenumber == null || password == null || "".equals(phonenumber) || "".equals(password)){
+        if(email == null || password == null || "".equals(email) || "".equals(password)){
             return Action.LOGIN;
         }
-        setUser(new UserDao(em).getUserByPhoneAndPassword(phonenumber, password));
+        setUser(new UserDao(em).getUserByEmailAndPassword(email, password));
         if (user == null)
             return "login";
         session.put("user", user);
@@ -43,22 +42,14 @@ public class Login extends BaseAction {
 
     public void setPassword(String password) {
         this.password = password;
+    }   
+
+    public String getEmail() {
+        return email;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public String getUsername() {
-        return phonenumber;
-    }
-
-    public void setUsername(String username) {
-        this.phonenumber = username;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
 
