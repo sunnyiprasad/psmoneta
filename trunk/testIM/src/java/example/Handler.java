@@ -18,7 +18,7 @@ public class Handler extends ActionSupport {
     private Long MNT_ID = null;
     private String MNT_TRANSACTION_ID = null;
     private String MNT_CURRENCY_CODE = null;
-    private Double MNT_AMOUNT = null;
+    private String MNT_AMOUNT = null;
     private Boolean MNT_TEST_MODE = false;
     private String MNT_DESCRIPTION = null;
     private String MNT_SIGNATURE = null;
@@ -34,15 +34,8 @@ public class Handler extends ActionSupport {
     }
 
     @Override
-    public String input() throws Exception {
-        System.out.println("************************************************************");
-        return super.input();
-    }
-
-
-
-    @Override
     public String execute() throws Exception {
+        System.out.println("+++++++++++++++++++++++++++++++++++++++++++++");
         EntityManager em = EMF.getEntityManager();
         if (MNT_COMMAND != null && "CHECK".equals(MNT_COMMAND)) {
             try {
@@ -96,7 +89,7 @@ public class Handler extends ActionSupport {
                 if (order.getStatus() == Order.STATUS_ACTIVE) {
                     MNT_RESULT_CODE = 200;
                     Payment payment = new Payment();
-                    payment.setAmount(MNT_AMOUNT);
+                    payment.setAmount(Double.parseDouble(MNT_AMOUNT));
                     payment.setDate(new Date());
                     payment.setOrder(order);
                     new Dao(em).persist(payment);
@@ -139,13 +132,15 @@ public class Handler extends ActionSupport {
         this.MNT_RESULT_CODE = MNT_RESULT_CODE;
     }
 
-    public Double getMNT_AMOUNT() {
+    public String getMNT_AMOUNT() {
         return MNT_AMOUNT;
     }
 
-    public void setMNT_AMOUNT(Double MNT_AMOUNT) {
+    public void setMNT_AMOUNT(String MNT_AMOUNT) {
         this.MNT_AMOUNT = MNT_AMOUNT;
     }
+
+    
 
     public String getMNT_CURRENCY_CODE() {
         return MNT_CURRENCY_CODE;
