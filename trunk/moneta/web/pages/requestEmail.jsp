@@ -13,9 +13,9 @@
             <s:text name="license_agreement" />
         </p>
         <p align="center">
-            <s:form action="RegisterByPhone" method="post">
+            <s:form action="RegisterOrLogin" method="post">
                 <s:hidden name="paymentId" value="%{paymentOrder.id}" />
-                <s:textfield name="phone" label="%{getText('assitant.enter_phone')}"/>
+                <s:textfield name="email" label="%{getText('enter_email')}"/>
                 <s:password name="password" label="%{getText('enter_password')}" />
                 <s:submit value="Registation"/>
                 <a href="<s:url action="SelectPaymentSystem"><s:param name="paymentId" value="%{paymentOrder.id}"/></s:url>"></a>
