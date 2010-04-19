@@ -9,14 +9,20 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.Date;
+import java.util.GregorianCalendar;
+//import java.text.NumberFormat;
+//import java.util.Locale;
 
 import com.rsc.moneta.dao.EMF;
 import com.rsc.moneta.bean.PaymentOrder;
+import com.rsc.moneta.bean.OSMPPayment;
 import com.rsc.moneta.module.ResultCode;
 //import com.rsc.moneta.Currency;
 import com.rsc.moneta.module.CheckResponse;
 import com.rsc.moneta.module.InputHandler;
 import com.rsc.moneta.module.MainPaymentHandler;
+import com.rsc.moneta.dao.Dao;
 
 /**
  * Класс представляет собой класс - обработчик запросов, поступающих от терминала ОСМП
@@ -41,6 +47,7 @@ public class OSMPInputHandler implements InputHandler {
     public final static String STRING_TXN_ID_PARAMETER_ERROR = "Отсутствует или неправильный параметр 'txn_id'";
     public final static String STRING_ACCOUNT_PARAMETER_ERROR = "Отсутствует или неправильный параметр 'account'";
     public final static String STRING_SUM_PARAMETER_ERROR = "Отсутствует или неправильный параметр 'sum'";
+    public final static String STRING_TXN_DATE_PARAMETER_ERROR = "Отсутствует или неправильный параметр 'txn_date'";
     public final static String STRING_DB_ERROR = "Ошибка БД";
     public final static String STRING_UNKNOWN_ERROR = "Неизвестная ошибка";
     public final static String STRING_ENTERED_NUMBER_DOES_NOT_CONFORM_TO_ORDER_FORMAT = "Введенный номер не соответствует формату номера заказа";
@@ -59,6 +66,12 @@ public class OSMPInputHandler implements InputHandler {
     public final static String STRING_SUM_TOO_SMALL = "Введённая сумма меньше чем сумма заказа, поэтому выполнено зачисление на счет абонента в ПС ТЛСМ вместо оплаты заказа";
 //    public final static String STRING_SUM_TOO_BIG = "Сумма слишком велика";
 
+    // Члены класса-эмуляторы различных свойтсв класса, применяемые для
+    // тестирования
+    private final static int EMULATOR_NOT_SET_INT = -1;
+    private final static double EMULATOR_NOT_SET_DOUBLE = -1.0;
+    private int TLSMResultCodeEmulator = EMULATOR_NOT_SET_INT;
+    private double amountEmulator = EMULATOR_NOT_SET_DOUBLE;
 
     // Данный метод проверяет возможность платежа.
     // См. ОПИСАНИЕ ИНТЕРФЕЙСА ОСМП стр. 6.
@@ -67,13 +80,17 @@ public class OSMPInputHandler implements InputHandler {
         // внутренний номер платежа в системе ОСМП (параметр из ОСМП-запроса)
         String txn_id = "";
 
+        // внутренний номер платежа в системе ОСМП
+        double transactionId = -1.0;
+
         // уникальный номер операции пополнения баланса абонента (в базе
-        // провайдера), целое число длиной до 20 знаков
+        // провайдера), целое число длиной до 20 знаков - номер заказа ПС ТЛСМ
+        // - исходим из того, что соотношение между транзакцией ПС ОСМП и
+        // заказом ПС ТЛСМ - один к одному
         long prv_txn = -1;
 
-        // сумма платежа, Если сумма представляет целое число, то оно все равно дополняется точкой и нулями, например – «152.00»
-        // (параметр из ОСМП - запроса)
-        double sum = -1.0;
+        // сумма платежа
+        double amount = -1.0;
 
         // идентификатор абонента в информационной системе провайдера (параметр из ОСМП-запроса)
         String account = "";
@@ -93,6 +110,7 @@ public class OSMPInputHandler implements InputHandler {
                 if (command.equals("check")) {
                     try {
                         txn_id = inputData.get("txn_id").toString();
+                        transactionId = Double.parseDouble(txn_id);
                         if (!this.regexMatch("^[0-9]{1,20}$", txn_id)) {
                             result = OSMP_RETURN_CODE_OTHER_ERROR;
                             comment = STRING_TXN_ID_PARAMETER_ERROR;
@@ -105,11 +123,8 @@ public class OSMPInputHandler implements InputHandler {
                                 } else {
                                     try {
                                         paymentOrderId = Long.parseLong(account);
-                                        // TODO: Денис
-                                        // "Платика" параметр sum не должна прислать но параметр sum всё-таки может быть в запросе "check"
-                                        //[14:29:29] Denis Solodovnikov говорит: так
-                                        //получается мне в чеке надо все -таки предусмотреть что сумму прислать может осмп ?
-                                        //[14:30:20] Batyrov Suleyman говорит: предусмотри я думаю ничего страшного в этом нет
+                                        // TODO: Денис - с Суликом - параметр sum может быть прислан в запросе "check"
+                                        // выяснить, что делать в этом случае
                                         try {
                                             EntityManager em = EMF.getEntityManager();
                                             
@@ -121,20 +136,36 @@ public class OSMPInputHandler implements InputHandler {
                                                 result = OSMP_RETURN_CODE_ACCOUNT_NOT_FOUND;
                                                 comment = STRING_ORDER_DOES_NOT_EXIST_ERROR;
                                             } else {
+                                                MainPaymentHandler handler = null;
+                                                CheckResponse checkResponse = null;
+                                                if (this.TLSMResultCodeEmulator == EMULATOR_NOT_SET_INT)
+                                                {
+                                                    // Заказ в ПС ТЛСМ найден.
+                                                    handler = new MainPaymentHandler(em);
 
-                                                // Заказ в ПС ТЛСМ найден.
-                                                MainPaymentHandler handler = new MainPaymentHandler(em);
+                                                    // Проверка его статуса в ИМ - отправка запроса check
+                                                    checkResponse = handler.check(paymentOrder);
+                                                }
 
-                                                // Проверка его статуса в ИМ - отправка запроса check
-                                                CheckResponse checkResponse = handler.check(paymentOrder);
-
-                                                if (checkResponse != null) {
-                                                    int TLSMResultCode = checkResponse.getResultCode();
+                                                if (checkResponse != null || this.TLSMResultCodeEmulator != EMULATOR_NOT_SET_INT) {
+                                                    int TLSMResultCode = -1;
+                                                    if (this.TLSMResultCodeEmulator == EMULATOR_NOT_SET_INT)
+                                                    {
+                                                        TLSMResultCode = checkResponse.getResultCode();
+                                                    }else {
+                                                        TLSMResultCode = this.TLSMResultCodeEmulator;
+                                                    }
                                                     if (TLSMResultCode == ResultCode.SUCCESS_WITH_AMOUNT) {
                                                         // TODO: Денис, с Суликом - тут должна быть проверка суммы заказа - 
                                                         // для каждого ИМ-а надо проверять на вхождение в рамки мин. и макс.
                                                         // суммы заказа
-                                                        sum = checkResponse.getAmount();
+                                                        if (checkResponse != null) {
+                                                            amount = checkResponse.getAmount();
+                                                        } else {
+                                                            if (amountEmulator != EMULATOR_NOT_SET_DOUBLE) {
+                                                                amount = amountEmulator;
+                                                            }
+                                                        }
                                                         result = OSMP_RETURN_CODE_OK;
                                                         comment = "";
                                                     } else {
@@ -142,7 +173,7 @@ public class OSMPInputHandler implements InputHandler {
                                                             // TODO: Денис, с Суликом - тут должна быть проверка суммы заказа -
                                                             // для каждого ИМ-а надо проверять на вхождение в рамки мин. и макс.
                                                             // суммы заказа
-                                                            sum = paymentOrder.getAmount();
+                                                            amount = paymentOrder.getAmount();
                                                             result = OSMP_RETURN_CODE_OK;
                                                             comment = "";
                                                         } else {
@@ -172,7 +203,7 @@ public class OSMPInputHandler implements InputHandler {
                                                                                     comment = STRING_UNKNOWN_CODE_RETURNED_BY_EMARKEPLACE;
                                                                                 } else {
                                                                                     if (TLSMResultCode == ResultCode.ORDER_NOT_FOUND_IN_EMARKETPLACE) {
-                                                                                        // TODO: Денис, с Суликом - а что возвращать в Платику в этом случае?
+                                                                                        // TODO: Денис, с Суликом - правильный ли код я возвращаю ОСМП в этом случае?
                                                                                         result = OSMP_RETURN_CODE_ACCOUNT_NOT_FOUND;
                                                                                         comment = STRING_ORDER_DOES_NOT_EXIST_ERROR;
                                                                                     } else {
@@ -246,7 +277,7 @@ public class OSMPInputHandler implements InputHandler {
             comment = STRING_COMMAND_PARAMETER_ERROR;
         } finally {
             try {
-                return this.makeUpResponse(txn_id, prv_txn, sum, result, comment);
+                return this.makeUpResponse(txn_id, prv_txn, amount, result, comment);
             } catch (Exception ex) {
                 return null;
             }
@@ -256,8 +287,220 @@ public class OSMPInputHandler implements InputHandler {
     // Данный метод проводит платеж
     // См. ОПИСАНИЕ ИНТЕРФЕЙСА ОСМП стр. 7.
     public String pay(Map inputData) {
-        //TODO: Denis
-        throw new UnsupportedOperationException("Not supported yet.");
+        // внутренний номер платежа в системе ОСМП (параметр из ОСМП-запроса)
+        String txn_id = "";
+
+        // внутренний номер платежа в системе ОСМП
+        double transactionId = -1.0;
+
+        // уникальный номер операции пополнения баланса абонента (в базе
+        // провайдера), целое число длиной до 20 знаков - номер заказа ПС ТЛСМ
+        // - исходим из того, что соотношение между транзакцией ПС ОСМП и
+        // заказом ПС ТЛСМ - один к одному
+        long prv_txn = -1;
+
+        // сумма платежа (параметр из ОСМП-запроса)
+        String sum = "";
+
+        // сумма платежа
+        double amount = -1.0;
+
+        // идентификатор абонента в информационной системе провайдера (параметр из ОСМП-запроса)
+        String account = "";
+
+        // Идентификатор кода заказа ТЛСМ
+        long paymentOrderId = -1;
+
+        // дата учета платежа в системе ОСМП (параметр из ОСМП-запроса)
+        String txn_date = "";
+
+        // дата учета платежа в системе ОСМП
+        Date payDate = null;
+
+        // command=check – запрос на проверку состояния абонента
+        String command = "";
+
+        int result = OSMP_RETURN_CODE_OTHER_ERROR;
+        String comment = "";
+
+        try {
+            command = inputData.get("command").toString();
+            try {
+                if (command.equals("check")) {
+                    try {
+                        txn_id = inputData.get("txn_id").toString();
+                        transactionId = Double.parseDouble(txn_id);
+                        if (!this.regexMatch("^[0-9]{1,20}$", txn_id)) {
+                            result = OSMP_RETURN_CODE_OTHER_ERROR;
+                            comment = STRING_TXN_ID_PARAMETER_ERROR;
+                        } else {
+                            try {
+                                account = inputData.get("account").toString();
+                                if (!this.regexMatch("^[0-9]{19}$", account)) {
+                                    result = OSMP_RETURN_CODE_ACCOUNT_ILLEGAL_FORMAT;
+                                    comment = STRING_ENTERED_NUMBER_DOES_NOT_CONFORM_TO_ORDER_FORMAT;
+                                } else {
+                                    try {
+                                        paymentOrderId = Long.parseLong(account);
+                                        try{
+                                            sum = inputData.get("sum").toString();
+                                            // TODO: Денис - проверить - насколько я понимаю, Java "поймёт" что это число типа double
+                                            // только если там точка будет, на запятую будет Exception сразу
+                                            amount = Double.parseDouble(sum);
+                                            try {
+                                                txn_date = inputData.get("txn_date").toString();
+                                                payDate = this.getDateFromOSMPTransactionDate(txn_date);
+                                                try {
+                                                    EntityManager em = EMF.getEntityManager();
+
+                                                    //Поиск по первичному ключу для всех объектов уже реализован JPA
+                                                    PaymentOrder paymentOrder = em.find(PaymentOrder.class, paymentOrderId);
+
+                                                    if (paymentOrder == null) {
+                                                        // Заказ не найден. Введен несуществующий код заказа.
+                                                        result = OSMP_RETURN_CODE_ACCOUNT_NOT_FOUND;
+                                                        comment = STRING_ORDER_DOES_NOT_EXIST_ERROR;
+                                                    } else {
+
+                                                        // Заказ в ПС ТЛСМ найден.
+                                                        MainPaymentHandler handler = new MainPaymentHandler(em);
+
+                                                        // Проверка его статуса в ИМ - отправка запроса check
+                                                        CheckResponse checkResponse = handler.check(paymentOrder);
+
+                                                        if (checkResponse != null) {
+                                                            int TLSMResultCode = checkResponse.getResultCode();
+                                                            if (TLSMResultCode == ResultCode.SUCCESS_WITH_AMOUNT) {
+                                                                // TODO: Денис, с Суликом - тут должна быть проверка суммы заказа -
+                                                                // для каждого ИМ-а надо проверять на вхождение в рамки мин. и макс.
+                                                                // суммы заказа
+                                                                this.saveOSMPPayment(amount, payDate, paymentOrder, transactionId);
+                                                                amount = checkResponse.getAmount();
+                                                                result = OSMP_RETURN_CODE_OK;
+                                                                comment = "";
+                                                            } else {
+                                                                if (TLSMResultCode == ResultCode.SUCCESS_WITHOUT_AMOUNT) {
+                                                                    this.saveOSMPPayment(amount, payDate, paymentOrder, transactionId);
+                                                                    // TODO: Денис, с Суликом - тут должна быть проверка суммы заказа -
+                                                                    // для каждого ИМ-а надо проверять на вхождение в рамки мин. и макс.
+                                                                    // суммы заказа
+                                                                    amount = paymentOrder.getAmount();
+                                                                    result = OSMP_RETURN_CODE_OK;
+                                                                    comment = "";
+                                                                } else {
+                                                                    if (TLSMResultCode == ResultCode.ORDER_ALREADY_PAID) {
+                                                                        prv_txn = paymentOrder.getId();
+                                                                        result = OSMP_RETURN_CODE_OK;
+                                                                        comment = STRING_ORDER_PAID_AND_COMPLETED;
+                                                                    } else {
+                                                                        if (TLSMResultCode == ResultCode.ORDER_VALID_AND_PROCESSING) {
+                                                                            result = OSMP_RETURN_CODE_TEMPORARY_ERROR;
+                                                                            comment = STRING_ORDER_IS_PROCESSING_IN_EMARKETPLACE;
+                                                                        } else {
+                                                                            if (TLSMResultCode == ResultCode.ORDER_NOT_ACTUAL) {
+                                                                                result = OSMP_RETURN_CODE_ACCOUNT_DISABLED;
+                                                                                comment = STRING_ORDER_IS_INVALID_FOR_EMARKETPLACE;
+                                                                            } else {
+                                                                                if (TLSMResultCode == ResultCode.ERROR_TRY_AGAIN) {
+                                                                                    result = OSMP_RETURN_CODE_TEMPORARY_ERROR;
+                                                                                    comment = STRING_EMARKETPLACE_UNABLE_TO_RESPOND;
+                                                                                } else {
+                                                                                    if (TLSMResultCode == ResultCode.INTERNAL_ERROR) {
+                                                                                        result = OSMP_RETURN_CODE_OTHER_ERROR;
+                                                                                        comment = STRING_UNKNOWN_ERROR;
+                                                                                    } else {
+                                                                                        if (TLSMResultCode == ResultCode.UNKNOWN_CODE_RETURNED_BY_EMARKEPLACE) {
+                                                                                            result = OSMP_RETURN_CODE_OTHER_ERROR;
+                                                                                            comment = STRING_UNKNOWN_CODE_RETURNED_BY_EMARKEPLACE;
+                                                                                        } else {
+                                                                                            if (TLSMResultCode == ResultCode.ORDER_NOT_FOUND_IN_EMARKETPLACE) {
+                                                                                                // TODO: Денис, с Суликом - правильный ли код я возвращаю ОСМП в этом случае?
+                                                                                                result = OSMP_RETURN_CODE_ACCOUNT_NOT_FOUND;
+                                                                                                comment = STRING_ORDER_DOES_NOT_EXIST_ERROR;
+                                                                                            } else {
+                                                                                                if (TLSMResultCode == ResultCode.INVALID_SIGN_RETURNED_BY_EMARKETPLACE) {
+                                                                                                    result = OSMP_RETURN_CODE_PAY_SUPPRESS_ON_TECHNICAL_REASONS;
+                                                                                                    comment = STRING_INVALID_SIGN_RETURNED_BY_EMARKETPLACE;
+                                                                                                } else {
+                                                                                                    if (TLSMResultCode == ResultCode.MARKET_ID_WAS_NOT_PROVIDED_BY_EMARKETPLACE) {
+                                                                                                        result = OSMP_RETURN_CODE_PAY_SUPPRESS_ON_TECHNICAL_REASONS;
+                                                                                                        comment = STRING_MARKET_ID_WAS_NOT_PROVIDED_BY_EMARKETPLACE;
+                                                                                                    } else {
+                                                                                                        if (TLSMResultCode == ResultCode.TRANSACTIONID_WAS_NOT_PROVIDED_BY_EMARKETPLACE) {
+                                                                                                            result = OSMP_RETURN_CODE_PAY_SUPPRESS_ON_TECHNICAL_REASONS;
+                                                                                                            comment = STRING_TRANSACTIONID_WAS_NOT_PROVIDED_BY_EMARKETPLACE;
+                                                                                                        } else {
+                                                                                                            if (TLSMResultCode == ResultCode.SUCCESS_BUT_AMOUNT_LESS_THAN_MUST_BE) {
+                                                                                                                result = OSMP_RETURN_CODE_SUM_TOO_SMALL;
+                                                                                                                comment = STRING_SUM_TOO_SMALL;
+                                                                                                            } else {
+                                                                                                                // TODO: Денис, с Суликом - что еще сделать в таком случае?
+                                                                                                                result = OSMP_RETURN_CODE_OTHER_ERROR;
+                                                                                                                comment = STRING_UNKNOWN_ERROR;
+                                                                                                            }
+                                                                                                        }
+                                                                                                    }
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        } else {
+                                                            // Не удалось получить ответ от ИМ на запрос
+                                                            result = OSMP_RETURN_CODE_TEMPORARY_ERROR;
+                                                            comment = STRING_UNABLE_TO_REQUEST_EMARKETPLACE_FOR_ORDER_STATUS;
+                                                        }
+                                                    }
+                                                } catch (Exception ex) {
+                                                    result = OSMP_RETURN_CODE_OTHER_ERROR;
+                                                    comment = STRING_DB_ERROR;
+                                                }
+                                            } catch (Exception ex) {
+                                                result = OSMP_RETURN_CODE_OTHER_ERROR;
+                                                comment = STRING_TXN_DATE_PARAMETER_ERROR;
+                                            }
+                                        }
+                                        catch (Exception ex) {
+                                            result = OSMP_RETURN_CODE_OTHER_ERROR;
+                                            comment = STRING_SUM_PARAMETER_ERROR;
+                                        }
+                                    } catch (Exception ex) {
+                                        result = OSMP_RETURN_CODE_ACCOUNT_ILLEGAL_FORMAT;
+                                        comment = STRING_ENTERED_NUMBER_DOES_NOT_CONFORM_TO_ORDER_FORMAT;
+                                    }
+                                }
+                            } catch (Exception ex) {
+                                result = OSMP_RETURN_CODE_OTHER_ERROR;
+                                comment = STRING_ACCOUNT_PARAMETER_ERROR;
+                            }
+                        }
+                    } catch (Exception ex) {
+                        result = OSMP_RETURN_CODE_OTHER_ERROR;
+                        comment = STRING_TXN_ID_PARAMETER_ERROR;
+                    }
+                } else {
+                    result = OSMP_RETURN_CODE_OTHER_ERROR;
+                    comment = STRING_COMMAND_PARAMETER_ERROR;
+                }
+            } catch (Exception ex) {
+                result = OSMP_RETURN_CODE_OTHER_ERROR;
+                comment = STRING_UNKNOWN_ERROR;
+            }
+        } catch (Exception ex) {
+            result = OSMP_RETURN_CODE_OTHER_ERROR;
+            comment = STRING_COMMAND_PARAMETER_ERROR;
+        } finally {
+            try {
+                return this.makeUpResponse(txn_id, prv_txn, amount, result, comment);
+            } catch (Exception ex) {
+                return null;
+            }
+        }
     }
 
     // На данный момент не реализуется
@@ -295,13 +538,13 @@ public class OSMPInputHandler implements InputHandler {
         if (prv_txn != -1) {
             response +=
                     "<prv_txn>" + String.format("%019d", prv_txn) + "</prv_txn>";
-
         }
-        // TODO: Сулик уточнит будет ли вообще приходить сумма в запросе, если будет - надо её возвращать
-//        if (amount != -1.00) {
-//            response +=
-//                     "<sum>" + amount.ToString("f2", new System.Globalization.CultureInfo("en-US", false).NumberFormat) + "</sum>";
-//        }
+        if (amount != -1.00) {
+            // TODO: Денис - вместо replace(',', '.') должно быть создание
+            // NumberFormat или чего-либо ему подобного и его применение
+            response +=
+                    "<sum>" + String.format("%.2f", amount).replace(',', '.') + "</sum>";
+        }
         response +=
                 "<result>" + String.format("%d", result) + "</result>";
         response +=
@@ -311,7 +554,56 @@ public class OSMPInputHandler implements InputHandler {
         return response;
     }
 
+    /**
+     * Creates a record for OSMP pay transaction
+     * @param paymentOrder
+     */
+    private void saveOSMPPayment(double amount, Date payDate, PaymentOrder paymentOrder, double transactionId) {
+        EntityManager em = EMF.getEntityManager();
+        OSMPPayment payment = new OSMPPayment();
+        payment.setAmount(amount);
+        payment.setPayDate(payDate);
+        payment.setPaymentOrder(paymentOrder);
+        // TODO: Денис - с Суликом, должен браться из конфигурационных файлов
+        short paymentSystemId = 1;
+        payment.setPaymentSystemId(paymentSystemId);
+        payment.setRejectDate(null);
+        payment.setTransactionId(transactionId);
+        new Dao(em).persist(payment);
+        em.close();
+    }
+
+    private Date getDateFromOSMPTransactionDate(String OSMPTransactionDate) {
+        return new GregorianCalendar(
+                Integer.parseInt(OSMPTransactionDate.substring(0, 4)),
+                Integer.parseInt(OSMPTransactionDate.substring(4, 2)),
+                Integer.parseInt(OSMPTransactionDate.substring(6, 2)),
+                Integer.parseInt(OSMPTransactionDate.substring(8, 2)),
+                Integer.parseInt(OSMPTransactionDate.substring(10, 2)),
+                Integer.parseInt(OSMPTransactionDate.substring(12, 2))).getTime();
+    }
+
+
     public void setConfig(InputHandlerConfig config) {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public String checkWithEmulating(Map inutData,
+            int TLSMResultCodeEmulator) {
+        this.TLSMResultCodeEmulator = TLSMResultCodeEmulator;
+        String xml = this.check(inutData);
+        this.TLSMResultCodeEmulator = EMULATOR_NOT_SET_INT;
+        return xml;
+    }
+
+    public String checkWithEmulating(Map inutData,
+        int TLSMResultCodeEmulator,
+        double amountEmulator) {
+        this.TLSMResultCodeEmulator = TLSMResultCodeEmulator;
+        this.amountEmulator = amountEmulator;
+        String xml = this.check(inutData);
+        this.TLSMResultCodeEmulator = EMULATOR_NOT_SET_INT;
+        this.amountEmulator = EMULATOR_NOT_SET_DOUBLE;
+        return xml;
     }
 }
