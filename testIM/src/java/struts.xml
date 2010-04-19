@@ -7,7 +7,7 @@
     <package name="default" namespace="/" extends="struts-default">
         <action name="Handler" class="example.Handler">
             <result name="success">/example/response.jsp</result>
-            <result name="input">/example/response.jsp</result>
+            <result name="input">/fail.jsp</result>
         </action>        
     </package>
 </struts>
