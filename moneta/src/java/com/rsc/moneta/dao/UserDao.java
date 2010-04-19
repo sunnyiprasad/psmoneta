@@ -30,8 +30,7 @@ public class UserDao extends Dao {
     public User createUserAndSendNotify(String phone, String name, String email) {
         em.getTransaction().begin();
         try {
-            User user = new User();
-            user.setPhone(phone);
+            User user = new User();            
             user.setEmail(email);
             user.setName(name);
             user.setPassword(generatePassword());
@@ -55,6 +54,8 @@ public class UserDao extends Dao {
             account.setBalance(0);
             em.persist(account);
             em.getTransaction().commit();
+            user.setPhone(phone);
+            persist(user);
             return user;
         } catch(Exception e) {
             if (em.getTransaction().isActive())
@@ -91,6 +92,19 @@ public class UserDao extends Dao {
         Query q = em.createQuery("select u from User u where u.phone=:phone and u.password=:pswd");
         try {
             q.setParameter("phone", phone);
+            q.setParameter("pswd", password);
+            return (User) q.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        } catch (NonUniqueResultException e2) {
+            return null;
+        }
+    }
+
+    public User getUserByEmailAndPassword(String email, String password) {
+        Query q = em.createQuery("select u from User u where u.email=:email and u.password=:pswd");
+        try {
+            q.setParameter("email", email);
             q.setParameter("pswd", password);
             return (User) q.getSingleResult();
         } catch (NoResultException e) {
