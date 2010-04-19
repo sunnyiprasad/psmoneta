@@ -39,9 +39,9 @@ public class TestOsmpHandler {
             market.setName("testMarket1");
             Assert.assertNotNull(new UserDao(em).getUserByPhone("test"));
             market.setUser(new UserDao(em).getUserByPhone("test"));
-            market.setCheckUrl("http://localhost:8084/testIM/Check");
+            market.setCheckUrl("http://localhost:8084/testIM/Handler");
             market.setFailUrl("http://localhost:8084/testIM/fail.jsp");
-            market.setPayUrl("http://localhost:8084/testIM/Pay");
+            market.setPayUrl("http://localhost:8084/testIM/Handler");
             market.setSignable(true);
             market.setSuccessUrl("http://localhost:8084/testIM/success.jsp");
             market.setPassword("12345");
@@ -107,9 +107,9 @@ public class TestOsmpHandler {
 //            market.setName("testMarket1");
 //            Assert.assertNotNull(new UserDao(em).getUserByPhone("test"));
 //            market.setUser(new UserDao(em).getUserByPhone("test"));
-//            market.setCheckUrl("http://localhost:8084/testIM/Check");
+//            market.setCheckUrl("http://localhost:8084/testIM/Handler");
 //            market.setFailUrl("http://localhost:8084/testIM/fail.jsp");
-//            market.setPayUrl("http://localhost:8084/testIM/Pay");
+//            market.setPayUrl("http://localhost:8084/testIM/Handler");
 //            market.setSignable(true);
 //            market.setSuccessUrl("http://localhost:8084/testIM/success.jsp");
 //            market.setPassword("12345");
