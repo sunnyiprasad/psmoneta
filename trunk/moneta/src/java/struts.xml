@@ -20,16 +20,16 @@
         </interceptors>
         <default-interceptor-ref name="main" />
         
-        <action name="Assistant" class="com.rsc.moneta.action.moneta.Assistant">
+        <action name="Assistant" class="com.rsc.moneta.action.Assistant">
             <result name="error">/pages/error.jsp</result>
-            <result name="success">/pages/requestPhone.jsp</result>
+            <result name="success">/pages/requestEmail.jsp</result>
             <result name="next">/pages/selectPaymentSystem.jsp</result>
         </action>
 
-        <action name="RegisterByPhone" class="com.rsc.moneta.action.RegisterByPhoneNumber" >
+        <action name="RegisterOrLogin" class="com.rsc.moneta.action.RegisterOrLogin" >
             <result name="success">/pages/selectPaymentSystem.jsp</result>
             <result name="error">/pages/error.jsp</result>
-            <result name="again">/pages/requestPhone.jsp</result>
+            <result name="again">/pages/requestEmail.jsp</result>
             <result name="login" type="redirectAction" >public/LoginForm</result>
         </action>
 
