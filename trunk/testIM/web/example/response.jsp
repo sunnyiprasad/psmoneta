@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="s" uri="/struts-tags" %>
-<?xml version="1.0" encoding="UTF-8"?>
+<s:actionerror/>
+<s:actionmessage/>
 <MNT_RESPONSE>
     <MNT_ID><s:property value="%{MNT_ID}" /></MNT_ID>
     <MNT_TRANSACTION_ID><s:property value="%{MNT_TRANSACTION_ID}" /></MNT_TRANSACTION_ID>
