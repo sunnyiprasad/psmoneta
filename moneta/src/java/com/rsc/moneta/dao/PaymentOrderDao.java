@@ -221,4 +221,15 @@ public class PaymentOrderDao extends Dao {
             return new Vector<PaymentOrder>();
         }
     }
+
+    public List<PaymentOrder> getAllPaymentOrderFilterByStatus(int status) {
+         Query q = em.createQuery("select c from PaymentOrder c where c.status = :status");
+        try {
+            q.setParameter("status", status);
+            return q.getResultList();
+        } catch (NoResultException exception) {
+            exception.printStackTrace();
+            return new Vector<PaymentOrder>();
+        }
+    }
 }

@@ -215,6 +215,7 @@ public class OSMPInputHandler implements InputHandler {
                                                 }
                                             }
                                         } catch (Exception ex) {
+                                            ex.printStackTrace();
                                             result = OSMP_RETURN_CODE_OTHER_ERROR;
                                             comment = STRING_DB_ERROR;
                                         }

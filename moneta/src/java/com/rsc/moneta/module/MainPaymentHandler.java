@@ -43,6 +43,10 @@ public class MainPaymentHandler {
                             checkResponse.setResultCode(response.getResultCode());
                             checkResponse.setDescription(response.getDescription());
                         } else {
+                            if (response.getResultCode() == ResultCode.SUCCESS_WITH_AMOUNT)
+                                checkResponse.setAmount(response.getAmount());
+                            else
+                                checkResponse.setAmount(order.getAmount());
                             checkResponse.setResultCode(response.getResultCode());
                             checkResponse.setDescription(response.getDescription());
                         }
@@ -98,7 +102,7 @@ public class MainPaymentHandler {
                     debug(" Description = " + response.getDescription());
                     if (response != null) {
                         if (response.getResultCode() == ResultCode.SUCCESS_WITHOUT_AMOUNT
-                                || response.getResultCode() == ResultCode.SUCCESS_WITH_AMOUNT) {
+                                || response.getResultCode() == ResultCode.SUCCESS_WITH_AMOUNT) {                            
                             if (order.getAccount() == null) {
                                 order.setStatus(PaymentOrder.ORDER_STATUS_PAID_AND_COMPLETED_BUT_NOT_FOUND_MARKET_ACCOUNT);
                                 new Dao(em).persist(order);
