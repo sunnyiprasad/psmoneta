@@ -117,7 +117,6 @@ public class TaisOutputHandler implements OutputHandler {
                 response.setDescription(nodeList.item(0).getTextContent());
             }
         }
-
         response.setResultCode(Utils.getIntValue("MNT_RESULT_CODE", doc));
         response.setAmount(Utils.getDoubleValue("MNT_AMOUNT", doc));
         response.setOperationId(Utils.getLongValue("MNT_OPERATION_ID", doc));
