@@ -8,7 +8,7 @@
     <body>
         <p align="center">
             <s:form action="Login" method="get" >
-                <s:textfield name="username" label="%{getText('phone')}" required="true" />
+                <s:textfield name="email" label="%{getText('email')}" required="true" />
                 <s:password name="password" label="%{getText('password')}" required="true" />
                 <s:submit value="%{getText('login')}" />            
             </s:form>
