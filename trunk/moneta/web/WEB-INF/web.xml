@@ -51,7 +51,7 @@
     </listener>
     <context-param>
         <param-name>OutputHandler.0</param-name>
-        <param-value>com.rsc.moneta.module.MonetaOutputHandler</param-value>
+        <param-value>com.rsc.moneta.module.outputhandler.TaisOutputHandler</param-value>
     </context-param>
     <context-param>
         <param-name>OutputHandlerCount</param-name>
@@ -115,12 +115,12 @@
         <description/>
         <role-name>platika</role-name>
     </security-role>
+   
 
 
 
-
-
+    
 -
-
+    
 
     </web-app>
