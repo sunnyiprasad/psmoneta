@@ -22,20 +22,20 @@ public class MainAppListener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent sce) {
         Thread thread = new Thread(processor);
         //thread.start();
-        Logger.getLogger(MainAppListener.class.getName()).log(Level.SEVERE, null, "MainAppListener started");
+        Logger.getLogger(MainAppListener.class.getName()).log(Level.SEVERE, "MainAppListener started");
         String countString = sce.getServletContext().getInitParameter("OutputHandlerCount");
         if (countString != null) {
-            Logger.getLogger(MainAppListener.class.getName()).log(Level.SEVERE, null, "Found "+countString+" output handlers");
+            Logger.getLogger(MainAppListener.class.getName()).log(Level.SEVERE, "Found "+countString+" output handlers");
             int count = Integer.parseInt(countString);
             for (int i = 0; i < count; i++) {
                 try {
                     String idString = sce.getServletContext().getInitParameter("OutputHandlerId." + i);
                     if (idString != null) {
-                        Logger.getLogger(MainAppListener.class.getName()).log(Level.SEVERE, null, "Output handler id: "+idString);
+                        Logger.getLogger(MainAppListener.class.getName()).log(Level.SEVERE, "Output handler id: "+idString);
                         int id = Integer.parseInt(idString);
                         String idClass = sce.getServletContext().getInitParameter("OutputHandlerClass." + i);
                         if (idClass != null) {
-                            Logger.getLogger(MainAppListener.class.getName()).log(Level.SEVERE, null, "Output handler class: "+idClass);
+                            Logger.getLogger(MainAppListener.class.getName()).log(Level.SEVERE,  "Output handler class: "+idClass);
                             Object obj = this.getClass().getClassLoader().loadClass(idClass).newInstance();
                             if (obj != null){
                                 Config.addOutputHandler(id, idClass);
@@ -53,7 +53,7 @@ public class MainAppListener implements ServletContextListener {
                 }
             }
         }else{
-            Logger.getLogger(MainAppListener.class.getName()).log(Level.SEVERE, null, "output handlers count not found");
+            Logger.getLogger(MainAppListener.class.getName()).log(Level.SEVERE, "output handlers count not found");
         }
     }
 
