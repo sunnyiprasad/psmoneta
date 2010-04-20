@@ -328,7 +328,7 @@ public class OSMPInputHandler implements InputHandler {
         try {
             command = ((String[])inputData.get("command"))[0];
             try {
-                if (command.equals("check")) {
+                if (command.equals("pay")) {
                     try {
                         txn_id = ((String[])inputData.get("txn_id"))[0];
                         transactionId = Double.parseDouble(txn_id);
