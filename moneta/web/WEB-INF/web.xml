@@ -50,7 +50,7 @@
         <listener-class>org.apache.myfaces.webapp.StartupServletContextListener</listener-class>
     </listener>
     <context-param>
-        <param-name>OutputHandler.0</param-name>
+        <param-name>OutputHandlerId.0</param-name>
         <param-value>com.rsc.moneta.module.outputhandler.TaisOutputHandler</param-value>
     </context-param>
     <context-param>
