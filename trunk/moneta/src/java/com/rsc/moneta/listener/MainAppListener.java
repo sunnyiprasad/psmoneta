@@ -24,14 +24,17 @@ public class MainAppListener implements ServletContextListener {
         //thread.start();
         String countString = sce.getServletContext().getInitParameter("OutputHandlerCount");
         if (countString != null) {
+            System.out.println("Found "+countString+" output handlers");
             int count = Integer.parseInt(countString);
             for (int i = 0; i < count; i++) {
                 try {
                     String idString = sce.getServletContext().getInitParameter("OutputHandlerId." + i);
                     if (idString != null) {
+                        System.out.println("Output handler id: "+idString);
                         int id = Integer.parseInt(idString);
                         String idClass = sce.getServletContext().getInitParameter("OutputHandlerClass." + i);
                         if (idClass != null) {
+                            System.out.println("Output handler class: "+idString);
                             Object obj = this.getClass().getClassLoader().loadClass(idClass).newInstance();
                             if (obj != null){
                                 Config.addOutputHandler(id, idClass);
