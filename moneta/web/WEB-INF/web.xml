@@ -51,11 +51,15 @@
     </listener>
     <context-param>
         <param-name>OutputHandlerId.0</param-name>
-        <param-value>com.rsc.moneta.module.outputhandler.TaisOutputHandler</param-value>
+        <param-value>0</param-value>
     </context-param>
     <context-param>
         <param-name>OutputHandlerCount</param-name>
         <param-value>1</param-value>
+    </context-param>
+    <context-param>
+        <param-name>OutputHandlerClass.0</param-name>
+        <param-value>com.rsc.moneta.module.outputhandler.TaisOutputHandler</param-value>
     </context-param>
     <filter>
         <filter-name>struts2</filter-name>
