@@ -41,6 +41,8 @@ public class MainAppListener implements ServletContextListener {
                                 Config.addOutputHandler(id, idClass);
                             }
                         }
+                    }else{
+                        Logger.getLogger(MainAppListener.class.getName()).log(Level.SEVERE, "OutputHandlerId." + i+" not found");
                     }
                 } catch (ClassNotFoundException ex) {
                     Logger.getLogger(MainAppListener.class.getName()).log(Level.SEVERE, null, ex);
