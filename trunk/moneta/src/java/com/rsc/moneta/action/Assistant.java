@@ -49,10 +49,28 @@ public class Assistant extends BaseAction {
     private Market market;
     private boolean _new;
     private String paymentOrderId;
+    private Assistant contact = this;
+    private Assistant moneta = this;
+    private Assistant paymentSystem = this;
+    private String locale;
+    private String unitId;
+    private String limitIds;
+    private String name;
+    private String email;
+    private String phone;
+
 
     @Override
     public String execute() throws Exception {
-        HttpServletRequest request = ServletActionContext.getRequest();
+        // TODO: Проверить ситуацию когда невозможно создания счетов для пользователя
+        // при ситуации когда например последовательность для аккаунт выдает уже суще
+        // ствующие значения. При этом пользователь получает доступ к номеру заказа. Почему ???
+
+        if (locale != null){
+            ServletActionContext.getContext().setLocale(new Locale(this.monetaLocale));
+        }
+
+        /*HttpServletRequest request = ServletActionContext.getRequest();
         String _monetaLocale = request.getParameter("moneta.locale");
         if (_monetaLocale != null) {
             this.monetaLocale = _monetaLocale;
@@ -66,11 +84,11 @@ public class Assistant extends BaseAction {
         String _paymentSystemLimitIds = request.getParameter("paymentSystem.limitIds");
         if (_paymentSystemLimitIds != null) {
             this.paymentSystemLimitIds = _paymentSystemLimitIds;
-        }
+        }*/
 
-        String _contactName = request.getParameter("contact.name");
+        /*String _contactName = request.getParameter("contact.name");
         String _contactEmail = request.getParameter("contact.email");
-        String _contactPhone = request.getParameter("contact.phone");
+        String _contactPhone = request.getParameter("contact.phone");*/
 
 
         if (MNT_ID == null) {
@@ -120,8 +138,6 @@ public class Assistant extends BaseAction {
             }
         }
 
-
-
         paymentOrder = new PaymentOrder();
         paymentOrder.setDate(new Date(System.currentTimeMillis()));
         paymentOrder.setAmount(MNT_AMOUNT);
@@ -139,18 +155,18 @@ public class Assistant extends BaseAction {
         } else {
             paymentOrder.setSuccessUrl(market.getSuccessUrl());
         }
-        paymentOrder.setPaymentSystemLimitIds(_paymentSystemLimitIds);
-        paymentOrder.setPaymentSystemUnitId(_paymentSystemUnitId);
+        paymentOrder.setPaymentSystemLimitIds(limitIds);
+        paymentOrder.setPaymentSystemUnitId(unitId);
         paymentOrder.setTest(MNT_TEST_MODE);
         String result = Action.SUCCESS;
-        if (_contactEmail != null) {
+        if (email != null) {
             UserDao dao = new UserDao(em);
-            User u = dao.getUserByEmail(_contactEmail);
+            User u = dao.getUserByEmail(email);
             if (u != null) {
                 addActionMessage(getText("you_are_already_registred"));
                 _new = false;
             } else {
-                u = dao.createUserAndSendNotify(_contactPhone, _contactName, _contactEmail);
+                u = dao.createUserAndSendNotify(phone, name, email);
                 paymentOrder.setUser(u);
                 addActionMessage(getText("you_was_success_registred"));
                 result = "next";
@@ -167,6 +183,74 @@ public class Assistant extends BaseAction {
             paymentOrderId = String.format("%019d", paymentOrder.getId());
         }
         return result;
+    }
+
+    public Assistant getContact() {
+        return contact;
+    }
+
+    public void setContact(Assistant contact) {
+        this.contact = contact;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getLimitIds() {
+        return limitIds;
+    }
+
+    public void setLimitIds(String limitIds) {
+        this.limitIds = limitIds;
+    }    
+
+    public void setLocale(String locale) {
+        this.locale = locale;
+    }
+
+    public Assistant getMoneta() {
+        return moneta;
+    }
+
+    public void setMoneta(Assistant moneta) {
+        this.moneta = moneta;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Assistant getPaymentSystem() {
+        return paymentSystem;
+    }
+
+    public void setPaymentSystem(Assistant paymentSystem) {
+        this.paymentSystem = paymentSystem;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getUnitId() {
+        return unitId;
+    }
+
+    public void setUnitId(String unitId) {
+        this.unitId = unitId;
     }
 
     public PaymentOrder getPaymentOrder() {
@@ -339,3 +423,5 @@ public class Assistant extends BaseAction {
         return (MNT_SIGNATURE.equalsIgnoreCase(Utils.byteArrayToHexString(Utils.md5(all))));
     }
 }
+
+
