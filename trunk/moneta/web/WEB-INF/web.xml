@@ -102,8 +102,9 @@
             <description/>
             <url-pattern>/Platika.html</url-pattern>
         </web-resource-collection>
-        <auth-constraint>            
-            <role-name>platika</role-name>            
+        <auth-constraint>
+            <description/>
+            <role-name>platika</role-name>
         </auth-constraint>
     </security-constraint>
     <login-config>
@@ -114,8 +115,12 @@
         <description/>
         <role-name>platika</role-name>
     </security-role>
-   
 
+
+
+
+
+-
 
 
     </web-app>

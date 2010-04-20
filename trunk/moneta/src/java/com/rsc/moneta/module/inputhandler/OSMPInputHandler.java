@@ -106,18 +106,18 @@ public class OSMPInputHandler implements InputHandler {
         String comment = "";
 
         try {
-            command = inputData.get("command").toString();
+            command = ((String[])inputData.get("command"))[0];
             try {
                 if (command.equals("check")) {
                     try {
-                        txn_id = inputData.get("txn_id").toString();
+                        txn_id = ((String[])inputData.get("txn_id"))[0];
                         transactionId = Double.parseDouble(txn_id);
                         if (!this.regexMatch("^[0-9]{1,20}$", txn_id)) {
                             result = OSMP_RETURN_CODE_OTHER_ERROR;
                             comment = STRING_TXN_ID_PARAMETER_ERROR;
                         } else {
                             try {
-                                account = inputData.get("account").toString();
+                                account = ((String[])inputData.get("account"))[0];
                                 if (!this.regexMatch("^[0-9]{19}$", account)) {
                                     result = OSMP_RETURN_CODE_ACCOUNT_ILLEGAL_FORMAT;
                                     comment = STRING_ENTERED_NUMBER_DOES_NOT_CONFORM_TO_ORDER_FORMAT;
@@ -326,18 +326,18 @@ public class OSMPInputHandler implements InputHandler {
         String comment = "";
 
         try {
-            command = inputData.get("command").toString();
+            command = ((String[])inputData.get("command"))[0];
             try {
                 if (command.equals("check")) {
                     try {
-                        txn_id = inputData.get("txn_id").toString();
+                        txn_id = ((String[])inputData.get("txn_id"))[0];
                         transactionId = Double.parseDouble(txn_id);
                         if (!this.regexMatch("^[0-9]{1,20}$", txn_id)) {
                             result = OSMP_RETURN_CODE_OTHER_ERROR;
                             comment = STRING_TXN_ID_PARAMETER_ERROR;
                         } else {
                             try {
-                                account = inputData.get("account").toString();
+                                account = ((String[])inputData.get("account"))[0];
                                 if (!this.regexMatch("^[0-9]{19}$", account)) {
                                     result = OSMP_RETURN_CODE_ACCOUNT_ILLEGAL_FORMAT;
                                     comment = STRING_ENTERED_NUMBER_DOES_NOT_CONFORM_TO_ORDER_FORMAT;
@@ -345,12 +345,12 @@ public class OSMPInputHandler implements InputHandler {
                                     try {
                                         paymentOrderId = Long.parseLong(account);
                                         try{
-                                            sum = inputData.get("sum").toString();
+                                            sum = ((String[])inputData.get("sum"))[0];
                                             // TODO: Денис - проверить - насколько я понимаю, Java "поймёт" что это число типа double
                                             // только если там точка будет, на запятую будет Exception сразу
                                             amount = Double.parseDouble(sum);
                                             try {
-                                                txn_date = inputData.get("txn_date").toString();
+                                                txn_date = ((String[])inputData.get("txn_date"))[0];
                                                 payDate = this.getDateFromOSMPTransactionDate(txn_date);
                                                 try {
                                                     EntityManager em = EMF.getEntityManager();

@@ -37,7 +37,7 @@ public class OSMP extends HttpServlet {
             String password = this.getInitParameter("password");
             String pem = this.getInitParameter("pem");
             String ip = this.getInitParameter("ip");
-            String handlerClass = this.getInitParameter("handler");            
+            String handlerClass = this.getInitParameter("handler");
             InputHandlerConfig config = new InputHandlerConfig();
             config.setLogin(login);
             config.setPassword(password);
