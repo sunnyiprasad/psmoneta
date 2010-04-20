@@ -274,6 +274,7 @@ public class OSMPInputHandler implements InputHandler {
                 comment = STRING_UNKNOWN_ERROR;
             }
         } catch (Exception ex) {
+            ex.printStackTrace();
             result = OSMP_RETURN_CODE_OTHER_ERROR;
             comment = STRING_COMMAND_PARAMETER_ERROR;
         } finally {
