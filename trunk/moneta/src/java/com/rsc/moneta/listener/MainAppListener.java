@@ -51,6 +51,8 @@ public class MainAppListener implements ServletContextListener {
                     Logger.getLogger(MainAppListener.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+        }else{
+            System.out.println("output handlers count not found");
         }
     }
 
