@@ -27,13 +27,22 @@
         <listener-class>com.rsc.moneta.listener.MainAppListener</listener-class>
     </listener>
     <servlet>
-        <servlet-name>OSMPCheck</servlet-name>
+        <servlet-name>Platika</servlet-name>
         <servlet-class>com.rsc.moneta.servlet.OSMP</servlet-class>
+        <init-param>
+            <param-name>login</param-name>
+            <param-value>platika</param-value>
+        </init-param>
+        <init-param>
+            <param-name>password</param-name>
+            <param-value>platika</param-value>
+        </init-param>
+        <init-param>
+            <param-name>handler</param-name>
+            <param-value>com.rsc.moneta.module.inputhandler.OSMPInputHandler</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
     </servlet>
-    <servlet-mapping>
-        <servlet-name>OSMPCheck</servlet-name>
-        <url-pattern>/OSMPCheck</url-pattern>
-    </servlet-mapping>
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
@@ -73,6 +82,10 @@
         <filter-name>struts-cleanup</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
+    <servlet-mapping>
+        <servlet-name>Platika</servlet-name>
+        <url-pattern>/Platika.html</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30

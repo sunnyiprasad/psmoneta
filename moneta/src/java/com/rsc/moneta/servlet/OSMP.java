@@ -45,7 +45,7 @@ public class OSMP extends HttpServlet {
             config.setHandler(handlerClass);
             config.setPem(pem);
             try {
-                InputHandler handler = (InputHandler) this.getClass().getClassLoader().loadClass(handlerClass).cast(InputHandler.class);
+                InputHandler handler = (InputHandler) this.getClass().getClassLoader().loadClass(handlerClass).newInstance();
                 handler.setConfig(config);
                 String xml = handler.check(request.getParameterMap());
                 out.write(xml);
@@ -53,7 +53,8 @@ public class OSMP extends HttpServlet {
                 out.write("Cannot find class handler");
                 exception.printStackTrace();
             }
-        } catch (IOException ex) {
+        } catch (Exception ex) {
+            ex.printStackTrace();
             Logger.getLogger(OSMP.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             out.close();
