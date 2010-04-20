@@ -28,7 +28,7 @@ public class OSMP extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response){
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response) {
         PrintWriter out = null;
         try {
             response.setContentType("text/html;charset=UTF-8");
@@ -47,7 +47,12 @@ public class OSMP extends HttpServlet {
             try {
                 InputHandler handler = (InputHandler) this.getClass().getClassLoader().loadClass(handlerClass).newInstance();
                 handler.setConfig(config);
-                String xml = handler.check(request.getParameterMap());
+                String xml = "";
+                if ("pay".equalsIgnoreCase(request.getParameter("command"))) {
+                    xml = handler.pay(request.getParameterMap());
+                }else{
+                    xml = handler.check(request.getParameterMap());
+                }
                 out.write(xml);
             } catch (ClassNotFoundException exception) {
                 out.write("Cannot find class handler");
@@ -59,7 +64,7 @@ public class OSMP extends HttpServlet {
         } finally {
             out.close();
         }
-        
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
