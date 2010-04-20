@@ -64,6 +64,7 @@ public class OSMPInputHandler implements InputHandler {
     public final static String STRING_MARKET_ID_WAS_NOT_PROVIDED_BY_EMARKETPLACE = "Интернет-Магазин возвратил некорректный идентификатор Интернет-Магазина в ПС ТЛСМ";
     public final static String STRING_TRANSACTIONID_WAS_NOT_PROVIDED_BY_EMARKETPLACE = "Интернет-Магазин возвратил некорректный номер транзакции";
     public final static String STRING_SUM_TOO_SMALL = "Введённая сумма меньше чем сумма заказа, поэтому выполнено зачисление на счет абонента в ПС ТЛСМ вместо оплаты заказа";
+    private InputHandlerConfig config;
 //    public final static String STRING_SUM_TOO_BIG = "Сумма слишком велика";
 
     // Члены класса-эмуляторы различных свойтсв класса, применяемые для
@@ -585,7 +586,7 @@ public class OSMPInputHandler implements InputHandler {
 
 
     public void setConfig(InputHandlerConfig config) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.config = config;
     }
 
     public String checkWithEmulating(Map inutData,
