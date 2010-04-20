@@ -22,6 +22,7 @@ public class MainAppListener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent sce) {
         Thread thread = new Thread(processor);
         //thread.start();
+        System.out.println("MainAppListener started");
         String countString = sce.getServletContext().getInitParameter("OutputHandlerCount");
         if (countString != null) {
             System.out.println("Found "+countString+" output handlers");
