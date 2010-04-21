@@ -19,7 +19,9 @@
     <body>
         <form action="http://95.169.186.207:8080/tlsm/Platika.html" method="get">
             <input type="text" name="command" value="pay" />
+            <label>Summa</label>
             <input type="text" name="sum" />
+            <label>Account</label>
             <input type="text" name="account" />
             <input type="text" name="txn_date" value="<%
                 SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -30,7 +32,7 @@
                 long l = r.nextLong();
                 out.print(String.format("%019d", l));
             %>" />
-            <input type="submit" name="Оплатить" value="" />
+            <input type="submit" name="Pay" value="Оплатить" />
         </form>
     </body>
 </html>
