@@ -18,7 +18,7 @@ public class OSMPPaymentDao extends Dao{
         super(em);
     }
 
-    public OSMPPayment getPaymentByTransactionIdAndPaymentSystemId(String transactionId, short paymentSystemId) {
+    public OSMPPayment getPaymentByTransactionIdAndPaymentSystemId(double transactionId, short paymentSystemId) {
         try {
             Query q = em.createQuery("select p from OSMPPayment p where p.transactionId=:txid and p.paymentSystemId=:pid");
             q.setParameter("txid", transactionId);
