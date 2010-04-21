@@ -12,6 +12,7 @@ import com.rsc.moneta.test.TestConf;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import org.junit.Test;
 
@@ -36,7 +37,7 @@ public class TestExample {
             map.put("txn_id", txn_id);
             map.put("account", account);
             String response = handler.check(map);
-            System.out.println(response);
+            Logger.getLogger(TestExample.class.getName()).severe(response);
         }
     }
 }
