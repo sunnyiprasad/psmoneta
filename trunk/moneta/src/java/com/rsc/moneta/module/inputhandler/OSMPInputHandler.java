@@ -392,8 +392,7 @@ public class OSMPInputHandler implements InputHandler {
                                                                         this.saveOSMPPayment(amount, payDate, paymentOrder, transactionId);
                                                                         // TODO: Денис, с Суликом - тут должна быть проверка суммы заказа -
                                                                         // для каждого ИМ-а надо проверять на вхождение в рамки мин. и макс.
-                                                                        // суммы заказа
-                                                                        amount = paymentOrder.getAmount();
+                                                                        // суммы заказа                                                                        
                                                                         result = OSMP_RETURN_CODE_OK;
                                                                         comment = "success";
                                                                     } else {
