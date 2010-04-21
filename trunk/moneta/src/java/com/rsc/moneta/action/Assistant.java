@@ -18,6 +18,7 @@ import com.rsc.moneta.util.Utils;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.Locale;
+import java.util.logging.Logger;
 import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -67,7 +68,12 @@ public class Assistant extends BaseAction {
         // ствующие значения. При этом пользователь получает доступ к номеру заказа. Почему ???
 
         if (locale != null){
-            ServletActionContext.getContext().setLocale(new Locale(this.monetaLocale));
+            try{
+                ServletActionContext.getContext().setLocale(new Locale(this.locale));
+            }catch(Exception exception){
+                Logger.getLogger(Assistant.class.getName()).severe("Cannot set locale = "+ this.locale);
+                exception.printStackTrace();
+            }
         }
 
         /*HttpServletRequest request = ServletActionContext.getRequest();
