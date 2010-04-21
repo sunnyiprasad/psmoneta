@@ -5,6 +5,7 @@
 package com.rsc.moneta.module.inputhandler;
 
 //import com.opensymphony.xwork2.Result;
+import java.text.ParseException;
 import java.util.Map;
 import javax.persistence.EntityManager;
 import java.util.regex.Matcher;
@@ -23,6 +24,8 @@ import com.rsc.moneta.module.CheckResponse;
 import com.rsc.moneta.module.InputHandler;
 import com.rsc.moneta.module.MainPaymentHandler;
 import com.rsc.moneta.dao.Dao;
+import java.text.SimpleDateFormat;
+import sun.java2d.pipe.SpanShapeRenderer.Simple;
 
 /**
  * Класс представляет собой класс - обработчик запросов, поступающих от терминала ОСМП
@@ -575,14 +578,16 @@ public class OSMPInputHandler implements InputHandler {
         em.close();
     }
 
-    private Date getDateFromOSMPTransactionDate(String OSMPTransactionDate) {
-        return new GregorianCalendar(
+    public Date getDateFromOSMPTransactionDate(String OSMPTransactionDate) throws ParseException {
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+        return df.parse(OSMPTransactionDate);
+        /*return new GregorianCalendar(
                 Integer.parseInt(OSMPTransactionDate.substring(0, 4)),
                 Integer.parseInt(OSMPTransactionDate.substring(4, 2)),
                 Integer.parseInt(OSMPTransactionDate.substring(6, 2)),
                 Integer.parseInt(OSMPTransactionDate.substring(8, 2)),
                 Integer.parseInt(OSMPTransactionDate.substring(10, 2)),
-                Integer.parseInt(OSMPTransactionDate.substring(12, 2))).getTime();
+                Integer.parseInt(OSMPTransactionDate.substring(12, 2))).getTime();*/
     }
 
 
