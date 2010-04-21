@@ -97,12 +97,12 @@ public class MainPaymentHandler {
                     order.setStatus(PaymentOrder.ORDER_STATUS_PAID_BUT_NOT_COMPLETED_AND_STILL_PROCESSING);
                     new Dao(em).persist(order);
                     OutputHandler outputHandler = new Config().buildOutputHandler(order.getMarket().getOutputHandlerType());
-                    CheckResponse response = outputHandler.pay(order);
-                    debug(" ResultCode = " + response.getResultCode());
-                    debug(" Description = " + response.getDescription());
-                    if (response != null) {
-                        if (response.getResultCode() == ResultCode.SUCCESS_WITHOUT_AMOUNT
-                                || response.getResultCode() == ResultCode.SUCCESS_WITH_AMOUNT) {                            
+                    checkResponse = outputHandler.pay(order);
+                    debug(" ResultCode = " + checkResponse.getResultCode());
+                    debug(" Description = " + checkResponse.getDescription());
+                    if (checkResponse != null) {
+                        if (checkResponse.getResultCode() == ResultCode.SUCCESS_WITHOUT_AMOUNT
+                                || checkResponse.getResultCode() == ResultCode.SUCCESS_WITH_AMOUNT) {
                             if (order.getAccount() == null) {
                                 order.setStatus(PaymentOrder.ORDER_STATUS_PAID_AND_COMPLETED_BUT_NOT_FOUND_MARKET_ACCOUNT);
                                 new Dao(em).persist(order);
@@ -131,17 +131,18 @@ public class MainPaymentHandler {
                                     }
                                 }
                             }
-                        } else if (response.getResultCode() == ResultCode.ORDER_NOT_ACTUAL) {
+                        } else if (checkResponse.getResultCode() == ResultCode.ORDER_NOT_ACTUAL) {
                             order.setStatus(PaymentOrder.ORDER_STATUS_PAID_BUT_REJECTED_BY_EMARKETPLACE);
                             new Dao(em).persist(order);
                             order.setStatus(PaymentOrder.ORDER_STATUS_PAID_BUT_ORDER_NOT_FOUND);
                             new Dao(em).persist(order);
-                        } else if (response.getResultCode() == ResultCode.ERROR_TRY_AGAIN) {
+                        } else if (checkResponse.getResultCode() == ResultCode.ERROR_TRY_AGAIN) {
                         } else {
                             order.setStatus(PaymentOrder.ORDER_STATUS_PAID_BUT_EMARKETPLACE_CANNOT_PROCESS_IT);
                             new Dao(em).persist(order);
                         }
                     } else {
+                        checkResponse = new CheckResponse();
                         checkResponse.setResultCode(ResultCode.ERROR_TRY_AGAIN);
                         checkResponse.setDescription("В ответ пришел нуль");
                     }
