@@ -5,15 +5,11 @@
 package com.rsc.moneta.module;
 
 import com.rsc.moneta.Config;
-import com.rsc.moneta.bean.Account;
 import com.rsc.moneta.bean.PaymentOrder;
-import com.rsc.moneta.dao.AccountDao;
 import com.rsc.moneta.dao.Dao;
-import com.rsc.moneta.dao.EMF;
 import com.rsc.moneta.dao.PaymentOrderDao;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 
 /**
@@ -147,7 +143,7 @@ public class MainPaymentHandler {
                         checkResponse.setDescription("В ответ пришел нуль");
                     }
                 } catch (Exception ex) {
-                    debug("Ошибка при создании обработчика");
+                    debug("Ошибка при создании обработчика "+ex.toString()+"\n"+ex.getMessage());
                     ex.printStackTrace();
                     checkResponse.setResultCode(ResultCode.INTERNAL_ERROR);
                 }
