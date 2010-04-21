@@ -37,8 +37,10 @@ public class OSMP extends HttpServlet {
             String password = this.getInitParameter("password");
             String pem = this.getInitParameter("pem");
             String ip = this.getInitParameter("ip");
+            String id = this.getInitParameter("id");
             String handlerClass = this.getInitParameter("handler");
             InputHandlerConfig config = new InputHandlerConfig();
+            config.setId(Short.parseShort(id));
             config.setLogin(login);
             config.setPassword(password);
             config.setIp(ip);
@@ -62,7 +64,8 @@ public class OSMP extends HttpServlet {
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            Logger.getLogger(OSMP.class.getName()).log(Level.SEVERE, null, ex);
+            out.print(ex.toString());
+            Logger.getLogger(OSMP.class.getName()).log(Level.SEVERE, ex.toString());
         } finally {
             out.close();
         }
