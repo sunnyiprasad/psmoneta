@@ -191,7 +191,7 @@ public class TaisOutputHandler implements OutputHandler {
                 case ORDER_NOT_ACTUAL:
                     return ResultCode.INTERNAL_ERROR;
                 case PAYMENT_SUCCESS:
-                    return ResultCode.SUCCESS_WITH_AMOUNT;
+                    return ResultCode.SUCCESS_WITHOUT_AMOUNT;
                 case UNKNOWN_STATUS:
                     return ResultCode.ERROR_TRY_AGAIN;
                 default:
