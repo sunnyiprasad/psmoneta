@@ -50,21 +50,17 @@ public class PaymentOrderDao extends Dao {
     public void processOrderPay(PaymentOrder order) {
         em.getTransaction().begin();
         try {
-            try {
-                Query q = em.createQuery("update Account a set a.balance=a.balance+:amount where id=:id");
-                q.setParameter("id", order.getAccount().getId());
-                q.setParameter("amount", order.getAmount());
-                q.executeUpdate();
-                order.setStatus(PaymentOrder.ORDER_STATUS_PAID_AND_COMPLETED);
-                em.persist(order);
-                em.getTransaction().commit();
-            } catch (Exception e) {
-                if (em.getTransaction().isActive()) {
-                    em.getTransaction().rollback();
-                }
+            Query q = em.createQuery("update Account a set a.balance=a.balance+:amount where id=:id");
+            q.setParameter("id", order.getAccount().getId());
+            q.setParameter("amount", order.getAmount());
+            q.executeUpdate();
+            order.setStatus(PaymentOrder.ORDER_STATUS_PAID_AND_COMPLETED);
+            em.persist(order);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
             }
-        } finally {
-            em.close();
         }
     }
 
@@ -87,62 +83,50 @@ public class PaymentOrderDao extends Dao {
     public void addUserAccountBalance(long accountId, double amount) {
         em.getTransaction().begin();
         try {
-            try {
-                addBalance(accountId, amount);
-                em.getTransaction().commit();
-            } catch (Exception e) {
-                if (em.getTransaction().isActive()) {
-                    em.getTransaction().rollback();
-                }
+            addBalance(accountId, amount);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
             }
-        } finally {
-            em.close();
         }
     }
 
     public void processOrderPayWithOddMoney(PaymentOrder order, double oddMoney) {
         em.getTransaction().begin();
         try {
-            try {
-                // Проводим платеж, баланс владельца магазина увеличивается
-                addBalance(order.getAccount().getId(), order.getAmount());
-                // Проводим сдачу, кидаем её на счет заказавщего
-                addBalance(order.getUser().getAccount(order.getCurrency()).getId(), oddMoney);
-                //задаем статус
-                order.setStatus(PaymentOrder.ORDER_STATUS_PAID_AND_COMPLETED);
-                em.persist(order);
-                em.getTransaction().commit();
-            } catch (Exception e) {
-                if (em.getTransaction().isActive()) {
-                    em.getTransaction().rollback();
-                }
+            // Проводим платеж, баланс владельца магазина увеличивается
+            addBalance(order.getAccount().getId(), order.getAmount());
+            // Проводим сдачу, кидаем её на счет заказавщего
+            addBalance(order.getUser().getAccount(order.getCurrency()).getId(), oddMoney);
+            //задаем статус
+            order.setStatus(PaymentOrder.ORDER_STATUS_PAID_AND_COMPLETED);
+            em.persist(order);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
             }
-        } finally {
-            em.close();
         }
     }
 
     public void processOrderFromBalance(PaymentOrder order, double amount) {
         em.getTransaction().begin();
         try {
-            try {
-                // Просто пополняем баланс пользователя.
-                addBalance(order.getUser().getAccount(order.getCurrency()).getId(), amount);
-                // Проводим платеж, баланс владельца магазина увеличивается
-                addBalance(order.getAccount().getId(), order.getAmount());
-                // Проводим платеж списывая деньги со счета заказавщего
-                subBalance(order.getUser().getAccount(order.getCurrency()).getId(), order.getAmount());
-                //задаем статус
-                order.setStatus(PaymentOrder.ORDER_STATUS_PAID_AND_COMPLETED);
-                em.persist(order);
-                em.getTransaction().commit();
-            } catch (Exception e) {
-                if (em.getTransaction().isActive()) {
-                    em.getTransaction().rollback();
-                }
+            // Просто пополняем баланс пользователя.
+            addBalance(order.getUser().getAccount(order.getCurrency()).getId(), amount);
+            // Проводим платеж, баланс владельца магазина увеличивается
+            addBalance(order.getAccount().getId(), order.getAmount());
+            // Проводим платеж списывая деньги со счета заказавщего
+            subBalance(order.getUser().getAccount(order.getCurrency()).getId(), order.getAmount());
+            //задаем статус
+            order.setStatus(PaymentOrder.ORDER_STATUS_PAID_AND_COMPLETED);
+            em.persist(order);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
             }
-        } finally {
-            em.close();
         }
     }
 
@@ -223,7 +207,7 @@ public class PaymentOrderDao extends Dao {
     }
 
     public List<PaymentOrder> getAllPaymentOrderFilterByStatus(int status) {
-         Query q = em.createQuery("select c from PaymentOrder c where c.status = :status");
+        Query q = em.createQuery("select c from PaymentOrder c where c.status = :status");
         try {
             q.setParameter("status", status);
             return q.getResultList();
