@@ -5,6 +5,9 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="java.util.*"  %>
+<%@page import="java.text.*"  %>
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -18,8 +21,14 @@
             <input type="text" name="command" value="pay" />
             <input type="text" name="sum" />
             <input type="text" name="account" />
+            <input type="text" name="txn_date" value="<%
+                SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+                out.print(df.format(new Date()));
+            %>"/>
             <input type="text" name="txn_id" value="<%
-                out.print(example.Utils.generateNumber());
+                Random r = new Random();
+                long l = r.nextLong();
+                out.print(String.format("%019d", l));
             %>" />
             <input type="submit" name="Оплатить" value="" />
         </form>
