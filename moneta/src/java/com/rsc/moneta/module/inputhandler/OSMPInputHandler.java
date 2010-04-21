@@ -371,7 +371,7 @@ public class OSMPInputHandler implements InputHandler {
                                                         MainPaymentHandler handler = new MainPaymentHandler(em);
 
                                                         // Проверка его статуса в ИМ - отправка запроса check
-                                                        CheckResponse checkResponse = handler.check(paymentOrder);
+                                                        CheckResponse checkResponse = handler.pay(paymentOrder, amount);
 
                                                         if (checkResponse != null) {
                                                             int TLSMResultCode = checkResponse.getResultCode();
