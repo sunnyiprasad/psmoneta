@@ -113,7 +113,7 @@ public class MainPaymentHandler {
                                     new PaymentOrderDao(em).processOrderPay(order);
                                 } else if (order.getAmount() < amount) {
                                     debug("Сумма больше чем нужно, поэтому сдачу начисляем на счет абонента в системе");
-                                    new PaymentOrderDao(em).processOrderPayWithOddMoney(order, order.getAmount() - amount);
+                                    new PaymentOrderDao(em).processOrderPayWithOddMoney(order, amount - order.getAmount());
                                 } else {
                                     debug("Суммы меньше чем нужно. Проверяем есть ли деньги на счету абонента в нашей системе");
                                     if (order.getUser().getAccount(order.getCurrency()).getBalance() + amount > order.getAmount()) {
