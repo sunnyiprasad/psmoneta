@@ -55,6 +55,10 @@ public class OSMPPayment implements Serializable {
     @Column(name = "transactionId", nullable = false)
     private double transactionId;
 
+    
+    private int resultCode;
+    private String description;
+
     // Идентификатор терминальной ПС, работающей по протоколу ОСМП
     @Column(name = "paymentSystemId", nullable = false)
     private short paymentSystemId;
@@ -80,6 +84,32 @@ public class OSMPPayment implements Serializable {
     @Column(name = "rejectdate")
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date rejectDate;
+
+    public double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getResultCode() {
+        return resultCode;
+    }
+
+    public void setResultCode(int resultCode) {
+        this.resultCode = resultCode;
+    }
+
+
 
     public long getId() {
         return this.id;
@@ -119,14 +149,6 @@ public class OSMPPayment implements Serializable {
 
     public void setPaymentOrder(PaymentOrder paymentOrder) {
         this.paymentOrder = paymentOrder;
-    }
-
-    public Double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(Double amount) {
-        this.amount = amount;
     }
 
     public Date getPayDate() {

@@ -10,11 +10,28 @@ package com.rsc.moneta.module.inputhandler;
  * @author sulic
  */
 public class InputHandlerConfig {
+    private short id;
     private String login;
     private String password;
     private String ip;
     private String handlerClass;
     private String pem;
+
+    public String getHandlerClass() {
+        return handlerClass;
+    }
+
+    public void setHandlerClass(String handlerClass) {
+        this.handlerClass = handlerClass;
+    }
+
+    public short getId() {
+        return id;
+    }
+
+    public void setId(short id) {
+        this.id = id;
+    }
 
     public String getIp() {
         return ip;
