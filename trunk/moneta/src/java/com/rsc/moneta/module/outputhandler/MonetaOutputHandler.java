@@ -59,7 +59,7 @@ public class MonetaOutputHandler implements OutputHandler {
             DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();
             fac.setNamespaceAware(true);
             String xml = IOUtils.toString(url.getInputStream());
-            System.out.println(xml);
+            Logger.getLogger(MonetaOutputHandler.class.getName()).severe(xml);
             Document doc = fac.newDocumentBuilder().parse(IOUtils.toInputStream(xml));
             CheckResponse response = parseResponse(doc);
             return checkSignature(response, order);
@@ -81,7 +81,7 @@ public class MonetaOutputHandler implements OutputHandler {
             DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();
             fac.setNamespaceAware(true);
             String xml = IOUtils.toString(url.getInputStream());
-            System.out.println(xml);
+            Logger.getLogger(MonetaOutputHandler.class.getName()).severe(xml);
             Document doc = fac.newDocumentBuilder().parse(IOUtils.toInputStream(xml));
             CheckResponse response = parseResponse(doc);
             return checkSignature(response, order);
@@ -121,7 +121,7 @@ public class MonetaOutputHandler implements OutputHandler {
                             if (!response.getSignature().equalsIgnoreCase(md5)) {
                                 response.setResultCode(ResultCode.INVALID_SIGN_RETURNED_BY_EMARKETPLACE);
                                 response.setDescription("Неправильная подпись");
-                                System.out.println("Invalid sign \n" + response.getSignature() + " my sign\n" + md5 + "\n" + sign);
+                                Logger.getLogger(MonetaOutputHandler.class.getName()).severe("Invalid sign \n" + response.getSignature() + " my sign\n" + md5 + "\n" + sign);
                             } else {
                                 response.setResultCode(convertForeignCodeToBase(response.getResultCode()));
                             }

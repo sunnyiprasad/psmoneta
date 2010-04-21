@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 import org.apache.struts.util.MessageResources;
 
 /**
@@ -60,7 +61,7 @@ public class Mail {
             transport.sendMessage(mimeMessage, mimeMessage.getRecipients(Message.RecipientType.TO));
         } catch (Exception exception)
         {
-            System.out.println("Transport connect error: " + exception);
+            Logger.getLogger(Mail.class.getName()).severe("Transport connect error: " + exception);
         } finally
         {
             transport.close();

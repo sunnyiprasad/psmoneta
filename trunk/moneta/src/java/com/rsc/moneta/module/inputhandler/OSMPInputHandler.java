@@ -25,7 +25,7 @@ import com.rsc.moneta.module.InputHandler;
 import com.rsc.moneta.module.MainPaymentHandler;
 import com.rsc.moneta.dao.Dao;
 import java.text.SimpleDateFormat;
-import sun.java2d.pipe.SpanShapeRenderer.Simple;
+
 
 /**
  * Класс представляет собой класс - обработчик запросов, поступающих от терминала ОСМП
