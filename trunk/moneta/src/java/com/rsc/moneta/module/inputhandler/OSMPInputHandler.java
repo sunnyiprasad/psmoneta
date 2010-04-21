@@ -468,7 +468,8 @@ public class OSMPInputHandler implements InputHandler {
                                                     }
                                                 } catch (Exception ex) {
                                                     result = OSMP_RETURN_CODE_OTHER_ERROR;
-                                                    comment = STRING_DB_ERROR;
+                                                    comment = STRING_DB_ERROR+ex.toString();
+                                                    ex.printStackTrace();
                                                 }
                                             } catch (Exception ex) {
                                                 result = OSMP_RETURN_CODE_OTHER_ERROR;
