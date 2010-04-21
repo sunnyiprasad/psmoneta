@@ -336,6 +336,7 @@ public class OSMPInputHandler implements InputHandler {
                             comment = STRING_TXN_ID_PARAMETER_ERROR;
                         } else {
                             try {
+                                transactionId = Double.parseDouble(txn_id);
                                 account = ((String[]) inputData.get("account"))[0];
                                 if (!this.regexMatch("^[0-9]{19}$", account)) {
                                     result = OSMP_RETURN_CODE_ACCOUNT_ILLEGAL_FORMAT;
@@ -363,7 +364,7 @@ public class OSMPInputHandler implements InputHandler {
                                                         comment = STRING_ORDER_DOES_NOT_EXIST_ERROR;
                                                     } else {
                                                         // Заказ в ПС ТЛСМ найден.
-                                                        OSMPPayment payment = new OSMPPaymentDao(em).getPaymentByTransactionIdAndPaymentSystemId(txn_id, this.config.getId());
+                                                        OSMPPayment payment = new OSMPPaymentDao(em).getPaymentByTransactionIdAndPaymentSystemId(transactionId, this.config.getId());
                                                         if (payment != null) {
                                                             // Ранее этот платеж проводился, возвращаем предыдущий результат
                                                             result = payment.getResultCode();
