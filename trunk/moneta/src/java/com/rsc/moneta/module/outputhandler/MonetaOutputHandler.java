@@ -50,10 +50,8 @@ public class MonetaOutputHandler implements OutputHandler {
             String query = order.getMarket().getCheckUrl();
             query += "?MNT_COMMAND=CHECK&MNT_ID=" + order.getMarket().getId() + "&MNT_TRANSACTION_ID="
                     + order.getTransactionId() + "&MNT_CURRENCY_CODE=RUB&MNT_TEST_MODE="
-                    + order.getTest();
-            if (order.getAmount() != null) {
-                query += "&MNT_AMOUNT=" + order.getAmount();
-            }
+                    + order.getTest() + "&MNT_AMOUNT=" + order.getAmount();
+            
             query += "&MNT_SIGNATURE=" + Utils.createSignature("check", order);
             URLConnection url = new URL(query).openConnection();
             DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();

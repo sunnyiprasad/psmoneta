@@ -21,7 +21,7 @@ public class Utils {
     static final String HEXES = "0123456789ABCDEF";
 
     public static String byteArrayToHexString(byte[] raw) {
-         if (raw == null) {
+        if (raw == null) {
             return null;
         }
         final StringBuilder hex = new StringBuilder(2 * raw.length);
@@ -47,10 +47,12 @@ public class Utils {
         NodeList list = doc.getElementsByTagName(tagName);
         try {
             Node node = list.item(0);
-            if (node == null)
+            if (node == null) {
                 return null;
-            if (node.getTextContent() == null || "".equals(node.getTextContent()))
+            }
+            if (node.getTextContent() == null || "".equals(node.getTextContent())) {
                 return null;
+            }
             return Long.parseLong(node.getTextContent());
         } catch (NumberFormatException e) {
             return null;
@@ -61,10 +63,12 @@ public class Utils {
         NodeList list = doc.getElementsByTagName(tagName);
         try {
             Node node = list.item(0);
-            if (node == null)
+            if (node == null) {
                 return null;
-            if (node.getTextContent() == null || "".equals(node.getTextContent()))
+            }
+            if (node.getTextContent() == null || "".equals(node.getTextContent())) {
                 return null;
+            }
             return Integer.parseInt(node.getTextContent());
         } catch (NumberFormatException e) {
             return null;
@@ -75,10 +79,12 @@ public class Utils {
         NodeList list = doc.getElementsByTagName(tagName);
         try {
             Node node = list.item(0);
-            if (node == null)
+            if (node == null) {
                 return null;
-            if (node.getTextContent() == null || "".equals(node.getTextContent()))
+            }
+            if (node.getTextContent() == null || "".equals(node.getTextContent())) {
                 return null;
+            }
             return Double.parseDouble(node.getTextContent());
         } catch (NumberFormatException e) {
             return null;
@@ -91,33 +97,38 @@ public class Utils {
 
     public static String createSignature(String command, PaymentOrder key) throws NoSuchAlgorithmException {
         String str = "";
-        if (command != null)
-            str  += command;
-        str += key.getMarket().getId()+key.getTransactionId()+key.getId();
-        if (key.getAmount() != null){
-            str += key.getAmount();
+        if (command != null) {
+            str += command;
         }
-        str += Utils.accountTypeToString(key.getCurrency())+Utils.booleanToInt(key.getTest())+key.getMarket().getPassword();
+        str += key.getMarket().getId() + key.getTransactionId() + key.getId();
+        str += key.getAmount();
+        str += Utils.accountTypeToString(key.getCurrency()) + Utils.booleanToInt(key.getTest()) + key.getMarket().getPassword();
         return getMd5InHexString(str);
     }
 
-    public static String accountTypeToString(int accountType){
-        switch (accountType){
-            case Currency.EURO: return "EURO";
-            case Currency.USD: return "USD";
-            case Currency.RUB: return "RUB";
+    public static String accountTypeToString(int accountType) {
+        switch (accountType) {
+            case Currency.EURO:
+                return "EURO";
+            case Currency.USD:
+                return "USD";
+            case Currency.RUB:
+                return "RUB";
             default:
-                    return "UNKNOWN";
+                return "UNKNOWN";
         }
     }
 
     public static int currencyStringToAccountType(String MNT_CURRENCY_CODE) throws UnknownCurrencyException {
-        if (MNT_CURRENCY_CODE.equalsIgnoreCase("RUB"))
+        if (MNT_CURRENCY_CODE.equalsIgnoreCase("RUB")) {
             return Currency.RUB;
-        if (MNT_CURRENCY_CODE.equalsIgnoreCase("EURO"))
+        }
+        if (MNT_CURRENCY_CODE.equalsIgnoreCase("EURO")) {
             return Currency.EURO;
-        if (MNT_CURRENCY_CODE.equalsIgnoreCase("USD"))
+        }
+        if (MNT_CURRENCY_CODE.equalsIgnoreCase("USD")) {
             return Currency.USD;
+        }
         throw new UnknownCurrencyException(MNT_CURRENCY_CODE);
     }
 
@@ -125,18 +136,18 @@ public class Utils {
         return (test) ? 1 : 0;
     }
 
-    public static int getInt(String s){
-        try{
+    public static int getInt(String s) {
+        try {
             return Integer.parseInt(s);
-        }catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             return -1;
         }
     }
 
-    public static long getLong(String s){
-        try{
+    public static long getLong(String s) {
+        try {
             return Long.parseLong(s);
-        }catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             return -1;
         }
     }
