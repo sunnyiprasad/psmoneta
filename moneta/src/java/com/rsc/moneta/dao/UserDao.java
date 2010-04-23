@@ -7,10 +7,12 @@ package com.rsc.moneta.dao;
 import com.rsc.moneta.Currency;
 import com.rsc.moneta.action.Const;
 import com.rsc.moneta.bean.Account;
+import com.rsc.moneta.bean.Mail;
 import com.rsc.moneta.bean.Sms;
 import com.rsc.moneta.bean.User;
 import com.rsc.moneta.util.PasswordGenerator;
 import java.util.Collection;
+import java.util.ResourceBundle;
 import java.util.prefs.InvalidPreferencesFormatException;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -56,6 +58,18 @@ public class UserDao extends Dao {
             em.getTransaction().commit();
             user.setPhone(phone);
             persist(user);
+
+            ResourceBundle bundle = ResourceBundle.getBundle("mail");
+            String content = bundle.getString("notify_content");
+            String subject = bundle.getString("notify_subject");
+            if (content != null)
+                content = String.format(content, user.getName(), user.getPassword());
+            else
+                content = "You are was registred in tlsm system. You password:"+user.getPassword();
+            if (subject == null)
+                subject = "Regisration was successful";
+            Mail mail = new Mail(user.getEmail(), subject, content);
+            mail.start();
             return user;
         } catch(Exception e) {
             if (em.getTransaction().isActive())

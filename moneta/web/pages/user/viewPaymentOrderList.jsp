@@ -22,7 +22,7 @@
     <s:select name="year_end" list="%{year}" listKey="number" listValue="name" value="%{year_end}" theme="simple" />
     <br/>
     Фильтр по статусу:    
-    <s:select name="status2" list="%{statusList}" listKey="id" listValue="description" value="%{status}" theme="simple" />
+    <s:select name="status" list="%{statusList}" listKey="id" listValue="description" value="%{status}" theme="simple" />
     <s:submit value="Показать" theme="simple" />
 </s:form>
 

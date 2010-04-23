@@ -6,6 +6,7 @@
 package com.rsc.moneta.bean;
 
 import java.util.Locale;
+import java.util.logging.Level;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.NoSuchProviderException;
@@ -24,15 +25,17 @@ import org.apache.struts.util.MessageResources;
  *
  * @author sulic
  */
-public class Mail {
+public class Mail extends Thread{
 
     private String recipient;
     private String message;
     private final Properties properties;
+    private final String subject;
 
-    public Mail(String recepient, String message) {
+    public Mail(String recepient, String subject, String message) {
         this.recipient = recepient;
         this.message = message;
+        this.subject = subject;
         properties = new Properties();
         ResourceBundle bundle = ResourceBundle.getBundle("mail");
         Enumeration e =  bundle.getKeys();
@@ -42,15 +45,29 @@ public class Mail {
             properties.put(name, value);
             Logger.getLogger(Mail.class.getName()).severe(name+"="+value);
         }
+
     }
 
-    public void send() throws NoSuchProviderException, MessagingException{                
+
+
+    @Override
+    public void run(){
+        try {
+            this.send();
+        } catch (NoSuchProviderException ex) {
+            Logger.getLogger(Mail.class.getName()).log(Level.SEVERE, ex.getMessage());
+        } catch (MessagingException ex) {
+            Logger.getLogger(Mail.class.getName()).log(Level.SEVERE, ex.getMessage());
+        }
+    }
+
+    private void send() throws NoSuchProviderException, MessagingException{
         Session mailSession = Session.getDefaultInstance(properties, null);
         mailSession.setDebug(Boolean.valueOf(properties.getProperty("debug")).booleanValue());
         Transport transport = mailSession.getTransport();
         MimeMessage mimeMessage = new MimeMessage(mailSession);
         mimeMessage.setFrom(new InternetAddress(properties.getProperty("from")));
-        mimeMessage.setSubject(properties.getProperty("subject"), properties.getProperty("encoding"));// windows-1251
+        mimeMessage.setSubject(this.subject, properties.getProperty("encoding"));// windows-1251
         if (properties.getProperty("mime_content_type") != null)
             mimeMessage.setContent(this.message, properties.getProperty("mime_content_type"));
         InternetAddress addrTo = new InternetAddress(recipient);
