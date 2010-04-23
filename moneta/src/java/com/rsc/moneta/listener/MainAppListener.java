@@ -23,9 +23,9 @@ public class MainAppListener implements ServletContextListener {
 
     public void contextInitialized(ServletContextEvent sce) {
         try {
-            FileOutputStream f = new FileOutputStream("stdout.log");
+           /* FileOutputStream f = new FileOutputStream("stdout.log");
             System.setErr(new PrintStream(f));
-            System.setOut(new PrintStream(f));
+            System.setOut(new PrintStream(f));*/
         } catch (Exception e) {
             Logger.getLogger(MainAppListener.class.getName()).log(Level.SEVERE, e.toString()+"\n"+e.getMessage());
         }
