@@ -14,6 +14,7 @@ import javax.persistence.EntityManager;
 import java.util.Vector;
 
 import com.rsc.moneta.bean.PaymentOrder;
+import com.rsc.moneta.bean.PaymentOrderStatus;
 import com.rsc.moneta.module.inputhandler.OSMPInputHandler;
 import com.rsc.moneta.dao.EMF;
 import com.rsc.moneta.dao.Dao;
@@ -59,7 +60,7 @@ public class TestOsmpHandler {
         // 2. Создать запись о заказе в т-це PaymentOrder, выставить заказу
         // статус "ORDER_STATUS_PAID_AND_COMPLETED"
         PaymentOrder paymentOrder = new PaymentOrder();
-        paymentOrder.setStatus(PaymentOrder.ORDER_STATUS_PAID_AND_COMPLETED);
+        paymentOrder.setStatus(PaymentOrderStatus.ORDER_STATUS_PAID_AND_COMPLETED);
         paymentOrder.setTest(Boolean.TRUE);
         paymentOrder.setMarket(market);
         new Dao(em).persist(paymentOrder);
@@ -149,7 +150,7 @@ public class TestOsmpHandler {
         PaymentOrder paymentOrder = new PaymentOrder();
         double amount = 812450.85;
         paymentOrder.setAmount(amount);
-        paymentOrder.setStatus(PaymentOrder.ORDER_STATUS_ACCEPTED);
+        paymentOrder.setStatus(PaymentOrderStatus.ORDER_STATUS_ACCEPTED);
         paymentOrder.setTest(Boolean.TRUE);
         paymentOrder.setMarket(market);
         new Dao(em).persist(paymentOrder);
@@ -223,7 +224,7 @@ public class TestOsmpHandler {
         PaymentOrder paymentOrder = new PaymentOrder();
         double amount = 14891.52;
         paymentOrder.setAmount(amount);
-        paymentOrder.setStatus(PaymentOrder.ORDER_STATUS_ACCEPTED);
+        paymentOrder.setStatus(PaymentOrderStatus.ORDER_STATUS_ACCEPTED);
         paymentOrder.setTest(Boolean.TRUE);
         paymentOrder.setMarket(market);
         new Dao(em).persist(paymentOrder);

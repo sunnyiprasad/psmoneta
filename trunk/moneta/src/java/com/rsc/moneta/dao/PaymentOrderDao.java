@@ -7,6 +7,7 @@ package com.rsc.moneta.dao;
 import com.rsc.moneta.action.Const;
 import com.rsc.moneta.action.admin.SumAndCount;
 import com.rsc.moneta.bean.PaymentOrder;
+import com.rsc.moneta.bean.PaymentOrderStatus;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -54,7 +55,7 @@ public class PaymentOrderDao extends Dao {
             q.setParameter("id", order.getAccount().getId());
             q.setParameter("amount", order.getAmount());
             q.executeUpdate();
-            order.setStatus(PaymentOrder.ORDER_STATUS_PAID_AND_COMPLETED);
+            order.setStatus(PaymentOrderStatus.ORDER_STATUS_PAID_AND_COMPLETED);
             em.persist(order);
             em.getTransaction().commit();
         } catch (Exception e) {
@@ -100,7 +101,7 @@ public class PaymentOrderDao extends Dao {
             // Проводим сдачу, кидаем её на счет заказавщего
             addBalance(order.getUser().getAccount(order.getCurrency()).getId(), oddMoney);
             //задаем статус
-            order.setStatus(PaymentOrder.ORDER_STATUS_PAID_AND_COMPLETED);
+            order.setStatus(PaymentOrderStatus.ORDER_STATUS_PAID_AND_COMPLETED);
             em.persist(order);
             em.getTransaction().commit();
         } catch (Exception e) {
@@ -120,7 +121,7 @@ public class PaymentOrderDao extends Dao {
             // Проводим платеж списывая деньги со счета заказавщего
             subBalance(order.getUser().getAccount(order.getCurrency()).getId(), order.getAmount());
             //задаем статус
-            order.setStatus(PaymentOrder.ORDER_STATUS_PAID_AND_COMPLETED);
+            order.setStatus(PaymentOrderStatus.ORDER_STATUS_PAID_AND_COMPLETED);
             em.persist(order);
             em.getTransaction().commit();
         } catch (Exception e) {
@@ -211,6 +212,43 @@ public class PaymentOrderDao extends Dao {
         try {
             q.setParameter("status", status);
             return q.getResultList();
+        } catch (NoResultException exception) {
+            exception.printStackTrace();
+            return new Vector<PaymentOrder>();
+        }
+    }
+
+    public SumAndCount getPaymentOrdersCountAndSumFilterByUser(Date startDate, Date endDate, long userId) {
+        Query q = em.createQuery("select count(c), sum(c.amount) from PaymentOrder c where c.date >= :stdt and c.date<=:endt and c.user.id=:uid");
+        try {
+            q.setParameter("stdt", startDate);
+            q.setParameter("endt", endDate);
+            q.setParameter("uid", userId);
+            List list = q.getResultList();
+            Object[] array = (Object[]) list.get(0);
+            SumAndCount sumAndCount = new SumAndCount();
+            sumAndCount.setCount((Long) array[0]);
+            if (array.length == 2) {
+                if (array[1] != null) {
+                    sumAndCount.setAmount((Double) array[1]);
+                }
+            }
+            return sumAndCount;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    public Collection<PaymentOrder> getPaymentOrdersPageFilterByUser(int page, Date startDate, Date endDate, Long userId) {
+        Query q = em.createQuery("select c from PaymentOrder c where c.date >= :stdt and c.date<=:endt and c.user.id=:uid");
+        try {
+            q.setFirstResult(page * Const.ROWS_COUNT);
+            q.setMaxResults(Const.ROWS_COUNT);
+            q.setParameter("stdt", startDate);
+            q.setParameter("endt", endDate);
+            q.setParameter("uid", userId);
+            return (Collection<PaymentOrder>) q.getResultList();
         } catch (NoResultException exception) {
             exception.printStackTrace();
             return new Vector<PaymentOrder>();

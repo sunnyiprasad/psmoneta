@@ -36,6 +36,10 @@
             <result>/pages/user/viewPaymentOrderList.jsp</result>
         </action>
 
+        <action name="ViewIMPaymentOrderList" class="com.rsc.moneta.action.user.ViewIMPaymentOrderList">
+            <result>/pages/user/viewIMPaymentOrderList.jsp</result>
+        </action>
+
        
     </package>
 </struts>

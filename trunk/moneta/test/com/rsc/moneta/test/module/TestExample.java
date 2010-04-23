@@ -5,6 +5,7 @@
 package com.rsc.moneta.test.module;
 
 import com.rsc.moneta.bean.PaymentOrder;
+import com.rsc.moneta.bean.PaymentOrderStatus;
 import com.rsc.moneta.dao.EMF;
 import com.rsc.moneta.dao.PaymentOrderDao;
 import com.rsc.moneta.module.inputhandler.OSMPInputHandler;
@@ -26,7 +27,7 @@ public class TestExample {
     public void testPayAllOrder() {
         TestConf.initConfig();
         EntityManager em = EMF.getEntityManager();
-        List<PaymentOrder> list = new PaymentOrderDao(em).getAllPaymentOrderFilterByStatus(PaymentOrder.ORDER_STATUS_ACCEPTED);
+        List<PaymentOrder> list = new PaymentOrderDao(em).getAllPaymentOrderFilterByStatus(PaymentOrderStatus.ORDER_STATUS_ACCEPTED);
         for (PaymentOrder paymentOrder : list) {
             OSMPInputHandler handler = new OSMPInputHandler();
             long orderId = paymentOrder.getId();

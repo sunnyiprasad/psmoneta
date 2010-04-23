@@ -1,29 +1,20 @@
 package com.rsc.moneta.test;
 
-import com.rsc.moneta.Currency;
-import com.rsc.moneta.bean.Account;
 import com.rsc.moneta.dao.Dao;
 import com.rsc.moneta.dao.EMF;
 import com.rsc.moneta.bean.Market;
 import com.rsc.moneta.bean.User;
-import com.rsc.moneta.dao.AccountDao;
 import com.rsc.moneta.dao.MarketDao;
 import com.rsc.moneta.dao.UserDao;
 import com.rsc.moneta.bean.PaymentOrder;
 import com.rsc.moneta.bean.OSMPPayment;
+import com.rsc.moneta.bean.PaymentOrderStatus;
 
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.GregorianCalendar;
-import java.util.Collection;
-import java.util.Calendar;
 import java.util.Vector;
-import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import org.junit.Assert;
 import org.junit.Test;
@@ -41,37 +32,12 @@ public class InitTestData {
     @Test
     public void testCreateUser() throws MalformedURLException, IOException {
         EntityManager em = EMF.getEntityManager();
-        User u = new User();
-        u.setPhone("admin");
-        u.setPassword("12345");
-        u.setRole(User.ADMINISTRATOR);
-        if (new UserDao(em).getUserByPhone("admin") == null) {
-            new Dao(em).persist(u);
-        }
-        User user = new User();
-        user.setPhone("test");
-        user.setPassword("12345");
-        if (new UserDao(em).getUserByPhone("test") == null) {
-            new Dao(em).persist(user);
-        }
-        em.close();
-    }
-
-    @Test
-    public void testCreateAccount() throws MalformedURLException, IOException {
-        EntityManager em = EMF.getEntityManager();
-        Account account = new Account();
-        account.setType(Currency.RUB);
-        User user = new UserDao(em).getUserByPhone("test");
-        Assert.assertNotNull(user);
-        Collection<Account> accounts = new AccountDao(em).getAccounts(user.getId(), Currency.RUB);
-        if (accounts.size() == 1) {
-            return;
-        }
-        account.setUser(user);
-        account.setBalance(0);
-        new Dao(em).persist(account);
-        em.close();
+        new UserDao(em).createUserAndSendNotify("+79882970412", "Administrator", "suleyman.batyrov@gmail.com");
+        User u = new UserDao(em).getUserByEmail("suleyman.batyrov@gmail.com");
+        Assert.assertNotNull(u);
+        new UserDao(em).createUserAndSendNotify("+79882970413", "TestMarket", "sbatyrov@yandex.ru");
+        u = new UserDao(em).getUserByEmail("suleyman.batyrov@gmail.com");
+        Assert.assertNotNull(u);
     }
 
     @Test
@@ -81,8 +47,8 @@ public class InitTestData {
         if (new MarketDao(em).getMarketByName("test") == null) {
             Market market = new Market();
             market.setName("test");
-            Assert.assertNotNull(new UserDao(em).getUserByPhone("test"));
-            market.setUser(new UserDao(em).getUserByPhone("test"));
+            Assert.assertNotNull(new UserDao(em).getUserByPhone("+79882970413"));
+            market.setUser(new UserDao(em).getUserByPhone("+79882970413"));
             market.setCheckUrl("http://localhost:8084/testIM/Handler");
             market.setFailUrl("http://localhost:8084/testIM/fail.jsp");
             market.setPayUrl("http://localhost:8084/testIM/Handler");
@@ -106,13 +72,13 @@ public class InitTestData {
             market.setPassword("TravelShop23481");
             market.setSuccessUrl("http://www.success.ru/");
             market.setFailUrl("http://www.fail.ru/");
-            Assert.assertNotNull(new UserDao(em).getUserByPhone("test"));
-            market.setUser(new UserDao(em).getUserByPhone("test"));            
+            Assert.assertNotNull(new UserDao(em).getUserByPhone("+79882970413"));
+            market.setUser(new UserDao(em).getUserByPhone("+79882970413"));
             new Dao(em).persist(market);
             Vector vec = new Vector();
             vec.addAll(market.getUser().getAccounts());
             market.setAccounts(vec);
-            new Dao(em).persist(market);            
+            new Dao(em).persist(market);
         }
         em.close();
     }
@@ -126,8 +92,8 @@ public class InitTestData {
         if (market == null) {
             market = new Market();
             market.setName("testMarket1");
-            Assert.assertNotNull(new UserDao(em).getUserByPhone("test"));
-            market.setUser(new UserDao(em).getUserByPhone("test"));
+            Assert.assertNotNull(new UserDao(em).getUserByPhone("+79882970413"));
+            market.setUser(new UserDao(em).getUserByPhone("+79882970413"));
             market.setCheckUrl("http://localhost:8084/testIM/Handler");
             market.setFailUrl("http://localhost:8084/testIM/fail.jsp");
             market.setPayUrl("http://localhost:8084/testIM/Handler");
@@ -144,7 +110,7 @@ public class InitTestData {
 
         // 2. Создать запись о заказе в т-це PaymentOrder
         PaymentOrder paymentOrder = new PaymentOrder();
-        paymentOrder.setStatus(PaymentOrder.ORDER_STATUS_ACCEPTED);
+        paymentOrder.setStatus(PaymentOrderStatus.ORDER_STATUS_ACCEPTED);
         paymentOrder.setTest(Boolean.TRUE);
         paymentOrder.setMarket(market);
         new Dao(em).persist(paymentOrder);

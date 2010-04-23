@@ -6,6 +6,7 @@ package com.rsc.moneta.module;
 
 import com.rsc.moneta.Config;
 import com.rsc.moneta.bean.PaymentOrder;
+import com.rsc.moneta.bean.PaymentOrderStatus;
 import com.rsc.moneta.dao.Dao;
 import com.rsc.moneta.dao.PaymentOrderDao;
 import java.util.logging.Level;
@@ -27,14 +28,14 @@ public class MainPaymentHandler {
     public CheckResponse check(PaymentOrder order) {
         CheckResponse checkResponse = new CheckResponse();
         switch (order.getStatus()) {
-            case PaymentOrder.ORDER_STATUS_ACCEPTED: {
+            case PaymentOrderStatus.ORDER_STATUS_ACCEPTED: {
                 try {
                     OutputHandler outputHandler = new Config().buildOutputHandler(order.getMarket().getOutputHandlerType());
                     CheckResponse response = outputHandler.check(order);
                     if (response != null) {
                         if (response.getResultCode() == ResultCode.ORDER_NOT_ACTUAL ||
                                 response.getResultCode() == ResultCode.ORDER_NOT_FOUND_IN_EMARKETPLACE) {
-                            order.setStatus(PaymentOrder.ORDER_STATUS_NOT_PAID_AND_REJECTED_BY_EMARKETPLACE);
+                            order.setStatus(PaymentOrderStatus.ORDER_STATUS_NOT_PAID_AND_REJECTED_BY_EMARKETPLACE);
                             new Dao(em).persist(order);
                             checkResponse.setResultCode(response.getResultCode());
                             checkResponse.setDescription(response.getDescription());
@@ -56,23 +57,23 @@ public class MainPaymentHandler {
                 }
                 break;
             }
-            case PaymentOrder.ORDER_STATUS_NOT_PAID_AND_REJECTED_BY_EMARKETPLACE: {
+            case PaymentOrderStatus.ORDER_STATUS_NOT_PAID_AND_REJECTED_BY_EMARKETPLACE: {
                 checkResponse.setResultCode(ResultCode.ORDER_NOT_ACTUAL);
                 break;
             }
-            case PaymentOrder.ORDER_STATUS_PAID_AND_COMPLETED: {
+            case PaymentOrderStatus.ORDER_STATUS_PAID_AND_COMPLETED: {
                 checkResponse.setResultCode(ResultCode.ORDER_ALREADY_PAID);
                 break;
             }
-            case PaymentOrder.ORDER_STATUS_PAID_BUT_NOT_COMPLETED_AND_STILL_PROCESSING: {
+            case PaymentOrderStatus.ORDER_STATUS_PAID_BUT_NOT_COMPLETED_AND_STILL_PROCESSING: {
                 checkResponse.setResultCode(ResultCode.ORDER_ALREADY_PAID);
                 break;
             }
-            case PaymentOrder.ORDER_STATUS_PAID_BUT_REJECTED_BY_EMARKETPLACE: {
+            case PaymentOrderStatus.ORDER_STATUS_PAID_BUT_REJECTED_BY_EMARKETPLACE: {
                 checkResponse.setResultCode(ResultCode.ORDER_ALREADY_PAID);
                 break;
             }
-            case PaymentOrder.ORDER_STATUS_UNDEFINED: {
+            case PaymentOrderStatus.ORDER_STATUS_UNDEFINED: {
                 checkResponse.setResultCode(ResultCode.ERROR_TRY_AGAIN);
                 break;
             }
@@ -87,10 +88,10 @@ public class MainPaymentHandler {
     public CheckResponse pay(PaymentOrder order, double amount) {
         CheckResponse checkResponse = new CheckResponse();
         switch (order.getStatus()) {
-            case PaymentOrder.ORDER_STATUS_ACCEPTED: {
+            case PaymentOrderStatus.ORDER_STATUS_ACCEPTED: {
                 try {
 
-                    order.setStatus(PaymentOrder.ORDER_STATUS_PAID_BUT_NOT_COMPLETED_AND_STILL_PROCESSING);
+                    order.setStatus(PaymentOrderStatus.ORDER_STATUS_PAID_BUT_NOT_COMPLETED_AND_STILL_PROCESSING);
                     new Dao(em).persist(order);
                     OutputHandler outputHandler = new Config().buildOutputHandler(order.getMarket().getOutputHandlerType());
                     checkResponse = outputHandler.pay(order);
@@ -100,7 +101,7 @@ public class MainPaymentHandler {
                         if (checkResponse.getResultCode() == ResultCode.SUCCESS_WITHOUT_AMOUNT
                                 || checkResponse.getResultCode() == ResultCode.SUCCESS_WITH_AMOUNT) {
                             if (order.getAccount() == null) {
-                                order.setStatus(PaymentOrder.ORDER_STATUS_PAID_AND_COMPLETED_BUT_NOT_FOUND_MARKET_ACCOUNT);
+                                order.setStatus(PaymentOrderStatus.ORDER_STATUS_PAID_AND_COMPLETED_BUT_NOT_FOUND_MARKET_ACCOUNT);
                                 new Dao(em).persist(order);
                             } else {
                                 //TODO: Сулик не реализована поддержка тестовых платежей. Любой платеж идет как не тестовый.
@@ -118,7 +119,7 @@ public class MainPaymentHandler {
                                     } else {
                                         debug("Денег не достаточно, поэтому вся сумма остается на счету абонента в нашей системе.");
                                         new PaymentOrderDao(em).addUserAccountBalance(order.getUser().getAccount(order.getCurrency()).getId(), amount);
-                                        order.setStatus(PaymentOrder.ORDER_STATUS_PAID_AND_COMPLETED_BUT_MONEY_ADDED_ON_ACCOUNT_BALANCE);
+                                        order.setStatus(PaymentOrderStatus.ORDER_STATUS_PAID_AND_COMPLETED_BUT_MONEY_ADDED_ON_ACCOUNT_BALANCE);
                                         new Dao(em).persist(em);
                                         checkResponse.setResultCode(ResultCode.SUCCESS_BUT_AMOUNT_LESS_THAN_MUST_BE);
                                         checkResponse.setDescription("Деньги зачислены на счет абонента в нашей системе, т.к. внесенных средств недостаточно для оплаты заказа.");
@@ -128,13 +129,13 @@ public class MainPaymentHandler {
                                 }
                             }
                         } else if (checkResponse.getResultCode() == ResultCode.ORDER_NOT_ACTUAL) {
-                            order.setStatus(PaymentOrder.ORDER_STATUS_PAID_BUT_REJECTED_BY_EMARKETPLACE);
+                            order.setStatus(PaymentOrderStatus.ORDER_STATUS_PAID_BUT_REJECTED_BY_EMARKETPLACE);
                             new Dao(em).persist(order);
-                            order.setStatus(PaymentOrder.ORDER_STATUS_PAID_BUT_ORDER_NOT_FOUND);
+                            order.setStatus(PaymentOrderStatus.ORDER_STATUS_PAID_BUT_ORDER_NOT_FOUND);
                             new Dao(em).persist(order);
                         } else if (checkResponse.getResultCode() == ResultCode.ERROR_TRY_AGAIN) {
                         } else {
-                            order.setStatus(PaymentOrder.ORDER_STATUS_PAID_BUT_EMARKETPLACE_CANNOT_PROCESS_IT);
+                            order.setStatus(PaymentOrderStatus.ORDER_STATUS_PAID_BUT_EMARKETPLACE_CANNOT_PROCESS_IT);
                             new Dao(em).persist(order);
                         }
                     } else {
@@ -149,22 +150,22 @@ public class MainPaymentHandler {
                 }
                 break;
             }
-            case PaymentOrder.ORDER_STATUS_NOT_PAID_AND_REJECTED_BY_EMARKETPLACE: {
+            case PaymentOrderStatus.ORDER_STATUS_NOT_PAID_AND_REJECTED_BY_EMARKETPLACE: {
                 checkResponse.setResultCode(ResultCode.ORDER_NOT_ACTUAL);
                 break;
             }
-            case PaymentOrder.ORDER_STATUS_PAID_AND_COMPLETED: {
+            case PaymentOrderStatus.ORDER_STATUS_PAID_AND_COMPLETED: {
                 checkResponse.setResultCode(ResultCode.ORDER_ALREADY_PAID);
                 break;
             }
-            case PaymentOrder.ORDER_STATUS_PAID_BUT_NOT_COMPLETED_AND_STILL_PROCESSING: {
+            case PaymentOrderStatus.ORDER_STATUS_PAID_BUT_NOT_COMPLETED_AND_STILL_PROCESSING: {
                 break;
             }
-            case PaymentOrder.ORDER_STATUS_PAID_BUT_REJECTED_BY_EMARKETPLACE: {
+            case PaymentOrderStatus.ORDER_STATUS_PAID_BUT_REJECTED_BY_EMARKETPLACE: {
                 checkResponse.setResultCode(ResultCode.ORDER_ALREADY_PAID);
                 break;
             }
-            case PaymentOrder.ORDER_STATUS_UNDEFINED: {
+            case PaymentOrderStatus.ORDER_STATUS_UNDEFINED: {
                 checkResponse.setResultCode(ResultCode.ERROR_TRY_AGAIN);
                 break;
             }

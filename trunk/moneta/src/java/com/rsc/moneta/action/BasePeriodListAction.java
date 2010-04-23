@@ -9,6 +9,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import org.apache.struts2.ServletActionContext;
 
 /**
  * User: Suleyman Batyrov
@@ -20,7 +21,7 @@ import java.util.List;
 public class BasePeriodListAction extends BaseListAction  {
 
     public List getMonths() {
-        return Month.getMonths();
+        return Month.getMonths(ServletActionContext.getContext().getLocale());
     }
     public List getYear() {
         return Year.getYears();
