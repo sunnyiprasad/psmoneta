@@ -22,14 +22,10 @@ import javax.persistence.SequenceGenerator;
  * @author sulic
  */
 @Entity
-@SequenceGenerator(
-    name="seq_market",
-    sequenceName="seq_market"
-)
 public class Market implements Serializable {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator="seq_market")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable=false)
     private String name;

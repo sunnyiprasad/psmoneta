@@ -9,7 +9,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -35,16 +34,12 @@ import javax.persistence.UniqueConstraint;
  * что пользователь заказ билет и хочет оплатить
  */
 @Entity
-@SequenceGenerator(
-    name="seq_payment_order",
-    sequenceName="seq_payment_order"
-)
 @Table(uniqueConstraints={@UniqueConstraint(columnNames={"transactionId", "marketId"})})
 public class PaymentOrder implements Serializable {
 
     // Идентификатор кода заказа ПС ТЛСМ
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator="seq_payment_order")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     // Это номер заказа в системе интернет магазина.

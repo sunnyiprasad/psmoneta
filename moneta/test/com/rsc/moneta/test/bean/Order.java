@@ -27,7 +27,7 @@ public class Order implements Serializable {
     static int STATUS_ACTIVE;
     
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;    
     private String transactionId;
     private double amount;
