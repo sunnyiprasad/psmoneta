@@ -61,7 +61,7 @@ public class Mail {
         try
         {
             transport.connect();
-            transport.send(mimeMessage);
+            Transport.send(mimeMessage);
         } catch (Exception exception)
         {
             Logger.getLogger(Mail.class.getName()).severe("Transport connect error: " + exception+"\n"+exception.getMessage());
