@@ -6,8 +6,6 @@ package com.rsc.moneta.action;
 
 import com.rsc.moneta.bean.Market;
 import com.opensymphony.xwork2.Action;
-import com.rsc.moneta.Currency;
-import com.rsc.moneta.action.BaseAction;
 import com.rsc.moneta.dao.Dao;
 import com.rsc.moneta.bean.PaymentOrder;
 import com.rsc.moneta.bean.PaymentOrderStatus;
@@ -20,11 +18,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.Locale;
 import java.util.logging.Logger;
-import javax.servlet.Servlet;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
 import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.interceptor.ServletRequestAware;
 
 /**
  *
