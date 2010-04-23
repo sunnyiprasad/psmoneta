@@ -32,7 +32,7 @@ public class MainPaymentHandler {
                 processCheck(order, checkResponse);
                 break;
             }
-            case PaymentOrderStatus.ORDER_STATUS_PAID_BUT_NOT_COMPLETED_AND_MONEY_ADDED_ON_ACCOUNT_BALANCE:{
+            case PaymentOrderStatus.ORDER_STATUS_PAID_BUT_NOT_COMPLETED_AND_MONEY_ADDED_ON_ACCOUNT_BALANCE: {
                 processCheck(order, checkResponse);
                 break;
             }
@@ -151,24 +151,37 @@ public class MainPaymentHandler {
                         //TODO: Сулик не реализована поддержка тестовых платежей. Любой платеж идет как не тестовый.
                         if (order.getAmount() == amount) {
                             debug("Сумма совершенно одинаковая просто производим начисление на счет");
-                            new PaymentOrderDao(em).processOrderPay(order);
+                            if (order.getTest()) {
+                            } else {
+                                new PaymentOrderDao(em).processOrderPay(order);
+                            }
                         } else if (order.getAmount() < amount) {
                             debug("Сумма больше чем нужно, поэтому сдачу начисляем на счет абонента в системе");
-                            new PaymentOrderDao(em).processOrderPayWithOddMoney(order, amount - order.getAmount());
+                            if (order.getTest()) {
+                            } else {
+                                new PaymentOrderDao(em).processOrderPayWithOddMoney(order, amount - order.getAmount());
+                            }
                         } else {
                             debug("Суммы меньше чем нужно. Проверяем есть ли деньги на счету абонента в нашей системе");
                             if (order.getUser().getAccount(order.getCurrency()).getBalance() + amount > order.getAmount()) {
                                 debug("Денег на счету достаточно, можно проводить платеж с тех средств");
-                                new PaymentOrderDao(em).processOrderFromBalance(order, amount);
+                                if (order.getTest()) {
+                                } else {
+                                    new PaymentOrderDao(em).processOrderFromBalance(order, amount);
+                                }
                             } else {
                                 debug("Денег не достаточно, поэтому вся сумма остается на счету абонента в нашей системе.");
-                                new PaymentOrderDao(em).addUserAccountBalance(order.getUser().getAccount(order.getCurrency()).getId(), amount);
-                                order.setStatus(PaymentOrderStatus.ORDER_STATUS_PAID_BUT_NOT_COMPLETED_AND_MONEY_ADDED_ON_ACCOUNT_BALANCE);
-                                new Dao(em).persist(order);
-                                checkResponse.setResultCode(ResultCode.SUCCESS_BUT_AMOUNT_LESS_THAN_MUST_BE);
-                                checkResponse.setDescription("Деньги зачислены на счет абонента в нашей системе, т.к. внесенных средств недостаточно для оплаты заказа.");
-                                checkResponse.setTransactionId(order.getTransactionId());
-                                checkResponse.setMarketId(order.getMarketId());
+                                if (order.getTest()) {
+                                    
+                                } else {
+                                    new PaymentOrderDao(em).addUserAccountBalance(order.getUser().getAccount(order.getCurrency()).getId(), amount);
+                                    order.setStatus(PaymentOrderStatus.ORDER_STATUS_PAID_BUT_NOT_COMPLETED_AND_MONEY_ADDED_ON_ACCOUNT_BALANCE);
+                                    new Dao(em).persist(order);
+                                    checkResponse.setResultCode(ResultCode.SUCCESS_BUT_AMOUNT_LESS_THAN_MUST_BE);
+                                    checkResponse.setDescription("Деньги зачислены на счет абонента в нашей системе, т.к. внесенных средств недостаточно для оплаты заказа.");
+                                    checkResponse.setTransactionId(order.getTransactionId());
+                                    checkResponse.setMarketId(order.getMarketId());
+                                }
                             }
                         }
                     }

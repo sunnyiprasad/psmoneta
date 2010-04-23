@@ -51,7 +51,7 @@ public class PaymentOrder implements Serializable {
 
     // Это тестовый платеж?
     @Column(nullable=false)
-    private Boolean test;
+    private boolean test = false;
     // Описание
     private String description;
     private String custom1;
@@ -245,11 +245,11 @@ public class PaymentOrder implements Serializable {
         this.successUrl = successUrl;
     }
 
-    public Boolean getTest() {
+    public boolean getTest() {
         return test;
     }
 
-    public void setTest(Boolean test) {
+    public void setTest(boolean test) {
         this.test = test;
     }
 
