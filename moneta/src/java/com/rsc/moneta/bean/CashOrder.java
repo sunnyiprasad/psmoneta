@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 
@@ -27,12 +28,20 @@ public class CashOrder implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
+
+    @Column(nullable=false, insertable=false, updatable=false)
+    private long userId;
+
+    @Column(nullable=false, insertable=false, updatable=false)
+    private long accountId;
 
     @ManyToOne
+    @JoinColumn(name="userId")
     private User user;
 
     @ManyToOne
+    @JoinColumn(name="accountId")
     private Account account;
 
     @Column(nullable=false)
@@ -41,7 +50,7 @@ public class CashOrder implements Serializable {
     @Column(nullable=false)
     private int status;
 
-    @Column(name="_date")
+    @Column(name="_date", nullable=false)
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date date;
 
@@ -69,11 +78,11 @@ public class CashOrder implements Serializable {
         this.amount = amount;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
