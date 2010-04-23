@@ -8,7 +8,7 @@
 <%@ taglib prefix="decorator" uri="http://www.opensymphony.com/sitemesh/decorator" %>
 <%@ taglib prefix="s" uri="/struts-tags" %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-   "http://www.w3.org/TR/html4/loose.dtd">
+    "http://www.w3.org/TR/html4/loose.dtd">
 
 <html>
     <head>
@@ -19,6 +19,14 @@
         <ul>
             <li><s:a action="ViewPaymentOrderList"><s:text name="view_payment_order_list" /></s:a></li>
             <li><s:a action="ViewAccountList"><s:text name="view_account_list" /></s:a></li>
+            <s:if test="%{user.role}==1">
+                <li>
+                    <s:a action="ViewIMPaymentOrderList">
+                        <s:text name="view_im_payment_order_list" />
+                    </s:a>
+                </li>
+            </s:if>
+            <li><s:a action="../public/Logout"><s:text name="logout" /></s:a></li>
         </ul>
         <table>
             <tr>

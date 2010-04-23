@@ -10,6 +10,7 @@ import com.rsc.moneta.Currency;
 import com.rsc.moneta.action.BaseAction;
 import com.rsc.moneta.dao.Dao;
 import com.rsc.moneta.bean.PaymentOrder;
+import com.rsc.moneta.bean.PaymentOrderStatus;
 import com.rsc.moneta.bean.User;
 import com.rsc.moneta.dao.MarketDao;
 import com.rsc.moneta.dao.PaymentOrderDao;
@@ -136,7 +137,7 @@ public class Assistant extends BaseAction {
 
         paymentOrder = new PaymentOrderDao(em).getPaymentOrder(MNT_TRANSACTION_ID, MNT_ID);
         if (paymentOrder != null) {
-            if (paymentOrder.getStatus() == PaymentOrder.ORDER_STATUS_ACCEPTED) {
+            if (paymentOrder.getStatus() == PaymentOrderStatus.ORDER_STATUS_ACCEPTED) {
                 return Action.SUCCESS;
             } else {
                 addActionError(getText("order_exists"));

@@ -13,6 +13,7 @@
             <s:text name="selectpayment.main_message" />
             <s:text name="selectpayment.enter_payment_key" /><s:property value="%{paymentOrderId}" />
         </p>
-        <p><s:a href="%{paymentOrder.successUrl}" >Вернуться в магазин</s:a></p>
+        <p><s:a href="%{paymentOrder.successUrl}" ><s:text name="return_to_emarketplace" /></s:a></p>
+        <p><s:a action="public/"><s:text name="my_cabinet" /></s:a></p>
     </body>
 </html>
