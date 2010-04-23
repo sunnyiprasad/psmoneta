@@ -4,16 +4,11 @@
  */
 package com.rsc.moneta.action;
 
-import com.rsc.moneta.bean.Sms;
 import com.opensymphony.xwork2.Action;
-import com.rsc.moneta.Currency;
-import com.rsc.moneta.bean.Account;
 import com.rsc.moneta.bean.PaymentOrder;
 import com.rsc.moneta.dao.Dao;
 import com.rsc.moneta.bean.User;
 import com.rsc.moneta.dao.UserDao;
-import com.rsc.moneta.util.PasswordGenerator;
-import java.util.prefs.InvalidPreferencesFormatException;
 
 /**
  *
@@ -57,6 +52,7 @@ public class RegisterOrLogin extends BaseAction {
                 if (localUser.getPassword().equals(password)) {
                     paymentOrder.setUser(localUser);
                     new Dao(em).persist(paymentOrder);
+                    session.put("user", localUser);
                 } else {
                     addActionError(getText("incorrect_password_please_try_again"));
                     return "again";
