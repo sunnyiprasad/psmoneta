@@ -58,7 +58,7 @@ public class PaymentOrderStatus {
     public static int ORDER_STATUS_PAID_BUT_EMARKETPLACE_CANNOT_PROCESS_IT = 8;
     //   9: Данный код будет выставлен если платеж прошел успешно но до ИМ не дошел.
     //      Денег было слишком мало и их зачислили на счет абонента в ТЛСМ
-    public static int ORDER_STATUS_PAID_AND_COMPLETED_BUT_MONEY_ADDED_ON_ACCOUNT_BALANCE = 9;
+    public final static int ORDER_STATUS_PAID_BUT_NOT_COMPLETED_AND_MONEY_ADDED_ON_ACCOUNT_BALANCE = 9;
 
     private int id;
     private String description;

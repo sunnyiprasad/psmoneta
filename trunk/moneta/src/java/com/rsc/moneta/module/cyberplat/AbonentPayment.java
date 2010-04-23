@@ -17,13 +17,9 @@ import java.util.Date;
  *
  */
 @Entity
-@SequenceGenerator(
-    name="seq_payment",
-    sequenceName="seq_payment"
-)
 public class AbonentPayment implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator="seq_payment")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String number;
     private String account;

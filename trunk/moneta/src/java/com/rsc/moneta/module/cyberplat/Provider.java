@@ -12,13 +12,9 @@ import java.util.Collection;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@SequenceGenerator(
-    name="seq_provider",
-    sequenceName="seq_provider"
-)
 public class Provider implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator="seq_provider")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
     private String checkUrl;

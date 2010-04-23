@@ -19,13 +19,9 @@ import javax.persistence.SequenceGenerator;
  * Это дополнительные параметры, которые могут быть присланы во время запроса чек к интернет магазину.
  */
 @Entity
-@SequenceGenerator(
-    name="seq_payment_parameter",
-    sequenceName="seq_payment_parameter"
-)
 public class PaymentParameter implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator="seq_payment_parameter")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String val;

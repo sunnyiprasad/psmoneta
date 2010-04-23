@@ -28,10 +28,6 @@ import javax.persistence.JoinColumn;
  */
 
 @Entity
-@SequenceGenerator(
-    name = "seq_osmppayment_order",
-    sequenceName = "seq_osmppayment_order"
-)
 @Table(uniqueConstraints = {
     @UniqueConstraint(columnNames = {"transactionId", "paymentSystemId"})})
 public class OSMPPayment implements Serializable {
@@ -46,7 +42,7 @@ public class OSMPPayment implements Serializable {
     // Уникальный идентификатор платежа, выполненного по протоколу ОСМП в ПС
     // ТЛСМ
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq_osmppayment_order")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     // Уникальный идентификатор платежа в ПС, работающей по протоколу ОСМП –

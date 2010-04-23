@@ -26,21 +26,15 @@ import javax.persistence.SequenceGenerator;
  * евро, доллар, рублевый и т.д.
  */
 @Entity
-@SequenceGenerator(
-    name="seq_account",
-    sequenceName="seq_account"
-)
 public class Account implements Serializable{
-    @OneToMany(mappedBy = "account")
-    private List<PaymentOrder> paymentOrders;
-
+    
     // Типы возможного периода обналичивания средств.
     public static int EVERYDAY = 0;
     public static int EVERYWEEK = 1;
     public static int EVERYMONTH = 2;
     
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator="seq_account")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     // Это тип валюты счета
@@ -57,6 +51,9 @@ public class Account implements Serializable{
     // Что бы обналичивать деньги автоматически у клиента должен быть задан
     // счет в банке, куда переводить средства.
     private Integer autoCheckoutMoney;
+
+    @OneToMany(mappedBy = "account")
+    private List<PaymentOrder> paymentOrders;
 
     // Это пользователь владелец счета.
     @ManyToOne
