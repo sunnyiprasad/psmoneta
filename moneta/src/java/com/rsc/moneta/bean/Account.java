@@ -17,7 +17,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
 
 /**
  *
@@ -56,8 +55,13 @@ public class Account implements Serializable{
     @OneToMany(mappedBy = "account")
     private List<PaymentOrder> paymentOrders;
 
+
     // Это пользователь владелец счета.
+    @Column(insertable=false, updatable=false, nullable=false)
+    private long userId;
+
     @ManyToOne
+    @JoinColumn(name="userId")
     private User user;
 
     @OneToMany(mappedBy = "account")
