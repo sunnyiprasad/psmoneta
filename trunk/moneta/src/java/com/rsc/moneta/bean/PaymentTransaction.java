@@ -13,7 +13,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 
 /**
@@ -28,29 +27,37 @@ public class PaymentTransaction implements Serializable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
-    @Column
-    private Float amount;
+    @Column(nullable=false)
+    private double amount;
 
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
-    @Column(name = "_date")
+    @Column(name = "_date", nullable=false)
     private Date date;
 
+    @Column(insertable=false, updatable=false, nullable=false)
+    private long fromUserId;
+
+    @Column(insertable=false, updatable=false, nullable=false)
+    private long toUserId;
+
     @ManyToOne
+    @Column(name="fromUserId")
     private User fromUser;
 
     @ManyToOne
+    @Column(name="toUserId")
     private User toUser;
 
 
 
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 

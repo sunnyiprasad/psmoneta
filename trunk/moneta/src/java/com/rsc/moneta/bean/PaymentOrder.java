@@ -22,7 +22,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.JoinColumn;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -47,8 +46,11 @@ public class PaymentOrder implements Serializable {
     private String transactionId;
 
     // Сумма заказа
+    @Column(nullable=false)
     private Double amount;
+
     // Это тестовый платеж?
+    @Column(nullable=false)
     private Boolean test;
     // Описание
     private String description;
@@ -63,25 +65,32 @@ public class PaymentOrder implements Serializable {
 
     private String paymentSystemUnitId;
     private String paymentSystemLimitIds;
+
     // Код валюты. Оплату можно производить в разных валютах
     // пока не используется вся валюту это рубль.
+    @Column(nullable=false)
     private int currency;
 
     // Статус заказа ТЛСМ
-    @Column(name = "orderstatus")
+    @Column(name = "orderstatus", nullable=false)
     private int status = PaymentOrderStatus.ORDER_STATUS_ACCEPTED;
 
-    @Column(name = "_date")
+    @Column(name = "_date", nullable=false)
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date date;
 
     @Column(insertable=false, updatable=false, nullable=false)
     private long marketId;
+
+    @Column(insertable=false, updatable=false, nullable=false)
+    private long accountId;
+
     @ManyToOne
     @JoinColumn(name = "marketId")
     private Market market;
 
     @ManyToOne
+    @JoinColumn(name="accountId")
     private Account account;
 
     @OneToMany(mappedBy = "paymentOrder")

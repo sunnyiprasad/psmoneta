@@ -13,7 +13,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
@@ -31,13 +30,19 @@ public class User implements Serializable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
+
     private String name;
-    @Column(unique=true)
+    
+    @Column(unique=true, nullable=false)
     private String email;
+
     @Column(unique=true)
     private String phone;
+
+    @Column(nullable=false)
     private String password;
+    
     @Column(name="_role", nullable=false)
     private int role = User.USER;
 

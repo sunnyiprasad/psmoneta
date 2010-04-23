@@ -7,11 +7,13 @@ package com.rsc.moneta.bean;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -26,7 +28,7 @@ public class Market implements Serializable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
     @Column(nullable=false)
     private String name;
     // URL куда отправлять чек запрос
@@ -54,9 +56,11 @@ public class Market implements Serializable {
     @Column(nullable=false)
     private int outputHandlerType = 0;
 
-
+    @Column(insertable=false,updatable=false,nullable=false)
+    private long userId;
 
     @ManyToOne
+    @JoinColumn(name="userId")
     private User user;
 
     @OneToMany(mappedBy = "market")
@@ -105,11 +109,11 @@ public class Market implements Serializable {
         this.payUrl = payUrl;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
