@@ -30,7 +30,7 @@ public class AddOrderToTlsm {
         int i = 0;
         for (Order order : orders) {
             i++;
-            String query = "http://localhost:8084/moneta/Assistant?MNT_ID=1";
+            String query = "http://localhost:8084/moneta/Assistant?MNT_ID=10";
             query += "&MNT_TRANSACTION_ID="+order.getId();
             query += "&MNT_CURRENCY_CODE=RUB";
             query += "&MNT_AMOUNT="+order.getAmount();
