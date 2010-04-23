@@ -52,7 +52,7 @@ public class Mail {
         mimeMessage.setFrom(new InternetAddress(properties.getProperty("from")));
         mimeMessage.setSubject(properties.getProperty("subject"), properties.getProperty("encoding"));// windows-1251
         if (properties.getProperty("mime_content_type") != null)
-            mimeMessage.setContent(mimeMessage, properties.getProperty("mime_content_type"));
+            mimeMessage.setContent(this.message, properties.getProperty("mime_content_type"));
         InternetAddress addrTo = new InternetAddress(recipient);
         mimeMessage.addRecipient(Message.RecipientType.TO, addrTo);
         mimeMessage.setHeader("X-Mailer", properties.getProperty("mailer"));
