@@ -39,6 +39,7 @@ public class Mail {
         while (e.hasMoreElements()) {
             Object object = e.nextElement();
             properties.put(object, bundle.getObject(object.toString()));
+            Logger.getLogger(Mail.class.getName(), object.toString()+"="+properties.getProperty(object.toString()));
         }
     }
 
@@ -61,7 +62,7 @@ public class Mail {
             transport.sendMessage(mimeMessage, mimeMessage.getRecipients(Message.RecipientType.TO));
         } catch (Exception exception)
         {
-            Logger.getLogger(Mail.class.getName()).severe("Transport connect error: " + exception);
+            Logger.getLogger(Mail.class.getName()).severe("Transport connect error: " + exception+"\n"+exception.getMessage());
         } finally
         {
             transport.close();
