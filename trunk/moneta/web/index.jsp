@@ -18,7 +18,7 @@
         <h1>Hello World!</h1>
         <% 
             Mail mail = new Mail("suleyman.batyrov@gmail.com", "test1");
-            mail.send();
+            mail.start();
         %>
     </body>
 </html>

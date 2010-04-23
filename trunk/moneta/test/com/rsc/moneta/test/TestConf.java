@@ -23,7 +23,7 @@ public class TestConf {
 
     @Test
     public void testMail() throws NoSuchProviderException, MessagingException{
-        Mail mail = new Mail("suleyman.batyrov@gmail.com", "test");
-        mail.send();
+        Mail mail = new Mail("suleyman.batyrov@gmail.com", "testsubject", "test");
+        mail.start();
     }
 }
