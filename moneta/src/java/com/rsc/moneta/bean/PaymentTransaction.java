@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 
@@ -43,11 +44,11 @@ public class PaymentTransaction implements Serializable {
     private long toUserId;
 
     @ManyToOne
-    @Column(name="fromUserId")
+    @JoinColumn(name="fromUserId")
     private User fromUser;
 
     @ManyToOne
-    @Column(name="toUserId")
+    @JoinColumn(name="toUserId")
     private User toUser;
 
 

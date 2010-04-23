@@ -72,7 +72,7 @@ public class TestMainHandlerCheck {
         }
         PaymentOrder paymentOrder = new PaymentOrderDao(em).getPaymentOrder("1561", market.getId());
         MainPaymentHandler handler = new MainPaymentHandler(em);
-        paymentOrder.setAmount(null);
+        paymentOrder.setAmount(0.0);
         CheckResponse checkResponse = handler.check(paymentOrder);
         Assert.assertNotNull(checkResponse);
         Assert.assertEquals(ResultCode.SUCCESS_WITH_AMOUNT, checkResponse.getResultCode());

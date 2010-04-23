@@ -9,7 +9,6 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import java.util.Date;
@@ -60,8 +59,9 @@ public class OSMPPayment implements Serializable {
     private short paymentSystemId;
 
     // Идентификатор кода заказа ПС ТЛСМ
-    @Column(insertable = false, updatable = false, nullable = false)
+    @Column(insertable = false, updatable = false, nullable = true)
     private long paymentOrderId;
+
     @OneToOne
     @JoinColumn(name = "paymentOrderId")
     private PaymentOrder paymentOrder;

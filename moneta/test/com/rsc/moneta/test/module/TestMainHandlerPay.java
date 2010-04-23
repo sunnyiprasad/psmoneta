@@ -52,7 +52,7 @@ public class TestMainHandlerPay {
         EntityManager em = EMF.getEntityManager();
         PaymentOrder order = new PaymentOrderDao(em).getPaymentOrder("1561", 67699912);
         Assert.assertNotNull(order);
-        order.setAmount(null);
+        order.setAmount(0.0);
         MainPaymentHandler handler = new MainPaymentHandler(em);
         CheckResponse response = handler.pay(order, order.getAmount());
         Assert.assertNotNull(response);
