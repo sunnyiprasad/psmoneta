@@ -4,6 +4,7 @@
  */
 package com.rsc.moneta.module.outputhandler;
 
+import com.rsc.moneta.Currency;
 import com.rsc.moneta.bean.PaymentOrder;
 import com.rsc.moneta.dao.EMF;
 import com.rsc.moneta.module.CheckResponse;
@@ -49,9 +50,23 @@ public class TaisOutputHandler implements OutputHandler {
     public CheckResponse check(PaymentOrder order) {
         try {
             String query = order.getMarket().getCheckUrl();
-            query += "?MNT_COMMAND=CHECK&MNT_ID=" + order.getMarket().getId() + "&MNT_TRANSACTION_ID="
-                    + order.getTransactionId() + "&MNT_CURRENCY_CODE=RUB&MNT_TEST_MODE="
-                    + order.getTest() + "&MNT_AMOUNT=" + order.getAmount();
+            query += "?MNT_COMMAND=CHECK&MNT_ID=" + order.getMarket().getId()
+                    + "&MNT_TRANSACTION_ID=" + order.getTransactionId()
+                    + "&MNT_AMOUNT=" + order.getAmount()
+                    + "&MNT_CURRENCY_CODE=" + Utils.accountTypeToString(order.getCurrency())
+                    + "&MNT_SIGNATURE=" + Utils.createSignature(order)
+                    + "&MNT_OPERATION_ID=" + order.getId();
+            int i = order.getTest() ? 1 : 0;
+            query += "&MNT_TEST_MODE=" + i;
+            if (order.getCustom1() != null) {
+                query += "&MNT_CUSTOM1=" + order.getCustom1();
+            }
+            if (order.getCustom2() != null) {
+                query += "&MNT_CUSTOM2=" + order.getCustom2();
+            }
+            if (order.getCustom3() != null) {
+                query += "&MNT_CUSTOM3=" + order.getCustom3();
+            }
             query += "&MNT_SIGNATURE=" + Utils.createSignature("check", order);
             URLConnection url = new URL(query).openConnection();
             DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();
@@ -72,9 +87,23 @@ public class TaisOutputHandler implements OutputHandler {
     public CheckResponse pay(PaymentOrder order) {
         try {
             String query = order.getMarket().getCheckUrl();
-            query += "?MNT_ID=" + order.getMarket().getId() + "&MNT_TRANSACTION_ID="
-                    + order.getTransactionId() + "&MNT_AMOUNT=" + order.getAmount() + "&MNT_CURRENCY_CODE=RUB&MNT_TEST_MODE="
-                    + order.getTest() + "&MNT_SIGNATURE=" + Utils.createSignature(order);
+            query += "?MNT_ID=" + order.getMarket().getId()
+                    + "&MNT_TRANSACTION_ID=" + order.getTransactionId()
+                    + "&MNT_AMOUNT=" + order.getAmount()
+                    + "&MNT_CURRENCY_CODE=" + Utils.accountTypeToString(order.getCurrency())
+                    + "&MNT_SIGNATURE=" + Utils.createSignature(order)
+                    + "&MNT_OPERATION_ID=" + order.getId();
+            int i = order.getTest() ? 1 : 0;
+            query += "&MNT_TEST_MODE=" + i;
+            if (order.getCustom1() != null) {
+                query += "&MNT_CUSTOM1=" + order.getCustom1();
+            }
+            if (order.getCustom2() != null) {
+                query += "&MNT_CUSTOM2=" + order.getCustom2();
+            }
+            if (order.getCustom3() != null) {
+                query += "&MNT_CUSTOM3=" + order.getCustom3();
+            }
             URLConnection url = new URL(query).openConnection();
             DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();
             fac.setNamespaceAware(true);
@@ -84,7 +113,7 @@ public class TaisOutputHandler implements OutputHandler {
             CheckResponse response = parseResponse(doc);
             return process(response, order, false);
         } catch (Exception ex) {
-            Logger.getLogger(MonetaOutputHandler.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MonetaOutputHandler.class.getName()).log(Level.SEVERE, ex.getMessage());
             ex.printStackTrace();
         }
         return null;
