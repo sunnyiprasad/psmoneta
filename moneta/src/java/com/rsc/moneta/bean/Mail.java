@@ -37,9 +37,10 @@ public class Mail {
         ResourceBundle bundle = ResourceBundle.getBundle("mail");
         Enumeration e =  bundle.getKeys();
         while (e.hasMoreElements()) {
-            Object object = e.nextElement();
-            properties.put(object.toString(), bundle.getString(object.toString()));
-            Logger.getLogger(Mail.class.getName(), object.toString()+"="+properties.getProperty(object.toString()));
+            String name = e.nextElement().toString();
+            String value = bundle.getString(name);
+            properties.put(name, value);
+            Logger.getLogger(Mail.class.getName()).severe(name+"="+value);
         }
     }
 
