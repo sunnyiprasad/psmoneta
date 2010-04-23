@@ -24,7 +24,7 @@ import javax.persistence.Temporal;
 @Table(name="TestPayment")
 public class Payment implements Serializable {    
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
