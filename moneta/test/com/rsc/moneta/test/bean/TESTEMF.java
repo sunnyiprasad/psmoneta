@@ -20,7 +20,7 @@ public class TESTEMF {
     public static EntityManager getEntityManager() {
         if (emfInstance == null) {
             try {
-                emfInstance = Persistence.createEntityManagerFactory("monetaPU");
+                emfInstance = Persistence.createEntityManagerFactory("monetaPU2");
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Random;
 import java.util.Vector;
 import javax.persistence.EntityManager;
 import org.junit.Assert;
@@ -41,9 +42,14 @@ public class InitTestData {
                 User u = new UserDao(em).getUserByEmail("suleyman.batyrov@gmail.com");
                 Assert.assertNotNull(u);
             }
-            if (new UserDao(em).getUserByEmail("suleyman.batyrov@gmail.com") == null) {
+            if (new UserDao(em).getUserByEmail("sbatyrov@yandex.ru") == null) {
                 new UserDao(em).createUserAndSendNotify("+79882970413", "TestMarket", "sbatyrov@yandex.ru");
                 User u = new UserDao(em).getUserByEmail("suleyman.batyrov@gmail.com");
+                Assert.assertNotNull(u);
+            }
+            if (new UserDao(em).getUserByEmail("sulic@batyrov.ru") == null) {
+                new UserDao(em).createUserAndSendNotify("+79882970414", "TestMarket", "sulic@batyrov.ru");
+                User u = new UserDao(em).getUserByEmail("sulic@batyrov.ru");
                 Assert.assertNotNull(u);
             }
         } catch (Exception e) {
@@ -61,10 +67,10 @@ public class InitTestData {
                 market.setName("test");
                 Assert.assertNotNull(new UserDao(em).getUserByPhone("+79882970413"));
                 market.setUser(new UserDao(em).getUserByPhone("+79882970413"));
-                market.setCheckUrl("http://localhost:8084/testIM/Handler");
+                market.setCheckUrl("http://localhost:8084/testIM/Handler.action");
                 market.setFailUrl("http://localhost:8084/testIM/fail.jsp");
-                market.setPayUrl("http://localhost:8084/testIM/Handler");
-                market.setSignable(true);
+                market.setPayUrl("http://localhost:8084/testIM/Handler.action");
+                market.setSignable(false);
                 market.setSuccessUrl("http://localhost:8084/testIM/success.jsp");
                 market.setPassword("12345");
                 market.setOutputHandlerType(0);
@@ -98,7 +104,7 @@ public class InitTestData {
         }
     }
 
-    @Test
+    /*@Test
     public void testCreateOSMPPayment() throws Exception {
         try {
             EntityManager em = EMF.getEntityManager();
@@ -132,6 +138,7 @@ public class InitTestData {
             paymentOrder.setAmount(0.0);
             paymentOrder.setDate(new Date());
             paymentOrder.setAccount(market.getAccount(Currency.RUB));
+            paymentOrder.setTransactionId(new Random().nextLong()+"");
             new Dao(em).persist(paymentOrder);
 
             // 3. Создать запись об ОСМП-платеже в т-це OSMPPayment
@@ -152,5 +159,5 @@ public class InitTestData {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 }

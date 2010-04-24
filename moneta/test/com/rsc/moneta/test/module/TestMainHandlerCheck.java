@@ -37,7 +37,7 @@ public class TestMainHandlerCheck {
         }
         PaymentOrder paymentOrder = new PaymentOrderDao(em).getPaymentOrder("97665487", market.getId());        
         MainPaymentHandler handler = new MainPaymentHandler(em);       
-        CheckResponse checkResponse = handler.check(paymentOrder);
+        CheckResponse checkResponse = handler.check(paymentOrder, paymentOrder.getAmount());
         Assert.assertNotNull(checkResponse);
         Assert.assertEquals(ResultCode.ORDER_NOT_FOUND_IN_EMARKETPLACE, checkResponse.getResultCode());
     }
@@ -55,7 +55,7 @@ public class TestMainHandlerCheck {
         }
         PaymentOrder paymentOrder = new PaymentOrderDao(em).getPaymentOrder("97665487", market.getId());
         MainPaymentHandler handler = new MainPaymentHandler(em);
-        CheckResponse checkResponse = handler.check(paymentOrder);
+        CheckResponse checkResponse = handler.check(paymentOrder, paymentOrder.getAmount());
         Assert.assertNotNull(checkResponse);
         Assert.assertEquals(ResultCode.ORDER_NOT_FOUND_IN_EMARKETPLACE, checkResponse.getResultCode());
     }
@@ -73,7 +73,7 @@ public class TestMainHandlerCheck {
         PaymentOrder paymentOrder = new PaymentOrderDao(em).getPaymentOrder("1561", market.getId());
         MainPaymentHandler handler = new MainPaymentHandler(em);
         paymentOrder.setAmount(0.0);
-        CheckResponse checkResponse = handler.check(paymentOrder);
+        CheckResponse checkResponse = handler.check(paymentOrder, paymentOrder.getAmount());
         Assert.assertNotNull(checkResponse);
         Assert.assertEquals(ResultCode.SUCCESS_WITH_AMOUNT, checkResponse.getResultCode());
     }
@@ -90,7 +90,7 @@ public class TestMainHandlerCheck {
         }
         PaymentOrder paymentOrder = new PaymentOrderDao(em).getPaymentOrder("1561", market.getId());
         MainPaymentHandler handler = new MainPaymentHandler(em);
-        CheckResponse checkResponse = handler.check(paymentOrder);
+        CheckResponse checkResponse = handler.check(paymentOrder, paymentOrder.getAmount());
         Assert.assertNotNull(checkResponse);
         Assert.assertEquals(ResultCode.SUCCESS_WITHOUT_AMOUNT, checkResponse.getResultCode());
     }

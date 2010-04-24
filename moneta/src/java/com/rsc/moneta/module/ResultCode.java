@@ -65,4 +65,9 @@ public class ResultCode {
     // Введённая в терминальную ПС сумма меньше чем сумма заказа, поэтому 
     // выполнено зачисление на счет абонента в ПС ТЛСМ вместо оплаты заказа
     public static final int SUCCESS_BUT_AMOUNT_LESS_THAN_MUST_BE = 17;
+    // Введённая в терминальную ПС сумма меньше чем сумма заказа,
+    // при это у заказа не определен пользователь, остаток суммы некуда закинуть.
+    // Поэтому принять платеж мы не можем.
+    public static final int AMOUNT_LESS_THAN_MUST_BE = 18;
+    public static final int AMOUNT_MORE_THAN_MUST_BE = 19;
 }

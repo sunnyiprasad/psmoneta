@@ -25,15 +25,15 @@ public class MainPaymentHandler {
         this.em = em;
     }
 
-    public CheckResponse check(PaymentOrder order) {
+    public CheckResponse check(PaymentOrder order, Double amount) {
         CheckResponse checkResponse = new CheckResponse();
         switch (order.getStatus()) {
             case PaymentOrderStatus.ORDER_STATUS_ACCEPTED: {
-                processCheck(order, checkResponse);
+                processCheck(order, checkResponse, amount);
                 break;
             }
             case PaymentOrderStatus.ORDER_STATUS_PAID_BUT_NOT_COMPLETED_AND_MONEY_ADDED_ON_ACCOUNT_BALANCE: {
-                processCheck(order, checkResponse);
+                processCheck(order, checkResponse, amount);
                 break;
             }
             case PaymentOrderStatus.ORDER_STATUS_NOT_PAID_AND_REJECTED_BY_EMARKETPLACE: {
@@ -64,8 +64,18 @@ public class MainPaymentHandler {
         return checkResponse;
     }
 
-    public void processCheck(PaymentOrder order, CheckResponse checkResponse) {
+    public void processCheck(PaymentOrder order, CheckResponse checkResponse, Double amount) {
         try {
+            if (amount != null && order.getUser() == null) {
+                if (order.getAmount() > amount) {
+                    checkResponse.setResultCode(ResultCode.AMOUNT_LESS_THAN_MUST_BE);
+                    return;
+                }
+                if (order.getAmount() < amount) {
+                    checkResponse.setResultCode(ResultCode.AMOUNT_MORE_THAN_MUST_BE);
+                    return;
+                }
+            }
             OutputHandler outputHandler = new Config().buildOutputHandler(order.getMarket().getOutputHandlerType());
             CheckResponse response = outputHandler.check(order);
             if (response != null) {
@@ -135,6 +145,16 @@ public class MainPaymentHandler {
 
     private void processPay(PaymentOrder order, CheckResponse checkResponse, double amount) {
         try {
+            if (order.getUser() == null) {
+                if (order.getAmount() > amount) {
+                    checkResponse.setResultCode(ResultCode.AMOUNT_LESS_THAN_MUST_BE);
+                    return;
+                }
+                if (order.getAmount() < amount) {
+                    checkResponse.setResultCode(ResultCode.AMOUNT_MORE_THAN_MUST_BE);
+                    return;
+                }
+            }
             order.setStatus(PaymentOrderStatus.ORDER_STATUS_PAID_BUT_NOT_COMPLETED_AND_STILL_PROCESSING);
             new Dao(em).persist(order);
             OutputHandler outputHandler = new Config().buildOutputHandler(order.getMarket().getOutputHandlerType());
@@ -155,32 +175,33 @@ public class MainPaymentHandler {
                             } else {
                                 new PaymentOrderDao(em).processOrderPay(order);
                             }
-                        } else if (order.getAmount() < amount) {
-                            debug("Сумма больше чем нужно, поэтому сдачу начисляем на счет абонента в системе");
-                            if (order.getTest()) {
-                            } else {
-                                new PaymentOrderDao(em).processOrderPayWithOddMoney(order, amount - order.getAmount());
-                            }
                         } else {
-                            debug("Суммы меньше чем нужно. Проверяем есть ли деньги на счету абонента в нашей системе");
-                            if (order.getUser().getAccount(order.getCurrency()).getBalance() + amount > order.getAmount()) {
-                                debug("Денег на счету достаточно, можно проводить платеж с тех средств");
+                            if (order.getAmount() < amount) {
+                                debug("Сумма больше чем нужно, поэтому сдачу начисляем на счет абонента в системе");
                                 if (order.getTest()) {
                                 } else {
-                                    new PaymentOrderDao(em).processOrderFromBalance(order, amount);
+                                    new PaymentOrderDao(em).processOrderPayWithOddMoney(order, amount - order.getAmount());
                                 }
                             } else {
-                                debug("Денег не достаточно, поэтому вся сумма остается на счету абонента в нашей системе.");
-                                if (order.getTest()) {
-                                    
+                                debug("Суммы меньше чем нужно. Проверяем есть ли деньги на счету абонента в нашей системе");
+                                if (order.getUser().getAccount(order.getCurrency()).getBalance() + amount > order.getAmount()) {
+                                    debug("Денег на счету достаточно, можно проводить платеж с тех средств");
+                                    if (order.getTest()) {
+                                    } else {
+                                        new PaymentOrderDao(em).processOrderFromBalance(order, amount);
+                                    }
                                 } else {
-                                    new PaymentOrderDao(em).addUserAccountBalance(order.getUser().getAccount(order.getCurrency()).getId(), amount);
-                                    order.setStatus(PaymentOrderStatus.ORDER_STATUS_PAID_BUT_NOT_COMPLETED_AND_MONEY_ADDED_ON_ACCOUNT_BALANCE);
-                                    new Dao(em).persist(order);
-                                    checkResponse.setResultCode(ResultCode.SUCCESS_BUT_AMOUNT_LESS_THAN_MUST_BE);
-                                    checkResponse.setDescription("Деньги зачислены на счет абонента в нашей системе, т.к. внесенных средств недостаточно для оплаты заказа.");
-                                    checkResponse.setTransactionId(order.getTransactionId());
-                                    checkResponse.setMarketId(order.getMarketId());
+                                    debug("Денег не достаточно, поэтому вся сумма остается на счету абонента в нашей системе.");
+                                    if (order.getTest()) {
+                                    } else {
+                                        new PaymentOrderDao(em).addUserAccountBalance(order.getUser().getAccount(order.getCurrency()), amount);
+                                        order.setStatus(PaymentOrderStatus.ORDER_STATUS_PAID_BUT_NOT_COMPLETED_AND_MONEY_ADDED_ON_ACCOUNT_BALANCE);
+                                        new Dao(em).persist(order);
+                                        checkResponse.setResultCode(ResultCode.SUCCESS_BUT_AMOUNT_LESS_THAN_MUST_BE);
+                                        checkResponse.setDescription("Деньги зачислены на счет абонента в нашей системе, т.к. внесенных средств недостаточно для оплаты заказа.");
+                                        checkResponse.setTransactionId(order.getTransactionId());
+                                        checkResponse.setMarketId(order.getMarketId());
+                                    }
                                 }
                             }
                         }

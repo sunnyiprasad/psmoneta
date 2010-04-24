@@ -42,12 +42,12 @@ public class PaymentOrder implements Serializable {
     private long id;
 
     // Это номер заказа в системе интернет магазина.
-    @Column(name = "transactionId")
+    @Column(name = "transactionId", nullable=false)
     private String transactionId;
 
     // Сумма заказа
     @Column(nullable=false)
-    private Double amount;
+    private double amount;
 
     // Это тестовый платеж?
     @Column(nullable=false)
@@ -85,6 +85,9 @@ public class PaymentOrder implements Serializable {
     @Column(insertable=false, updatable=false, nullable=false)
     private long accountId;
 
+    @Column(insertable=false, updatable=false, nullable=true)
+    private Long userId;
+
     @ManyToOne
     @JoinColumn(name = "marketId")
     private Market market;
@@ -97,7 +100,26 @@ public class PaymentOrder implements Serializable {
     private List<PaymentParameter> paymentParameters;
 
     @ManyToOne
+    @JoinColumn(name="userId")
     private User user;
+
+    public long getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(long accountId) {
+        this.accountId = accountId;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    
 
     public User getUser() {
         return user;
