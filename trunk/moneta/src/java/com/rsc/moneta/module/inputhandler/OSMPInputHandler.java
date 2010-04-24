@@ -11,7 +11,6 @@ import javax.persistence.EntityManager;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.Date;
-import java.util.GregorianCalendar;
 //import java.text.NumberFormat;
 //import java.util.Locale;
 
@@ -42,7 +41,7 @@ public class OSMPInputHandler implements InputHandler {
     public final static int OSMP_RETURN_CODE_PAY_SUPPRESS_ON_TECHNICAL_REASONS = 8; // Прием платежа запрещен по техническим причинам
     public final static int OSMP_RETURN_CODE_ACCOUNT_DISABLED = 79; // Счет абонента не активен
     public final static int OSMP_RETURN_CODE_SUM_TOO_SMALL = 241; // Сумма слишком мала
-//    public final static int OSMP_RETURN_CODE_SUM_TOO_BIG = 242; // Сумма слишком велика
+    public final static int OSMP_RETURN_CODE_SUM_TOO_BIG = 242; // Сумма слишком велика
     public final static int OSMP_RETURN_CODE_OTHER_ERROR = 300; // Другая ошибка провайдера
     // Комментарии к кодам ответа ПС ОСМП
     public final static String STRING_COMMAND_PARAMETER_ERROR = "Отсутствует или неправильный параметр 'command'";
@@ -103,6 +102,8 @@ public class OSMPInputHandler implements InputHandler {
         // command=check – запрос на проверку состояния абонента
         String command = "";
 
+        Double sum = null;
+
         int result = OSMP_RETURN_CODE_OTHER_ERROR;
         String comment = "";
 
@@ -125,8 +126,11 @@ public class OSMPInputHandler implements InputHandler {
                                 } else {
                                     try {
                                         paymentOrderId = Long.parseLong(account);
-                                        // TODO: Денис - с Суликом - параметр sum может быть прислан в запросе "check"
-                                        // выяснить, что делать в этом случае
+                                        try {
+                                            sum = Double.parseDouble(((String[]) inputData.get("sum"))[0]);
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
                                         try {
                                             EntityManager em = EMF.getEntityManager();
 
@@ -145,7 +149,7 @@ public class OSMPInputHandler implements InputHandler {
                                                     handler = new MainPaymentHandler(em);
 
                                                     // Проверка его статуса в ИМ - отправка запроса check
-                                                    checkResponse = handler.check(paymentOrder);
+                                                    checkResponse = handler.check(paymentOrder, sum);
                                                 }
 
                                                 if (checkResponse != null || this.TLSMResultCodeEmulator != EMULATOR_NOT_SET_INT) {
@@ -220,12 +224,20 @@ public class OSMPInputHandler implements InputHandler {
                                                                                                     comment = STRING_TRANSACTIONID_WAS_NOT_PROVIDED_BY_EMARKETPLACE;
                                                                                                 } else {
                                                                                                     if (TLSMResultCode == ResultCode.SUCCESS_BUT_AMOUNT_LESS_THAN_MUST_BE) {
-                                                                                                        result = OSMP_RETURN_CODE_SUM_TOO_SMALL;
+                                                                                                        result = OSMP_RETURN_CODE_OK;
                                                                                                         comment = STRING_SUM_TOO_SMALL;
                                                                                                     } else {
-                                                                                                        // TODO: Денис, с Суликом - что еще сделать в таком случае?
-                                                                                                        result = OSMP_RETURN_CODE_OTHER_ERROR;
-                                                                                                        comment = STRING_UNKNOWN_ERROR;
+                                                                                                        if (TLSMResultCode == ResultCode.AMOUNT_LESS_THAN_MUST_BE) {
+                                                                                                            result = OSMP_RETURN_CODE_SUM_TOO_SMALL;
+                                                                                                        } else {
+                                                                                                            if (TLSMResultCode == ResultCode.AMOUNT_MORE_THAN_MUST_BE) {
+                                                                                                                result = OSMP_RETURN_CODE_SUM_TOO_BIG;
+                                                                                                            } else {
+                                                                                                                // TODO: Денис, с Суликом - что еще сделать в таком случае?
+                                                                                                                result = OSMP_RETURN_CODE_OTHER_ERROR;
+                                                                                                                comment = STRING_UNKNOWN_ERROR;
+                                                                                                            }
+                                                                                                        }
                                                                                                     }
                                                                                                 }
                                                                                             }
@@ -439,12 +451,20 @@ public class OSMPInputHandler implements InputHandler {
                                                                                                                 comment = STRING_TRANSACTIONID_WAS_NOT_PROVIDED_BY_EMARKETPLACE;
                                                                                                             } else {
                                                                                                                 if (TLSMResultCode == ResultCode.SUCCESS_BUT_AMOUNT_LESS_THAN_MUST_BE) {
-                                                                                                                    result = OSMP_RETURN_CODE_SUM_TOO_SMALL;
+                                                                                                                    result = OSMP_RETURN_CODE_OK;
                                                                                                                     comment = STRING_SUM_TOO_SMALL;
                                                                                                                 } else {
-                                                                                                                    // TODO: Денис, с Суликом - что еще сделать в таком случае?
-                                                                                                                    result = OSMP_RETURN_CODE_OTHER_ERROR;
-                                                                                                                    comment = STRING_UNKNOWN_ERROR;
+                                                                                                                    if (TLSMResultCode == ResultCode.AMOUNT_LESS_THAN_MUST_BE) {
+                                                                                                                        result = OSMP_RETURN_CODE_SUM_TOO_SMALL;
+                                                                                                                    } else {
+                                                                                                                        if (TLSMResultCode == ResultCode.AMOUNT_MORE_THAN_MUST_BE) {
+                                                                                                                            result = OSMP_RETURN_CODE_SUM_TOO_BIG;
+                                                                                                                        } else {
+                                                                                                                            // TODO: Денис, с Суликом - что еще сделать в таком случае?
+                                                                                                                            result = OSMP_RETURN_CODE_OTHER_ERROR;
+                                                                                                                            comment = STRING_UNKNOWN_ERROR;
+                                                                                                                        }
+                                                                                                                    }
                                                                                                                 }
                                                                                                             }
                                                                                                         }
@@ -467,7 +487,7 @@ public class OSMPInputHandler implements InputHandler {
                                                     }
                                                 } catch (Exception ex) {
                                                     result = OSMP_RETURN_CODE_OTHER_ERROR;
-                                                    comment = STRING_DB_ERROR+ex.toString();
+                                                    comment = STRING_DB_ERROR + ex.toString();
                                                     ex.printStackTrace();
                                                 }
                                             } catch (Exception ex) {

@@ -20,11 +20,9 @@ import javax.persistence.Table;
 @Entity
 @Table(name="TestOrder")
 public class Order implements Serializable {
-    static int STATUS_PAID;
-    @OneToOne(mappedBy = "order")
-    private Payment payment;
-    static int STATUS_INACTIVE;
-    static int STATUS_ACTIVE;
+    public static int STATUS_PAID;
+    public static int STATUS_INACTIVE;
+    public static int STATUS_ACTIVE;
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,6 +31,9 @@ public class Order implements Serializable {
     private double amount;
     private String description;
     private int status;
+
+    @OneToOne(mappedBy = "order")
+    private Payment payment;
 
     public double getAmount() {
         return amount;

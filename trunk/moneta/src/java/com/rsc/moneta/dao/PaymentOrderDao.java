@@ -6,6 +6,7 @@ package com.rsc.moneta.dao;
 
 import com.rsc.moneta.action.Const;
 import com.rsc.moneta.action.admin.SumAndCount;
+import com.rsc.moneta.bean.Account;
 import com.rsc.moneta.bean.PaymentOrder;
 import com.rsc.moneta.bean.PaymentOrderStatus;
 import java.util.Collection;
@@ -55,6 +56,7 @@ public class PaymentOrderDao extends Dao {
             q.setParameter("id", order.getAccount().getId());
             q.setParameter("amount", order.getAmount());
             q.executeUpdate();
+            em.refresh(order.getAccount());
             order.setStatus(PaymentOrderStatus.ORDER_STATUS_PAID_AND_COMPLETED);
             em.persist(order);
             em.getTransaction().commit();
@@ -81,10 +83,11 @@ public class PaymentOrderDao extends Dao {
         q.executeUpdate();
     }
 
-    public void addUserAccountBalance(long accountId, double amount) {
+    public void addUserAccountBalance(Account account, double amount) {
         em.getTransaction().begin();
         try {
-            addBalance(accountId, amount);
+            addBalance(account.getId(), amount);
+            em.refresh(account);
             em.getTransaction().commit();
         } catch (Exception e) {
             if (em.getTransaction().isActive()) {
@@ -102,6 +105,8 @@ public class PaymentOrderDao extends Dao {
             addBalance(order.getUser().getAccount(order.getCurrency()).getId(), oddMoney);
             //задаем статус
             order.setStatus(PaymentOrderStatus.ORDER_STATUS_PAID_AND_COMPLETED);
+            em.refresh(order.getAccount());
+            em.refresh(order.getUser().getAccount(order.getCurrency()));
             em.persist(order);
             em.getTransaction().commit();
         } catch (Exception e) {
@@ -122,6 +127,8 @@ public class PaymentOrderDao extends Dao {
             subBalance(order.getUser().getAccount(order.getCurrency()).getId(), order.getAmount());
             //задаем статус
             order.setStatus(PaymentOrderStatus.ORDER_STATUS_PAID_AND_COMPLETED);
+            em.refresh(order.getAccount());
+            em.refresh(order.getUser().getAccount(order.getCurrency()));
             em.persist(order);
             em.getTransaction().commit();
         } catch (Exception e) {

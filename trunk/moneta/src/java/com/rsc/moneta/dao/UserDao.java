@@ -31,8 +31,8 @@ public class UserDao extends Dao {
 
     public User createUserAndSendNotify(String phone, String name, String email) {
         em.getTransaction().begin();
+        User user = new User();
         try {
-            User user = new User();            
             user.setEmail(email);
             user.setName(name);
             user.setPassword(generatePassword());
@@ -41,7 +41,7 @@ public class UserDao extends Dao {
             Account account = new Account();
             account.setType(Currency.EURO);
             account.setUser(user);
-            account.setBalance(0);            
+            account.setBalance(0);
             em.persist(account);
 
             account = new Account();
@@ -56,26 +56,35 @@ public class UserDao extends Dao {
             account.setBalance(0);
             em.persist(account);
             em.getTransaction().commit();
-            user.setPhone(phone);
-            persist(user);
-
-            ResourceBundle bundle = ResourceBundle.getBundle("mail");
-            String content = bundle.getString("notify_content");
-            String subject = bundle.getString("notify_subject");
-            if (content != null)
-                content = String.format(content, user.getName(), user.getPassword());
-            else
-                content = "You are was registred in tlsm system. You password:"+user.getPassword();
-            if (subject == null)
-                subject = "Regisration was successful";
-            Mail mail = new Mail(user.getEmail(), subject, content);
-            mail.start();
-            return user;
-        } catch(Exception e) {
-            if (em.getTransaction().isActive())
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (em.getTransaction().isActive()) {
                 em.getTransaction().rollback();
+            }
             return null;
         }
+        user.setPhone(phone);
+        persist(user);
+        String subject = null;
+        String content = null;
+        try {
+            ResourceBundle bundle = ResourceBundle.getBundle("mail");
+            content = bundle.getString("notify_content");
+            subject = bundle.getString("notify_subject");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (content != null) {
+            content = String.format(content, user.getName(), user.getPassword());
+        } else {
+            content = "You are was registred in tlsm system. You password:" + user.getPassword();
+        }
+        if (subject == null) {
+            subject = "Regisration was successful";
+        }
+        Mail mail = new Mail(user.getEmail(), subject, content);
+        mail.start();
+        return user;
     }
 
     public User getUserByPhone(String phone) {

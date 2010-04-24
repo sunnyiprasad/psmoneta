@@ -68,6 +68,7 @@ public class TaisOutputHandler implements OutputHandler {
                 query += "&MNT_CUSTOM3=" + order.getCustom3();
             }
             query += "&MNT_SIGNATURE=" + Utils.createSignature("check", order);
+            Logger.getLogger(TaisOutputHandler.class.getName()).severe(query);
             URLConnection url = new URL(query).openConnection();
             DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();
             fac.setNamespaceAware(true);
@@ -104,6 +105,7 @@ public class TaisOutputHandler implements OutputHandler {
             if (order.getCustom3() != null) {
                 query += "&MNT_CUSTOM3=" + order.getCustom3();
             }
+            Logger.getLogger(TaisOutputHandler.class.getName()).severe(query);
             URLConnection url = new URL(query).openConnection();
             DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();
             fac.setNamespaceAware(true);
