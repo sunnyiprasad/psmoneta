@@ -110,10 +110,6 @@
             <description/>
             <url-pattern>/Platika.html</url-pattern>
         </web-resource-collection>
-        <auth-constraint>
-            <description/>
-            <role-name>platika</role-name>
-        </auth-constraint>
     </security-constraint>
     <login-config>
         <auth-method>BASIC</auth-method>

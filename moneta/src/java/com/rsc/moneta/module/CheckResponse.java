@@ -95,5 +95,15 @@ public class CheckResponse {
         this.transactionId = transactionId;
     }
 
+    public void copyFrom(CheckResponse response) {
+        amount = response.getAmount();
+        description = response.getDescription();
+        marketId = response.getMarketId();
+        name = response.getName();
+        operationId = response.getOperationId();
+        resultCode = response.getResultCode();
+        transactionId = response.getTransactionId();
+    }
+
 
 }

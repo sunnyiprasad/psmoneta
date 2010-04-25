@@ -148,17 +148,18 @@ public class MainPaymentHandler {
             if (order.getUser() == null) {
                 if (order.getAmount() > amount) {
                     checkResponse.setResultCode(ResultCode.AMOUNT_LESS_THAN_MUST_BE);
-                    return;
+                    return ;
                 }
                 if (order.getAmount() < amount) {
                     checkResponse.setResultCode(ResultCode.AMOUNT_MORE_THAN_MUST_BE);
-                    return;
+                    return ;
                 }
             }
             order.setStatus(PaymentOrderStatus.ORDER_STATUS_PAID_BUT_NOT_COMPLETED_AND_STILL_PROCESSING);
             new Dao(em).persist(order);
             OutputHandler outputHandler = new Config().buildOutputHandler(order.getMarket().getOutputHandlerType());
-            checkResponse = outputHandler.pay(order);
+            CheckResponse response = outputHandler.pay(order);
+            checkResponse.copyFrom(response);
             debug(" ResultCode = " + checkResponse.getResultCode());
             debug(" Description = " + checkResponse.getDescription());
             if (checkResponse != null) {
@@ -226,6 +227,7 @@ public class MainPaymentHandler {
             ex.printStackTrace();
             checkResponse.setResultCode(ResultCode.INTERNAL_ERROR);
         }
+        return ;
     }
 
     public void debug(String msg) {
