@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.List;
 import javax.persistence.EntityManager;
-import javax.persistence.FlushModeType;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -20,6 +20,7 @@ import javax.persistence.EntityManager;
 import org.w3c.dom.Document;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.commons.io.IOUtils;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
@@ -144,6 +145,31 @@ public class TaisOutputHandler implements OutputHandler {
             if (nodeList.getLength() > 0) {
                 response.setDescription(nodeList.item(0).getTextContent());
             }
+        }
+        nodeList = doc.getElementsByTagName("ATTRIBUTE");
+        try {
+            if (nodeList != null) {
+                for (int i = 0; i < nodeList.getLength(); i++) {
+                    Node node = nodeList.item(i);
+                    NodeList atribute = node.getChildNodes();
+                    int j = 0;
+                    Node key = atribute.item(0);
+                    j++;
+                    while (!"KEY".equals(key.getNodeName())) {
+                        key = atribute.item(j);
+                        j++;
+                    }
+                    Node value = atribute.item(j);
+                    j++;
+                    while (!"VALUE".equals(value.getNodeName())) {
+                        value = atribute.item(j);
+                        j++;
+                    }
+                    response.getAttributes().put(key.getTextContent(), value.getTextContent());
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         response.setResultCode(Utils.getIntValue("MNT_RESULT_CODE", doc));
         response.setAmount(Utils.getDoubleValue("MNT_AMOUNT", doc));

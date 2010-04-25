@@ -5,6 +5,8 @@
 
 package com.rsc.moneta.module;
 
+import java.util.Properties;
+
 /**
  *
  * @author sulic
@@ -19,6 +21,17 @@ public class CheckResponse {
     private String name;
     private String signature;
     private String description;
+    private Properties attributes = new Properties();
+
+    public Properties getAttributes() {
+        return attributes;
+    }
+
+    public void setAttributes(Properties attributes) {
+        this.attributes = attributes;
+    }
+
+    
 
     public String getDescription() {
         return description;
