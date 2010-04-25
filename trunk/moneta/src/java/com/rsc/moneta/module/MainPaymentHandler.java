@@ -7,8 +7,11 @@ package com.rsc.moneta.module;
 import com.rsc.moneta.Config;
 import com.rsc.moneta.bean.PaymentOrder;
 import com.rsc.moneta.bean.PaymentOrderStatus;
+import com.rsc.moneta.bean.PaymentParameter;
 import com.rsc.moneta.dao.Dao;
 import com.rsc.moneta.dao.PaymentOrderDao;
+import java.util.Enumeration;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
@@ -78,6 +81,18 @@ public class MainPaymentHandler {
             }
             OutputHandler outputHandler = new Config().buildOutputHandler(order.getMarket().getOutputHandlerType());
             CheckResponse response = outputHandler.check(order);
+            if (checkResponse.getAttributes() != null) {
+                Enumeration e = checkResponse.getAttributes().keys();
+                Dao dao = new Dao(em);
+                while (e.hasMoreElements()) {
+                    String key = (String) e.nextElement();
+                    PaymentParameter paymentParameter = new PaymentParameter();
+                    paymentParameter.setName(key);
+                    paymentParameter.setVal(checkResponse.getAttributes().getProperty(key));
+                    paymentParameter.setPaymentOrder(order);
+                    dao.persist(paymentParameter);
+                }
+            }
             if (response != null) {
                 if (response.getResultCode() == ResultCode.ORDER_NOT_ACTUAL
                         || response.getResultCode() == ResultCode.ORDER_NOT_FOUND_IN_EMARKETPLACE) {
@@ -148,11 +163,11 @@ public class MainPaymentHandler {
             if (order.getUser() == null) {
                 if (order.getAmount() > amount) {
                     checkResponse.setResultCode(ResultCode.AMOUNT_LESS_THAN_MUST_BE);
-                    return ;
+                    return;
                 }
                 if (order.getAmount() < amount) {
                     checkResponse.setResultCode(ResultCode.AMOUNT_MORE_THAN_MUST_BE);
-                    return ;
+                    return;
                 }
             }
             order.setStatus(PaymentOrderStatus.ORDER_STATUS_PAID_BUT_NOT_COMPLETED_AND_STILL_PROCESSING);
@@ -160,6 +175,18 @@ public class MainPaymentHandler {
             OutputHandler outputHandler = new Config().buildOutputHandler(order.getMarket().getOutputHandlerType());
             CheckResponse response = outputHandler.pay(order);
             checkResponse.copyFrom(response);
+            if (checkResponse.getAttributes() != null) {
+                Enumeration e = checkResponse.getAttributes().keys();
+                Dao dao = new Dao(em);
+                while (e.hasMoreElements()) {
+                    String key = (String) e.nextElement();
+                    PaymentParameter paymentParameter = new PaymentParameter();
+                    paymentParameter.setName(key);
+                    paymentParameter.setVal(checkResponse.getAttributes().getProperty(key));
+                    paymentParameter.setPaymentOrder(order);
+                    dao.persist(paymentParameter);
+                }
+            }
             debug(" ResultCode = " + checkResponse.getResultCode());
             debug(" Description = " + checkResponse.getDescription());
             if (checkResponse != null) {
@@ -227,7 +254,7 @@ public class MainPaymentHandler {
             ex.printStackTrace();
             checkResponse.setResultCode(ResultCode.INTERNAL_ERROR);
         }
-        return ;
+        return;
     }
 
     public void debug(String msg) {
