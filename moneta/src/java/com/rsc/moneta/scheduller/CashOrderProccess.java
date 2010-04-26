@@ -5,11 +5,9 @@
 package com.rsc.moneta.scheduller;
 
 import com.rsc.moneta.bean.Account;
-import com.rsc.moneta.bean.CashOrder;
 import com.rsc.moneta.dao.AccountDao;
 import com.rsc.moneta.dao.CashOrderDao;
 import com.rsc.moneta.dao.EMF;
-import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.quartz.Job;

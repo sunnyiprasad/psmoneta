@@ -3,7 +3,7 @@
 "http://struts.apache.org/dtds/struts-2.0.dtd">
 
 <!-- Author: sulic -->
- 
+
 <struts>
     <include file="admin.xml" />
     <include file="user.xml"/>
@@ -16,10 +16,16 @@
             <interceptor-stack name="main">
                 <interceptor-ref name="defaultStack"/>
                 <interceptor-ref name="initem"/>
-             </interceptor-stack>
+            </interceptor-stack>
         </interceptors>
         <default-interceptor-ref name="main" />
-        
+
+        <default-action-ref name="Login"></default-action-ref>
+
+        <action name="Login">
+            <result type="redirectAction">public/</result>
+        </action>
+
         <action name="Assistant" class="com.rsc.moneta.action.Assistant">
             <result name="error">/pages/error.jsp</result>
             <result name="success">/pages/requestEmail.jsp</result>

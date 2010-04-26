@@ -47,18 +47,19 @@ public class User implements Serializable {
     private int role = User.USER;
 
 
-    @OneToMany(mappedBy = "toUser")
-    private List<PaymentTransaction> paymentTransactionsTo;
+    
     @OneToMany(mappedBy = "user")
     private List<Account> accounts;
+
     @OneToMany(mappedBy = "user")
     private List<Market> markets;
-    @OneToMany(mappedBy = "fromUser")
-    private List<PaymentTransaction> paymentTransactionsFrom;
+
     @OneToMany(mappedBy = "user")
     private List<AbonentPayment> abonentPayments;
+
     @OneToMany(mappedBy = "user")
     private List<PaymentOrder> paymentOrders;
+
     @OneToMany(mappedBy = "user")
     private List<CashOrder> cashOrders;
 
@@ -132,22 +133,6 @@ public class User implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public List<PaymentTransaction> getPaymentTransactionsFrom() {
-        return paymentTransactionsFrom;
-    }
-
-    public void setPaymentTransactionsFrom(List<PaymentTransaction> paymentTransactionsFrom) {
-        this.paymentTransactionsFrom = paymentTransactionsFrom;
-    }
-
-    public List<PaymentTransaction> getPaymentTransactionsTo() {
-        return paymentTransactionsTo;
-    }
-
-    public void setPaymentTransactionsTo(List<PaymentTransaction> paymentTransactionsTo) {
-        this.paymentTransactionsTo = paymentTransactionsTo;
     }
 
     public String getPhone() {

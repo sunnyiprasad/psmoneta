@@ -2,17 +2,17 @@
 <web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
 
-    <!--<context-param>
+    <context-param>
         <param-name>config-file</param-name>
         <param-value>quartz.properties</param-value>
     </context-param>
     <context-param>
         <param-name>shutdown-on-unload</param-name>
-        <param-value>false</param-value>
+        <param-value>true</param-value>
     </context-param>
     <context-param>
         <param-name>start-scheduler-on-load</param-name>
-        <param-value>false</param-value>
+        <param-value>true</param-value>
     </context-param>
 
 
@@ -20,7 +20,7 @@
         <listener-class>
             org.quartz.ee.servlet.QuartzInitializerListener
         </listener-class>
-    </listener>-->
+    </listener>
     
 
     <listener>
@@ -110,6 +110,10 @@
             <description/>
             <url-pattern>/Platika.html</url-pattern>
         </web-resource-collection>
+        <auth-constraint>
+            <description/>
+            <role-name>platika</role-name>
+        </auth-constraint>
     </security-constraint>
     <login-config>
         <auth-method>BASIC</auth-method>

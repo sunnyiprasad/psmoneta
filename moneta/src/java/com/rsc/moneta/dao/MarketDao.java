@@ -7,6 +7,7 @@ package com.rsc.moneta.dao;
 
 import com.rsc.moneta.bean.Account;
 import com.rsc.moneta.bean.Market;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
@@ -41,6 +42,11 @@ public class MarketDao extends Dao{
             }
         }
         return false;
+    }
+
+    public List<Market> getAllMarketList() {
+        //TODO:
+        return null;
     }
 
 }
