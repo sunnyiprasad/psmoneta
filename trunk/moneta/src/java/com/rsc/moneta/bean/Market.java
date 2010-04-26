@@ -7,7 +7,6 @@ package com.rsc.moneta.bean;
 
 import java.io.Serializable;
 import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,7 +16,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
 
 /**
  *
@@ -31,6 +29,11 @@ public class Market implements Serializable {
     private long id;
     @Column(nullable=false)
     private String name;
+
+    // Емайл куда будет высылаться реестр платежей
+    @Column
+    private String paymentListSendEmail;
+
     // URL куда отправлять чек запрос
     @Column(nullable=false)
     private String checkUrl;
@@ -68,6 +71,24 @@ public class Market implements Serializable {
 
     @ManyToMany
     private List<Account> accounts;
+
+    public String getPaymentListSendEmail() {
+        return paymentListSendEmail;
+    }
+
+    public void setPaymentListSendEmail(String paymentListSendEmail) {
+        this.paymentListSendEmail = paymentListSendEmail;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
+
+
 
     public int getOutputHandlerType() {
         return outputHandlerType;
