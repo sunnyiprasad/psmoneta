@@ -43,6 +43,7 @@ public class OSMPInputHandler implements InputHandler {
     public final static int OSMP_RETURN_CODE_SUM_TOO_SMALL = 241; // Сумма слишком мала
     public final static int OSMP_RETURN_CODE_SUM_TOO_BIG = 242; // Сумма слишком велика
     public final static int OSMP_RETURN_CODE_OTHER_ERROR = 300; // Другая ошибка провайдера
+
     // Комментарии к кодам ответа ПС ОСМП
     public final static String STRING_COMMAND_PARAMETER_ERROR = "Отсутствует или неправильный параметр 'command'";
     public final static String STRING_TXN_ID_PARAMETER_ERROR = "Отсутствует или неправильный параметр 'txn_id'";
@@ -476,9 +477,11 @@ public class OSMPInputHandler implements InputHandler {
                                                                                                                 } else {
                                                                                                                     if (TLSMResultCode == ResultCode.AMOUNT_LESS_THAN_MUST_BE) {
                                                                                                                         result = OSMP_RETURN_CODE_SUM_TOO_SMALL;
+                                                                                                                        comment = STRING_FAILED_SUM_TOO_SMALL_AND_ORDER_OWNER_UNDEFINED;
                                                                                                                     } else {
                                                                                                                         if (TLSMResultCode == ResultCode.AMOUNT_MORE_THAN_MUST_BE) {
                                                                                                                             result = OSMP_RETURN_CODE_SUM_TOO_BIG;
+                                                                                                                            comment = STRING_FAILED_SUM_TOO_BIG_AND_ORDER_OWNER_UNDEFINED;
                                                                                                                         } else {
                                                                                                                             // TODO: Денис, с Суликом - что еще сделать в таком случае?
                                                                                                                             result = OSMP_RETURN_CODE_OTHER_ERROR;
