@@ -11,6 +11,9 @@ import java.security.NoSuchAlgorithmException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 
 /**
  *
@@ -149,6 +152,21 @@ public class Utils {
             return Long.parseLong(s);
         } catch (NumberFormatException e) {
             return -1;
+        }
+    }
+
+    /*
+     * Возвращает true если string соотвествует шаблону regex,
+     false - в прот. случ.
+     */
+    public static boolean regexMatch(String regex, String string) {
+        Pattern pattern = null;
+        pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(string);
+        if (matcher.matches()) {
+            return true;
+        } else {
+            return false;
         }
     }
 }

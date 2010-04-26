@@ -8,11 +8,10 @@ package com.rsc.moneta.module.inputhandler;
 import java.text.ParseException;
 import java.util.Map;
 import javax.persistence.EntityManager;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.Date;
 //import java.text.NumberFormat;
 //import java.util.Locale;
+import java.text.SimpleDateFormat;
 
 import com.rsc.moneta.dao.EMF;
 import com.rsc.moneta.bean.PaymentOrder;
@@ -24,7 +23,8 @@ import com.rsc.moneta.module.InputHandler;
 import com.rsc.moneta.module.MainPaymentHandler;
 import com.rsc.moneta.dao.Dao;
 import com.rsc.moneta.dao.OSMPPaymentDao;
-import java.text.SimpleDateFormat;
+import com.rsc.moneta.util.Utils;
+
 
 /**
  * Класс представляет собой класс - обработчик запросов, поступающих от терминала ОСМП
@@ -124,14 +124,14 @@ public class OSMPInputHandler implements InputHandler {
                     try {
                         txn_id = ((String[]) inputData.get("txn_id"))[0];
                         transactionId = Double.parseDouble(txn_id);
-                        if (!this.regexMatch("^[0-9]{1,20}$", txn_id)) {
+                        if (!Utils.regexMatch("^[0-9]{1,20}$", txn_id)) {
                             result = OSMP_RETURN_CODE_OTHER_ERROR;
                             comment = STRING_TXN_ID_PARAMETER_ERROR;
                         } else {
                             transactionId = Double.parseDouble(txn_id);
                             try {
                                 account = ((String[]) inputData.get("account"))[0];
-                                if (!this.regexMatch("^[0-9]{19}$", account)) {
+                                if (!Utils.regexMatch("^[0-9]{19}$", account)) {
                                     result = OSMP_RETURN_CODE_ACCOUNT_ILLEGAL_FORMAT;
                                     comment = STRING_ENTERED_NUMBER_DOES_NOT_CONFORM_TO_ORDER_FORMAT;
                                 } else {
@@ -139,8 +139,8 @@ public class OSMPInputHandler implements InputHandler {
                                         paymentOrderId = Long.parseLong(account);
                                         try {
                                             sum = Double.parseDouble(((String[]) inputData.get("sum"))[0]);
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
+                                        } catch (Exception ex) {
+                                            ex.printStackTrace();
                                         }
                                         try {
                                             EntityManager em = EMF.getEntityManager();
@@ -364,14 +364,14 @@ public class OSMPInputHandler implements InputHandler {
                 if (command.equals("pay")) {
                     try {
                         txn_id = ((String[]) inputData.get("txn_id"))[0];                        
-                        if (!this.regexMatch("^[0-9]{1,20}$", txn_id)) {
+                        if (!Utils.regexMatch("^[0-9]{1,20}$", txn_id)) {
                             result = OSMP_RETURN_CODE_OTHER_ERROR;
                             comment = STRING_TXN_ID_PARAMETER_ERROR;
                         } else {
                             try {
                                 transactionId = Double.parseDouble(txn_id);
                                 account = ((String[]) inputData.get("account"))[0];
-                                if (!this.regexMatch("^[0-9]{19}$", account)) {
+                                if (!Utils.regexMatch("^[0-9]{19}$", account)) {
                                     result = OSMP_RETURN_CODE_ACCOUNT_ILLEGAL_FORMAT;
                                     comment = STRING_ENTERED_NUMBER_DOES_NOT_CONFORM_TO_ORDER_FORMAT;
                                 } else {
@@ -563,17 +563,6 @@ public class OSMPInputHandler implements InputHandler {
     // На данный момент не реализуется
     public String cancel(Map inputData) {
         throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    private boolean regexMatch(String regex, String string) {
-        Pattern pattern = null;
-        pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(string);
-        if (matcher.matches()) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     private String makeUpResponse(String txn_id, long prv_txn, double amount, int result, String comment) {
