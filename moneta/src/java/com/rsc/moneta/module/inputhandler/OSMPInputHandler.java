@@ -65,8 +65,17 @@ public class OSMPInputHandler implements InputHandler {
     public final static String STRING_MARKET_ID_WAS_NOT_PROVIDED_BY_EMARKETPLACE = "Интернет-Магазин возвратил некорректный идентификатор Интернет-Магазина в ПС ТЛСМ";
     public final static String STRING_TRANSACTIONID_WAS_NOT_PROVIDED_BY_EMARKETPLACE = "Интернет-Магазин возвратил некорректный номер транзакции";
     public final static String STRING_SUM_TOO_SMALL = "Введённая сумма меньше чем сумма заказа, поэтому выполнено зачисление на счет абонента в ПС ТЛСМ вместо оплаты заказа";
+    public final static String STRING_FAILED_SUM_TOO_SMALL_AND_ORDER_OWNER_UNDEFINED = "Сумма меньше чем сумма заказа, для заказа не определен владелец";
+    public final static String STRING_FAILED_SUM_TOO_BIG_AND_ORDER_OWNER_UNDEFINED = "Сумма больше чем сумма заказа, для заказа не определен владелец";
+
+    // Введённая в терминальную ПС сумма меньше чем сумма заказа, при этом для
+    // заказа не определен пользователь, нет возможности разместить остаток
+    // суммы в ПС ТЛСМ, поэтому платеж не может быть принят
+    public static final int AMOUNT_LESS_THAN_MUST_BE = 18;
+
+
     private InputHandlerConfig config;
-//    public final static String STRING_SUM_TOO_BIG = "Сумма слишком велика";
+
     // Члены класса-эмуляторы различных свойтсв класса, применяемые для
     // тестирования
     private final static int EMULATOR_NOT_SET_INT = -1;
@@ -238,9 +247,11 @@ public class OSMPInputHandler implements InputHandler {
                                                                                                         } else {
                                                                                                             if (TLSMResultCode == ResultCode.AMOUNT_LESS_THAN_MUST_BE) {
                                                                                                                 result = OSMP_RETURN_CODE_SUM_TOO_SMALL;
+                                                                                                                comment = STRING_FAILED_SUM_TOO_SMALL_AND_ORDER_OWNER_UNDEFINED;
                                                                                                             } else {
                                                                                                                 if (TLSMResultCode == ResultCode.AMOUNT_MORE_THAN_MUST_BE) {
                                                                                                                     result = OSMP_RETURN_CODE_SUM_TOO_BIG;
+                                                                                                                    comment = STRING_FAILED_SUM_TOO_BIG_AND_ORDER_OWNER_UNDEFINED;
                                                                                                                 } else {
                                                                                                                     // TODO: Денис, с Суликом - что еще сделать в таком случае?
                                                                                                                     result = OSMP_RETURN_CODE_OTHER_ERROR;
