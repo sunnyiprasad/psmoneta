@@ -51,7 +51,8 @@ public class OSMPPayment implements Serializable {
     private double transactionId;
 
     @Column(nullable=false)
-    private int resultCode;   
+    private int resultCode;
+
     private String description;
 
     // Идентификатор терминальной ПС, работающей по протоколу ОСМП
@@ -104,8 +105,6 @@ public class OSMPPayment implements Serializable {
     public void setResultCode(int resultCode) {
         this.resultCode = resultCode;
     }
-
-
 
     public long getId() {
         return this.id;
