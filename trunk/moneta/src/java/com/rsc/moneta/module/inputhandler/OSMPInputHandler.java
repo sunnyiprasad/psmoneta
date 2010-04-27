@@ -12,7 +12,6 @@ import java.util.Date;
 //import java.text.NumberFormat;
 //import java.util.Locale;
 import java.text.SimpleDateFormat;
-
 import com.rsc.moneta.dao.EMF;
 import com.rsc.moneta.bean.PaymentOrder;
 import com.rsc.moneta.bean.OSMPPayment;
@@ -50,30 +49,6 @@ public class OSMPInputHandler implements InputHandler {
     public final static String STRING_ACCOUNT_PARAMETER_ERROR = "Отсутствует или неправильный параметр 'account'";
     public final static String STRING_SUM_PARAMETER_ERROR = "Отсутствует или неправильный параметр 'sum'";
     public final static String STRING_TXN_DATE_PARAMETER_ERROR = "Отсутствует или неправильный параметр 'txn_date'";
-    public final static String STRING_DB_ERROR = "Ошибка БД";
-    public final static String STRING_UNKNOWN_ERROR = "Неизвестная ошибка";
-    public final static String STRING_ENTERED_NUMBER_DOES_NOT_CONFORM_TO_ORDER_FORMAT = "Введенный номер не соответствует формату номера заказа";
-    public final static String STRING_ORDER_DOES_NOT_EXIST_ERROR = "Заказ с таким номером не существует";
-    public final static String STRING_ORDER_REJECTED_BY_EMARKETPLACE_BEFORE_TLSM_PAYMENT = "Интернет-Магазином заказ признан инвалидным и отменён до получения оплаты";
-    public final static String STRING_ORDER_REJECTED_BY_EMARKETPLACE_AFTER_TLSM_PAYMENT = "Интернет-Магазином заказ признан инвалидным и отменён после получения оплаты";
-    public final static String STRING_UNABLE_TO_REQUEST_EMARKETPLACE_FOR_ORDER_STATUS = "Нет возможности запросить статус заказа у Интернет-Магазина";
-    public final static String STRING_ORDER_IS_INVALID_FOR_EMARKETPLACE = "Заказ не валиден в информационной системе Интернет-Магазина (отменён и т.д.)";
-    public final static String STRING_ORDER_PAID_AND_COMPLETED = "Этот заказ уже обработан и оплачен";
-    public final static String STRING_ORDER_IS_PROCESSING_IN_EMARKETPLACE = "Заказ находится в стадии обработки";
-    public final static String STRING_EMARKETPLACE_UNABLE_TO_RESPOND = "Интернет-Магазин не в состоянии ответить на отправленный запрос в данный момент";
-    public final static String STRING_UNKNOWN_CODE_RETURNED_BY_EMARKEPLACE = "Интернет-Магазин возвратил неизвестный код результата";
-    public final static String STRING_INVALID_SIGN_RETURNED_BY_EMARKETPLACE = "Интернет-Магазин возвратил неправильную подпись";
-    public final static String STRING_MARKET_ID_WAS_NOT_PROVIDED_BY_EMARKETPLACE = "Интернет-Магазин возвратил некорректный идентификатор Интернет-Магазина в ПС ТЛСМ";
-    public final static String STRING_TRANSACTIONID_WAS_NOT_PROVIDED_BY_EMARKETPLACE = "Интернет-Магазин возвратил некорректный номер транзакции";
-    public final static String STRING_SUM_TOO_SMALL = "Введённая сумма меньше чем сумма заказа, поэтому выполнено зачисление на счет абонента в ПС ТЛСМ вместо оплаты заказа";
-    public final static String STRING_FAILED_SUM_TOO_SMALL_AND_ORDER_OWNER_UNDEFINED = "Сумма меньше чем сумма заказа, для заказа не определен владелец";
-    public final static String STRING_FAILED_SUM_TOO_BIG_AND_ORDER_OWNER_UNDEFINED = "Сумма больше чем сумма заказа, для заказа не определен владелец";
-
-    // Введённая в терминальную ПС сумма меньше чем сумма заказа, при этом для
-    // заказа не определен пользователь, нет возможности разместить остаток
-    // суммы в ПС ТЛСМ, поэтому платеж не может быть принят
-    public static final int AMOUNT_LESS_THAN_MUST_BE = 18;
-
 
     private InputHandlerConfig config;
 
@@ -133,7 +108,7 @@ public class OSMPInputHandler implements InputHandler {
                                 account = ((String[]) inputData.get("account"))[0];
                                 if (!Utils.regexMatch("^[0-9]{19}$", account)) {
                                     result = OSMP_RETURN_CODE_ACCOUNT_ILLEGAL_FORMAT;
-                                    comment = STRING_ENTERED_NUMBER_DOES_NOT_CONFORM_TO_ORDER_FORMAT;
+                                    comment = Const.STRING_ENTERED_NUMBER_DOES_NOT_CONFORM_TO_ORDER_FORMAT;
                                 } else {
                                     try {
                                         paymentOrderId = Long.parseLong(account);
@@ -151,7 +126,7 @@ public class OSMPInputHandler implements InputHandler {
                                             if (paymentOrder == null) {
                                                 // Заказ не найден. Введен несуществующий код заказа.
                                                 result = OSMP_RETURN_CODE_ACCOUNT_NOT_FOUND;
-                                                comment = STRING_ORDER_DOES_NOT_EXIST_ERROR;
+                                                comment = Const.STRING_ORDER_DOES_NOT_EXIST_ERROR;
                                             } else {
                                                 OSMPPayment payment = new OSMPPaymentDao(em).getPaymentByTransactionIdAndPaymentSystemId(transactionId, this.config.getId());
                                                 if (payment != null) {
@@ -180,7 +155,7 @@ public class OSMPInputHandler implements InputHandler {
                                                         }
                                                         if (TLSMResultCode == ResultCode.SUCCESS_WITH_AMOUNT) {
                                                             // TODO: Денис, с Суликом - тут должна быть проверка суммы заказа -
-                                                            // для каждого ИМ-а надо проверять на вхождение в рамки мин. и макс.
+                                                            // для каждого ИМ-на надо проверять на вхождение в рамки мин. и макс.
                                                             // суммы заказа
                                                             if (checkResponse != null) {
                                                                 amount = checkResponse.getAmount();
@@ -203,60 +178,60 @@ public class OSMPInputHandler implements InputHandler {
                                                                 if (TLSMResultCode == ResultCode.ORDER_ALREADY_PAID) {
                                                                     prv_txn = paymentOrder.getId();
                                                                     result = OSMP_RETURN_CODE_OK;
-                                                                    comment = STRING_ORDER_PAID_AND_COMPLETED;
+                                                                    comment = Const.STRING_ORDER_PAID_AND_COMPLETED;
                                                                 } else {
                                                                     if (TLSMResultCode == ResultCode.ORDER_VALID_AND_PROCESSING) {
                                                                         result = OSMP_RETURN_CODE_TEMPORARY_ERROR;
-                                                                        comment = STRING_ORDER_IS_PROCESSING_IN_EMARKETPLACE;
+                                                                        comment = Const.STRING_ORDER_IS_PROCESSING_IN_EMARKETPLACE;
                                                                     } else {
                                                                         if (TLSMResultCode == ResultCode.ORDER_NOT_ACTUAL) {
                                                                             result = OSMP_RETURN_CODE_ACCOUNT_DISABLED;
-                                                                            comment = STRING_ORDER_IS_INVALID_FOR_EMARKETPLACE;
+                                                                            comment = Const.STRING_ORDER_IS_INVALID_FOR_EMARKETPLACE;
                                                                         } else {
                                                                             if (TLSMResultCode == ResultCode.ERROR_TRY_AGAIN) {
                                                                                 result = OSMP_RETURN_CODE_TEMPORARY_ERROR;
-                                                                                comment = STRING_EMARKETPLACE_UNABLE_TO_RESPOND;
+                                                                                comment = Const.STRING_EMARKETPLACE_UNABLE_TO_RESPOND;
                                                                             } else {
                                                                                 if (TLSMResultCode == ResultCode.INTERNAL_ERROR) {
                                                                                     result = OSMP_RETURN_CODE_OTHER_ERROR;
-                                                                                    comment = STRING_UNKNOWN_ERROR;
+                                                                                    comment = Const.STRING_UNKNOWN_ERROR;
                                                                                 } else {
                                                                                     if (TLSMResultCode == ResultCode.UNKNOWN_CODE_RETURNED_BY_EMARKEPLACE) {
                                                                                         result = OSMP_RETURN_CODE_OTHER_ERROR;
-                                                                                        comment = STRING_UNKNOWN_CODE_RETURNED_BY_EMARKEPLACE;
+                                                                                        comment = Const.STRING_UNKNOWN_CODE_RETURNED_BY_EMARKEPLACE;
                                                                                     } else {
                                                                                         if (TLSMResultCode == ResultCode.ORDER_NOT_FOUND_IN_EMARKETPLACE) {
                                                                                             // TODO: Денис, с Суликом - правильный ли код я возвращаю ОСМП в этом случае?
                                                                                             result = OSMP_RETURN_CODE_ACCOUNT_NOT_FOUND;
-                                                                                            comment = STRING_ORDER_DOES_NOT_EXIST_ERROR;
+                                                                                            comment = Const.STRING_ORDER_DOES_NOT_EXIST_ERROR;
                                                                                         } else {
                                                                                             if (TLSMResultCode == ResultCode.INVALID_SIGN_RETURNED_BY_EMARKETPLACE) {
                                                                                                 result = OSMP_RETURN_CODE_PAY_SUPPRESS_ON_TECHNICAL_REASONS;
-                                                                                                comment = STRING_INVALID_SIGN_RETURNED_BY_EMARKETPLACE;
+                                                                                                comment = Const.STRING_INVALID_SIGN_RETURNED_BY_EMARKETPLACE;
                                                                                             } else {
                                                                                                 if (TLSMResultCode == ResultCode.MARKET_ID_WAS_NOT_PROVIDED_BY_EMARKETPLACE) {
                                                                                                     result = OSMP_RETURN_CODE_PAY_SUPPRESS_ON_TECHNICAL_REASONS;
-                                                                                                    comment = STRING_MARKET_ID_WAS_NOT_PROVIDED_BY_EMARKETPLACE;
+                                                                                                    comment = Const.STRING_MARKET_ID_WAS_NOT_PROVIDED_BY_EMARKETPLACE;
                                                                                                 } else {
                                                                                                     if (TLSMResultCode == ResultCode.TRANSACTIONID_WAS_NOT_PROVIDED_BY_EMARKETPLACE) {
                                                                                                         result = OSMP_RETURN_CODE_PAY_SUPPRESS_ON_TECHNICAL_REASONS;
-                                                                                                        comment = STRING_TRANSACTIONID_WAS_NOT_PROVIDED_BY_EMARKETPLACE;
+                                                                                                        comment = Const.STRING_TRANSACTIONID_WAS_NOT_PROVIDED_BY_EMARKETPLACE;
                                                                                                     } else {
                                                                                                         if (TLSMResultCode == ResultCode.SUCCESS_BUT_AMOUNT_LESS_THAN_MUST_BE) {
                                                                                                             result = OSMP_RETURN_CODE_OK;
-                                                                                                            comment = STRING_SUM_TOO_SMALL;
+                                                                                                            comment = Const.STRING_SUM_TOO_SMALL;
                                                                                                         } else {
                                                                                                             if (TLSMResultCode == ResultCode.AMOUNT_LESS_THAN_MUST_BE) {
                                                                                                                 result = OSMP_RETURN_CODE_SUM_TOO_SMALL;
-                                                                                                                comment = STRING_FAILED_SUM_TOO_SMALL_AND_ORDER_OWNER_UNDEFINED;
+                                                                                                                comment = Const.STRING_FAILED_SUM_TOO_SMALL_AND_ORDER_OWNER_UNDEFINED;
                                                                                                             } else {
                                                                                                                 if (TLSMResultCode == ResultCode.AMOUNT_MORE_THAN_MUST_BE) {
                                                                                                                     result = OSMP_RETURN_CODE_SUM_TOO_BIG;
-                                                                                                                    comment = STRING_FAILED_SUM_TOO_BIG_AND_ORDER_OWNER_UNDEFINED;
+                                                                                                                    comment = Const.STRING_FAILED_SUM_TOO_BIG_AND_ORDER_OWNER_UNDEFINED;
                                                                                                                 } else {
                                                                                                                     // TODO: Денис, с Суликом - что еще сделать в таком случае?
                                                                                                                     result = OSMP_RETURN_CODE_OTHER_ERROR;
-                                                                                                                    comment = STRING_UNKNOWN_ERROR;
+                                                                                                                    comment = Const.STRING_UNKNOWN_ERROR;
                                                                                                                 }
                                                                                                             }
                                                                                                         }
@@ -275,18 +250,18 @@ public class OSMPInputHandler implements InputHandler {
                                                     } else {
                                                         // Не удалось получить ответ от ИМ на запрос
                                                         result = OSMP_RETURN_CODE_TEMPORARY_ERROR;
-                                                        comment = STRING_UNABLE_TO_REQUEST_EMARKETPLACE_FOR_ORDER_STATUS;
+                                                        comment = Const.STRING_UNABLE_TO_REQUEST_EMARKETPLACE_FOR_ORDER_STATUS;
                                                     }
                                                 }
                                             }
                                         } catch (Exception ex) {
                                             ex.printStackTrace();
                                             result = OSMP_RETURN_CODE_OTHER_ERROR;
-                                            comment = STRING_DB_ERROR;
+                                            comment = Const.STRING_DB_ERROR;
                                         }
                                     } catch (Exception ex) {
                                         result = OSMP_RETURN_CODE_ACCOUNT_ILLEGAL_FORMAT;
-                                        comment = STRING_ENTERED_NUMBER_DOES_NOT_CONFORM_TO_ORDER_FORMAT;
+                                        comment = Const.STRING_ENTERED_NUMBER_DOES_NOT_CONFORM_TO_ORDER_FORMAT;
                                     }
                                 }
                             } catch (Exception ex) {
@@ -304,7 +279,7 @@ public class OSMPInputHandler implements InputHandler {
                 }
             } catch (Exception ex) {
                 result = OSMP_RETURN_CODE_OTHER_ERROR;
-                comment = STRING_UNKNOWN_ERROR;
+                comment = Const.STRING_UNKNOWN_ERROR;
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -373,7 +348,7 @@ public class OSMPInputHandler implements InputHandler {
                                 account = ((String[]) inputData.get("account"))[0];
                                 if (!Utils.regexMatch("^[0-9]{19}$", account)) {
                                     result = OSMP_RETURN_CODE_ACCOUNT_ILLEGAL_FORMAT;
-                                    comment = STRING_ENTERED_NUMBER_DOES_NOT_CONFORM_TO_ORDER_FORMAT;
+                                    comment = Const.STRING_ENTERED_NUMBER_DOES_NOT_CONFORM_TO_ORDER_FORMAT;
                                 } else {
                                     try {
                                         paymentOrderId = Long.parseLong(account);
@@ -394,7 +369,7 @@ public class OSMPInputHandler implements InputHandler {
                                                     if (paymentOrder == null) {
                                                         // Заказ не найден. Введен несуществующий код заказа.
                                                         result = OSMP_RETURN_CODE_ACCOUNT_NOT_FOUND;
-                                                        comment = STRING_ORDER_DOES_NOT_EXIST_ERROR;
+                                                        comment = Const.STRING_ORDER_DOES_NOT_EXIST_ERROR;
                                                     } else {
                                                         // Заказ в ПС ТЛСМ найден.
                                                         OSMPPayment payment = new OSMPPaymentDao(em).getPaymentByTransactionIdAndPaymentSystemId(transactionId, this.config.getId());
@@ -432,60 +407,60 @@ public class OSMPInputHandler implements InputHandler {
                                                                         if (TLSMResultCode == ResultCode.ORDER_ALREADY_PAID) {
                                                                             prv_txn = paymentOrder.getId();
                                                                             result = OSMP_RETURN_CODE_OK;
-                                                                            comment = STRING_ORDER_PAID_AND_COMPLETED;
+                                                                            comment = Const.STRING_ORDER_PAID_AND_COMPLETED;
                                                                         } else {
                                                                             if (TLSMResultCode == ResultCode.ORDER_VALID_AND_PROCESSING) {
                                                                                 result = OSMP_RETURN_CODE_TEMPORARY_ERROR;
-                                                                                comment = STRING_ORDER_IS_PROCESSING_IN_EMARKETPLACE;
+                                                                                comment = Const.STRING_ORDER_IS_PROCESSING_IN_EMARKETPLACE;
                                                                             } else {
                                                                                 if (TLSMResultCode == ResultCode.ORDER_NOT_ACTUAL) {
                                                                                     result = OSMP_RETURN_CODE_ACCOUNT_DISABLED;
-                                                                                    comment = STRING_ORDER_IS_INVALID_FOR_EMARKETPLACE;
+                                                                                    comment = Const.STRING_ORDER_IS_INVALID_FOR_EMARKETPLACE;
                                                                                 } else {
                                                                                     if (TLSMResultCode == ResultCode.ERROR_TRY_AGAIN) {
                                                                                         result = OSMP_RETURN_CODE_TEMPORARY_ERROR;
-                                                                                        comment = STRING_EMARKETPLACE_UNABLE_TO_RESPOND;
+                                                                                        comment = Const.STRING_EMARKETPLACE_UNABLE_TO_RESPOND;
                                                                                     } else {
                                                                                         if (TLSMResultCode == ResultCode.INTERNAL_ERROR) {
                                                                                             result = OSMP_RETURN_CODE_OTHER_ERROR;
-                                                                                            comment = STRING_UNKNOWN_ERROR;
+                                                                                            comment = Const.STRING_UNKNOWN_ERROR;
                                                                                         } else {
                                                                                             if (TLSMResultCode == ResultCode.UNKNOWN_CODE_RETURNED_BY_EMARKEPLACE) {
                                                                                                 result = OSMP_RETURN_CODE_OTHER_ERROR;
-                                                                                                comment = STRING_UNKNOWN_CODE_RETURNED_BY_EMARKEPLACE;
+                                                                                                comment = Const.STRING_UNKNOWN_CODE_RETURNED_BY_EMARKEPLACE;
                                                                                             } else {
                                                                                                 if (TLSMResultCode == ResultCode.ORDER_NOT_FOUND_IN_EMARKETPLACE) {
                                                                                                     // TODO: Денис, с Суликом - правильный ли код я возвращаю ОСМП в этом случае?
                                                                                                     result = OSMP_RETURN_CODE_ACCOUNT_NOT_FOUND;
-                                                                                                    comment = STRING_ORDER_DOES_NOT_EXIST_ERROR;
+                                                                                                    comment = Const.STRING_ORDER_DOES_NOT_EXIST_ERROR;
                                                                                                 } else {
                                                                                                     if (TLSMResultCode == ResultCode.INVALID_SIGN_RETURNED_BY_EMARKETPLACE) {
                                                                                                         result = OSMP_RETURN_CODE_PAY_SUPPRESS_ON_TECHNICAL_REASONS;
-                                                                                                        comment = STRING_INVALID_SIGN_RETURNED_BY_EMARKETPLACE;
+                                                                                                        comment = Const.STRING_INVALID_SIGN_RETURNED_BY_EMARKETPLACE;
                                                                                                     } else {
                                                                                                         if (TLSMResultCode == ResultCode.MARKET_ID_WAS_NOT_PROVIDED_BY_EMARKETPLACE) {
                                                                                                             result = OSMP_RETURN_CODE_PAY_SUPPRESS_ON_TECHNICAL_REASONS;
-                                                                                                            comment = STRING_MARKET_ID_WAS_NOT_PROVIDED_BY_EMARKETPLACE;
+                                                                                                            comment = Const.STRING_MARKET_ID_WAS_NOT_PROVIDED_BY_EMARKETPLACE;
                                                                                                         } else {
                                                                                                             if (TLSMResultCode == ResultCode.TRANSACTIONID_WAS_NOT_PROVIDED_BY_EMARKETPLACE) {
                                                                                                                 result = OSMP_RETURN_CODE_PAY_SUPPRESS_ON_TECHNICAL_REASONS;
-                                                                                                                comment = STRING_TRANSACTIONID_WAS_NOT_PROVIDED_BY_EMARKETPLACE;
+                                                                                                                comment = Const.STRING_TRANSACTIONID_WAS_NOT_PROVIDED_BY_EMARKETPLACE;
                                                                                                             } else {
                                                                                                                 if (TLSMResultCode == ResultCode.SUCCESS_BUT_AMOUNT_LESS_THAN_MUST_BE) {
                                                                                                                     result = OSMP_RETURN_CODE_OK;
-                                                                                                                    comment = STRING_SUM_TOO_SMALL;
+                                                                                                                    comment = Const.STRING_SUM_TOO_SMALL;
                                                                                                                 } else {
                                                                                                                     if (TLSMResultCode == ResultCode.AMOUNT_LESS_THAN_MUST_BE) {
                                                                                                                         result = OSMP_RETURN_CODE_SUM_TOO_SMALL;
-                                                                                                                        comment = STRING_FAILED_SUM_TOO_SMALL_AND_ORDER_OWNER_UNDEFINED;
+                                                                                                                        comment = Const.STRING_FAILED_SUM_TOO_SMALL_AND_ORDER_OWNER_UNDEFINED;
                                                                                                                     } else {
                                                                                                                         if (TLSMResultCode == ResultCode.AMOUNT_MORE_THAN_MUST_BE) {
                                                                                                                             result = OSMP_RETURN_CODE_SUM_TOO_BIG;
-                                                                                                                            comment = STRING_FAILED_SUM_TOO_BIG_AND_ORDER_OWNER_UNDEFINED;
+                                                                                                                            comment = Const.STRING_FAILED_SUM_TOO_BIG_AND_ORDER_OWNER_UNDEFINED;
                                                                                                                         } else {
                                                                                                                             // TODO: Денис, с Суликом - что еще сделать в таком случае?
                                                                                                                             result = OSMP_RETURN_CODE_OTHER_ERROR;
-                                                                                                                            comment = STRING_UNKNOWN_ERROR;
+                                                                                                                            comment = Const.STRING_UNKNOWN_ERROR;
                                                                                                                         }
                                                                                                                     }
                                                                                                                 }
@@ -504,13 +479,13 @@ public class OSMPInputHandler implements InputHandler {
                                                             } else {
                                                                 // Не удалось получить ответ от ИМ на запрос
                                                                 result = OSMP_RETURN_CODE_TEMPORARY_ERROR;
-                                                                comment = STRING_UNABLE_TO_REQUEST_EMARKETPLACE_FOR_ORDER_STATUS;
+                                                                comment = Const.STRING_UNABLE_TO_REQUEST_EMARKETPLACE_FOR_ORDER_STATUS;
                                                             }
                                                         }
                                                     }
                                                 } catch (Exception ex) {
                                                     result = OSMP_RETURN_CODE_OTHER_ERROR;
-                                                    comment = STRING_DB_ERROR + ex.toString();
+                                                    comment = Const.STRING_DB_ERROR + ex.toString();
                                                     ex.printStackTrace();
                                                 }
                                             } catch (Exception ex) {
@@ -523,7 +498,7 @@ public class OSMPInputHandler implements InputHandler {
                                         }
                                     } catch (Exception ex) {
                                         result = OSMP_RETURN_CODE_ACCOUNT_ILLEGAL_FORMAT;
-                                        comment = STRING_ENTERED_NUMBER_DOES_NOT_CONFORM_TO_ORDER_FORMAT;
+                                        comment = Const.STRING_ENTERED_NUMBER_DOES_NOT_CONFORM_TO_ORDER_FORMAT;
                                     }
                                 }
                             } catch (Exception ex) {
@@ -541,7 +516,7 @@ public class OSMPInputHandler implements InputHandler {
                 }
             } catch (Exception ex) {
                 result = OSMP_RETURN_CODE_OTHER_ERROR;
-                comment = STRING_UNKNOWN_ERROR;
+                comment = Const.STRING_UNKNOWN_ERROR;
             }
         } catch (Exception ex) {
             result = OSMP_RETURN_CODE_OTHER_ERROR;
