@@ -9,6 +9,7 @@ import com.rsc.moneta.action.admin.SumAndCount;
 import com.rsc.moneta.bean.Account;
 import com.rsc.moneta.bean.PaymentOrder;
 import com.rsc.moneta.bean.PaymentOrderStatus;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -259,6 +260,16 @@ public class PaymentOrderDao extends Dao {
         } catch (NoResultException exception) {
             exception.printStackTrace();
             return new Vector<PaymentOrder>();
+        }
+    }
+
+    public List<PaymentOrder> getAllPaymentOrderWhereUserIsNull() {
+        Query q = em.createQuery("select c from PaymentOrder c where c.userId is null");
+        try {
+            return (List<PaymentOrder>) q.getResultList();
+        } catch (NoResultException exception) {
+            exception.printStackTrace();
+            return new ArrayList<PaymentOrder>();
         }
     }
 }

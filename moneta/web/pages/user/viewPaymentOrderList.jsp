@@ -51,10 +51,20 @@
             <td><s:property value="test" /></td>
             <td><s:property value="status" /></td>
             <td><s:property value="description" /></td>
-
+            <s:if test="%{status==1}">
+                <td>
+                    <s:a action="PaymentOrderCheck">
+                        <s:text name="pay" />
+                        <s:param name="paymentOrderId" value="id" />
+                    </s:a>
+                </td>
+            </s:if>
         </tr>
     </s:iterator>
 </table>
+
+
+
 
 <s:if test="%{showNavigation}">
     <div id="pageNum">
@@ -73,18 +83,18 @@
             </span>
         </s:if>
         <s:iterator id="_page" value="%{pages}">
-            <s:if test="#_page.isSelect"><span class="ono"><s:property value="%{_page.value}" /></span></s:if>
+            <s:if test="#_page.isSelect"><span class="ono"><s:property value="#_page.value" /></span></s:if>
             <s:elseif test="!#_page.isDisable">
                 <span>
                     <s:a action="ViewPaymentOrderList">
-                        <s:param name="page" value="%{_page.page}" />
+                        <s:param name="page" value="#_page.page" />
                         <s:param name="day_begin" value="%{day_begin}" />
                         <s:param name="month_begin" value="%{month_begin}" />
                         <s:param name="year_begin" value="%{year_begin}" />
                         <s:param name="day_end" value="%{day_end}" />
                         <s:param name="month_end" value="%{month_end}" />
                         <s:param name="year_end" value="%{year_end}" />
-                        <s:property value="%{_page.value}" />
+                        <s:property value="#_page.value" />
                     </s:a>
                 </span>
             </s:elseif>

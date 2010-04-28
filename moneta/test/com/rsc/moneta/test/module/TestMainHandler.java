@@ -137,8 +137,9 @@ public class TestMainHandler {
             Assert.assertEquals(ResultCode.SUCCESS_WITH_AMOUNT, checkResponse.getResultCode());
             Assert.assertEquals(val + order.getAmount(), order.getAccount().getBalance(), 0);
         }
-
     }
+
+    
 
     public void test4() throws MalformedURLException, IOException {
         TestConf.initConfig();
@@ -222,8 +223,8 @@ public class TestMainHandler {
             if (val2 + 10 < order.getAmount()) {
                 Assert.assertEquals(val, order.getAccount().getBalance(), 0);
                 Assert.assertEquals(val2 + order.getAmount() - 10, order.getUser().getAccount(order.getCurrency()).getBalance(), 0);
-            }else{
-                Assert.assertEquals(val+order.getAmount(), order.getAccount().getBalance(), 0);
+            } else {
+                Assert.assertEquals(val + order.getAmount(), order.getAccount().getBalance(), 0);
                 Assert.assertEquals(val2 - 10, order.getUser().getAccount(order.getCurrency()).getBalance(), 0);
             }
         }

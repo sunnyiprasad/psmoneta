@@ -5,8 +5,12 @@
 package com.rsc.moneta.test.module;
 
 import com.rsc.moneta.bean.Market;
+import com.rsc.moneta.bean.PaymentOrder;
+import com.rsc.moneta.bean.User;
 import com.rsc.moneta.dao.EMF;
 import com.rsc.moneta.dao.MarketDao;
+import com.rsc.moneta.dao.PaymentOrderDao;
+import com.rsc.moneta.dao.UserDao;
 import com.rsc.moneta.test.bean.Order;
 import com.rsc.moneta.test.bean.TESTEMF;
 import com.rsc.moneta.test.bean.TestDao;
@@ -78,6 +82,18 @@ public class AddOrderToTlsm {
             while(in.available()>0){
                 System.out.print((char)in.read());
             }
+        }
+    }
+
+    @Test
+    public void test(){
+        EntityManager em = EMF.getEntityManager();
+        UserDao userDao = new UserDao(em);
+        User user = userDao.getUserByEmail("test1@test.com");
+        List<PaymentOrder> paymentOrders = new PaymentOrderDao(em).getAllPaymentOrderWhereUserIsNull();
+        for (PaymentOrder paymentOrder : paymentOrders) {
+            paymentOrder.setUser(user);
+            userDao.persist(paymentOrder);
         }
     }
 }
