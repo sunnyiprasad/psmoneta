@@ -10,7 +10,6 @@ import com.rsc.moneta.module.OutputHandler;
 import com.rsc.moneta.module.cyberplat.Provider;
 import java.util.Collection;
 import java.util.Hashtable;
-import java.util.List;
 import javax.persistence.EntityManager;
 
 /**
