@@ -26,7 +26,9 @@
         </action>
 
         <action name="Logout" class="com.rsc.moneta.action.site.Logout">            
-            <result>public/</result>
+            <result type="redirectAction">
+                <param name="actionName">Login</param>
+            </result>
         </action>       
     </package>
 </struts>
