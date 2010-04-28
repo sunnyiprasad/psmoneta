@@ -8,7 +8,10 @@ package com.rsc.moneta.module.inputhandler;
 import java.util.Map;
 import java.util.Date;
 import javax.persistence.EntityManager;
-
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
 
 import com.rsc.moneta.util.Utils;
 import com.rsc.moneta.module.InputHandler;
@@ -24,7 +27,7 @@ import com.rsc.moneta.module.ResultCode;
  * @author Солодовников Д.А.
  */
 
-public class EPORTInputHandler implements InputHandler{
+public class EPortInputHandler implements InputHandler{
 
     private final static String EPORT_RETURN_CODE_E1 = "E1"; // E1 - запрос не распознан
     private final static String EPORT_RETURN_CODE_E2 = "E2"; // E2 - технические трудности обработки запроса
@@ -121,6 +124,7 @@ public class EPORTInputHandler implements InputHandler{
                             try {
                                 timestamp = ((String[]) inputData.get("timestamp"))[0];
                                 // TODO: Денис - дату проверить на валидность
+                                // dtTimestamp = this.getDateTime(context.Server.UrlDecode(context.Request.Params["timestamp"]));
                                 try {
                                     EntityManager em = EMF.getEntityManager();
                                     PaymentOrder paymentOrder = em.find(PaymentOrder.class, paymentOrderId);
@@ -240,23 +244,18 @@ public class EPORTInputHandler implements InputHandler{
             reason = STRING_UNDEFINED_REQUEST;
         } finally {
             try {
-                // TODO
-                return null;
-//                return this.makeUpResponse(txn_id, prv_txn, amount, result, comment);
-//
-//                response = this.makeUpResponse(context.Server,
-//                        type,
-//                        result,
-//                        reason,
-//                        account,
-//                        sum,
-//                        dtTimestamp,
-//                        dtAccepted,
-//                        id,
-//                        dtPay_time,
-//                        dtRevoked,
-//                        comment,
-//                        debugLogFileStreamWriter);
+                return this.makeUpResponse(
+                        type,
+                        result,
+                        reason,
+                        account,
+                        sum,
+                        dtTimestamp,
+                        null,
+                        -1,
+                        null,
+                        null,
+                        "");
 
             } catch (Exception ex) {
                 return null;
@@ -280,5 +279,121 @@ public class EPORTInputHandler implements InputHandler{
     public void setConfig(InputHandlerConfig config) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
+    private String makeUpResponse(
+        String type,
+        String result,
+        String reason,
+        String account,
+        double sum,
+        Date dtTimestamp,
+        Date dtAccepted,
+        int id,
+        Date dtPay_time,
+        Date dtRevoked,
+        String comment) {
+        // TODO
+        String response = "";
+
+//        // accepted
+//        if (dtAccepted.Year != 1) {
+//            response += "accepted=" + httpServerUtility.UrlEncode(this.getDateTimeString(dtAccepted));
+//        }
+//
+//        // account
+//        if (anAccount != "") {
+//            if (response.Length > 0) {
+//                response += "&";
+//            }
+//            response += "account=" + anAccount;
+//        }
+//
+//        // comment
+//        if (aComment != "") {
+//            if (response.Length > 0) {
+//                response += "&";
+//            }
+//            response += "comment=" + httpServerUtility.UrlEncode(aComment);
+//        }
+//
+//        // id
+//        if (anId != -1) {
+//            if (response.Length > 0) {
+//                response += "&";
+//            }
+//            response += "id=" + anId.ToString();
+//        }
+//
+//        // pay_time
+//        if (dtPay_time.Year != 1) {
+//            if (response.Length > 0) {
+//                response += "&";
+//            }
+//            response += "pay_time=" + httpServerUtility.UrlEncode(this.getDateTimeString(dtPay_time));
+//        }
+//
+//        // reason
+//        if (aReason != "") {
+//            if (response.Length > 0) {
+//                response += "&";
+//            }
+//            response += "reason=" + httpServerUtility.UrlEncode(aReason);
+//        }
+//
+//        // result
+//        if (aResult != "") {
+//            if (response.Length > 0) {
+//                response += "&";
+//            }
+//            response += "result=" + aResult;
+//        }
+//
+//        // revoked
+//        if (dtRevoked.Year != 1) {
+//            if (response.Length > 0) {
+//                response += "&";
+//            }
+//            response += "revoked=" + httpServerUtility.UrlEncode(this.getDateTimeString(dtRevoked));
+//        }
+//
+//        // sum
+//        if (aSum != 0) {
+//            if (response.Length > 0) {
+//                response += "&";
+//            }
+//            response += "sum=" + aSum.ToString("f2", new System.Globalization.CultureInfo("en-US", false).NumberFormat);
+//        }
+//
+//        // timestamp
+//        if (dtTimestamp.Year != 1) {
+//            if (response.Length > 0) {
+//                response += "&";
+//            }
+//            response += "timestamp=" + httpServerUtility.UrlEncode(this.getDateTimeString(dtTimestamp));
+//        }
+//
+//        // type
+//        if (response.Length > 0) {
+//            response += "&";
+//        }
+//        response += "type=" + aType;
+//
+//        // sign
+//        if (response.Length > 0) {
+//            string responseSign = httpServerUtility.UrlEncode(this.getSignature(response, aDebugLogFileStreamWriter));
+//            response += "&";
+//            response += "sign=" + responseSign;
+//        }
+//        // response += "sign=576c20e01a5e7225dc7a70e353b4f30673db5c1f073d294b2b14c1e2ad944112cdc36d44b1aa22d674cbc12ed7ddc2d79e51bf4046e20db8e9674682462ba6d635eb71d993ce011ac39a4cce16280b01a7e96b1ab61d05ebd356b69a3bd5cc14b717b69f4c5eba8c4a14d5381f2d5b11a7a692711f32de39c951fd9bb8b7cf4a";
+
+        return response;
+    }
+
+    public Date convertEPortDateTimeToDateTime(String EPortDateTime) throws ParseException {
+        // timestamp, pay_time, accepted, revoked - дата/время в формате ISO с точностью до секунд, YYYY-MM-DDTHH:MM:SS±hh
+        SimpleDateFormat EPortDateFormat = new SimpleDateFormat("YYYY-MM-DDTHH:MM:SS±hh");
+        return EPortDateFormat.parse(EPortDateTime);
+    }
+
 
 }
