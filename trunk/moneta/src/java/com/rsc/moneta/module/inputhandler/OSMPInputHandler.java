@@ -4,19 +4,16 @@
  */
 package com.rsc.moneta.module.inputhandler;
 
-//import com.opensymphony.xwork2.Result;
 import java.text.ParseException;
 import java.util.Map;
 import javax.persistence.EntityManager;
 import java.util.Date;
-//import java.text.NumberFormat;
-//import java.util.Locale;
 import java.text.SimpleDateFormat;
+
 import com.rsc.moneta.dao.EMF;
 import com.rsc.moneta.bean.PaymentOrder;
 import com.rsc.moneta.bean.OSMPPayment;
 import com.rsc.moneta.module.ResultCode;
-//import com.rsc.moneta.Currency;
 import com.rsc.moneta.module.CheckResponse;
 import com.rsc.moneta.module.InputHandler;
 import com.rsc.moneta.module.MainPaymentHandler;
@@ -359,7 +356,7 @@ public class OSMPInputHandler implements InputHandler {
                                             amount = Double.parseDouble(sum);
                                             try {
                                                 txn_date = ((String[]) inputData.get("txn_date"))[0];
-                                                payDate = this.getDateFromOSMPTransactionDate(txn_date);
+                                                payDate = this.convertOSMPDateTimeToDateTime(txn_date);
                                                 try {
                                                     EntityManager em = EMF.getEntityManager();
 
@@ -587,9 +584,9 @@ public class OSMPInputHandler implements InputHandler {
         em.close();
     }
 
-    public Date getDateFromOSMPTransactionDate(String OSMPTransactionDate) throws ParseException {
+    private Date convertOSMPDateTimeToDateTime(String OSMPDateTime) throws ParseException {
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
-        return df.parse(OSMPTransactionDate);
+        return df.parse(OSMPDateTime);
         /*return new GregorianCalendar(
         Integer.parseInt(OSMPTransactionDate.substring(0, 4)),
         Integer.parseInt(OSMPTransactionDate.substring(4, 2)),
