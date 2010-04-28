@@ -40,6 +40,29 @@
             <result>/pages/user/viewIMPaymentOrderList.jsp</result>
         </action>
 
-       
+       <!-- <action name="SelectAccountForPayOrder" class="com.rsc.moneta.action.user.SelectAccountForPayOrder">
+            <result name="success">/pages/user/selectAccountForPayOrder.jsp</result>
+            <result name="error">/pages/error.jsp</result>
+            <result name="next" type="redirectAction">
+                <param name="actionName">PaymentOrderCheck</param>
+                <param name="paymentOrderId">${paymentOrderId}</param>
+                <param name="accountId">${accountId}</param>
+            </result>
+        </action>-->
+
+        <action name="PaymentOrderCheck" class="com.rsc.moneta.action.user.PaymentOrderCheck">
+            <result name="success">/pages/user/confirmPayment.jsp</result>
+            <result name="error">/pages/user/error.jsp</result>
+        </action>
+
+         <action name="PaymentOrderPay" class="com.rsc.moneta.action.user.PaymentOrderPay">
+            <result name="success" type="redirectAction">
+                <param name="actionName">ViewPaymentOrderList</param>
+                <param name="paymentOrderId">${paymentOrderId}</param>
+                <param name="accountId">${accountId}</param>
+            </result>
+            <result name="error">/pages/user/error.jsp</result>
+        </action>
+      
     </package>
 </struts>

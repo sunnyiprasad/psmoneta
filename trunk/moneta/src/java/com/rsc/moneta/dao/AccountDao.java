@@ -64,4 +64,8 @@ public class AccountDao extends Dao{
         }
     }
 
+    public List<Account> getAccountsWithMoney(Long id, double amount, int currency) {
+        return null;
+    }
+
 }
