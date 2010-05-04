@@ -584,7 +584,7 @@ public class OSMPInputHandler implements InputHandler {
         em.close();
     }
 
-    private Date convertOSMPDateTimeToDateTime(String OSMPDateTime) throws ParseException {
+    public Date convertOSMPDateTimeToDateTime(String OSMPDateTime) throws ParseException {
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
         return df.parse(OSMPDateTime);
         /*return new GregorianCalendar(

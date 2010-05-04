@@ -19,7 +19,7 @@ public class TestOSMPParsingDate {
     @Test
     public void testdateParse() throws ParseException{
         OSMPInputHandler handler = new OSMPInputHandler();
-        Date date  = handler.getDateFromOSMPTransactionDate("20100421113029");
+        Date date  = handler.convertOSMPDateTimeToDateTime("20100421113029");
         Assert.assertNotNull(date);
         System.out.println(date);
     }

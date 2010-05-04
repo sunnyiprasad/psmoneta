@@ -20,7 +20,6 @@ import com.rsc.moneta.bean.PaymentOrder;
 import com.rsc.moneta.module.MainPaymentHandler;
 import com.rsc.moneta.module.CheckResponse;
 import com.rsc.moneta.module.ResultCode;
-import java.util.Calendar;
 
 /**
  * Класс представляет собой класс - обработчик запросов, поступающих от терминала e-port
@@ -28,36 +27,38 @@ import java.util.Calendar;
  */
 public class EPortInputHandler implements InputHandler {
 
-    private final static String KOI8R_ENCODING = "koi8-r";
-    private final static String EPORT_RETURN_CODE_E1 = "E1"; // E1 - запрос не распознан
-    private final static String EPORT_RETURN_CODE_E2 = "E2"; // E2 - технические трудности обработки запроса
-    private final static String EPORT_RETURN_CODE_E3 = "E3"; // E3 - подпись запроса неверна
-    private final static String EPORT_RETURN_CODE_E4 = "E4"; // E4 - результат операции еще не известен
-    private final static String EPORT_RETURN_CODE_S1 = "S1"; // S1 - успешно, платеж считается зачисленным
-    private final static String EPORT_RETURN_CODE_S2 = "S2"; // S2 - успешно, платеж считается аннулированным
-    private final static String EPORT_RETURN_CODE_F1 = "F1"; // F1 - отказ, сумма меньше минимальной допустимой
-    private final static String EPORT_RETURN_CODE_F2 = "F2"; // F2 - отказ, сумма больше максимальной допустимой
-    private final static String EPORT_RETURN_CODE_F3 = "F3"; // F3 - отказ, клиент с указанными реквизитами не найден
-    private final static String EPORT_RETURN_CODE_F4 = "F4"; // F4 - отказ, платеж невозможен (но клиент с указкнными реквизитами найден)
-    private final static String EPORT_RETURN_CODE_F5 = "F5"; // F5 - отказ, платеж с указанным id уже проведен
-    private final static String EPORT_RETURN_CODE_F6 = "F6"; // F6 - отказ, платеж с указанным id не найден
-    private final static String EPORT_RETURN_CODE_F7 = "F7"; // F7 - отказ, платеж с указанным id уже аннулирован
-    private final static String EPORT_RETURN_CODE_F8 = "F8"; // F8 - отказ, аннулирование не возможно
-    // Комментарии к кодам ответа ПС e-port
-    private final static String STRING_UNDEFINED_REQUEST = "Запрос не распознан";
-    private final static String STRING_ACCOUNT_PARAMETER_ERROR = "Отсутствует или неправильный параметр 'account'";
-    private final static String STRING_TIMESTAMP_PARAMETER_ERROR = "Отсутствует или неправильный параметр 'timestamp'";
+    public final static String KOI8R_ENCODING = "koi8-r";
+    public final static String EPORT_RETURN_CODE_E1 = "E1"; // E1 - запрос не распознан
+    public final static String EPORT_RETURN_CODE_E2 = "E2"; // E2 - технические трудности обработки запроса
+    public final static String EPORT_RETURN_CODE_E3 = "E3"; // E3 - подпись запроса неверна
+    public final static String EPORT_RETURN_CODE_E4 = "E4"; // E4 - результат операции еще не известен
+    public final static String EPORT_RETURN_CODE_S1 = "S1"; // S1 - успешно, платеж считается зачисленным
+    public final static String EPORT_RETURN_CODE_S2 = "S2"; // S2 - успешно, платеж считается аннулированным
+    public final static String EPORT_RETURN_CODE_F1 = "F1"; // F1 - отказ, сумма меньше минимальной допустимой
+    public final static String EPORT_RETURN_CODE_F2 = "F2"; // F2 - отказ, сумма больше максимальной допустимой
+    public final static String EPORT_RETURN_CODE_F3 = "F3"; // F3 - отказ, клиент с указанными реквизитами не найден
+    public final static String EPORT_RETURN_CODE_F4 = "F4"; // F4 - отказ, платеж невозможен (но клиент с указкнными реквизитами найден)
+    public final static String EPORT_RETURN_CODE_F5 = "F5"; // F5 - отказ, платеж с указанным id уже проведен
+    public final static String EPORT_RETURN_CODE_F6 = "F6"; // F6 - отказ, платеж с указанным id не найден
+    public final static String EPORT_RETURN_CODE_F7 = "F7"; // F7 - отказ, платеж с указанным id уже аннулирован
+    public final static String EPORT_RETURN_CODE_F8 = "F8"; // F8 - отказ, аннулирование не возможно
 
-    //    private final static String STRING_ABONENT_LOCKEDOUT = "Абонент заблокирован";
-//    private final static String STRING_SUM_TOO_SMALL = "Сумма слишком мала";
-//    private final static String STRING_SUM_TOO_BIG = "Сумма слишком велика";
-//    private final static String STRING_SUM_PARAMETER_ERROR = "Отсутствует или неправильный параметр 'sum'";
-//    private final static String STRING_ID_PARAMETER_ERROR = "Отсутствует или неправильный параметр 'id'";
-//    private final static String STRING_PAY_TIME_PARAMETER_ERROR = "Отсутствует или неправильный параметр 'pay_time'";
-//    private final static String STRING_PAYMENT_ALREADY_COMPLETED = "Платеж с указанным 'id' уже проведен";
-//    private final static String STRING_PAYMENT_ALREADY_REVOKED = "Платеж с указанным 'id' уже аннулирован";
-//    private final static String STRING_PAYMENT_NOT_FOUND = "Платеж с указанным 'id' не найден";
-//    private final static String STRING_COMMENT_TOO_LONG = "Длина поля comment больше 256 символов";
+    // Комментарии к кодам ответа ПС e-port
+    public final static String STRING_UNDEFINED_REQUEST = "Запрос не распознан";
+    public final static String STRING_ACCOUNT_PARAMETER_ERROR = "Отсутствует или неправильный параметр 'account'";
+    public final static String STRING_TIMESTAMP_PARAMETER_ERROR = "Отсутствует или неправильный параметр 'timestamp'";
+
+    //    public final static String STRING_ABONENT_LOCKEDOUT = "Абонент заблокирован";
+    //    public final static String STRING_SUM_TOO_SMALL = "Сумма слишком мала";
+    //    public final static String STRING_SUM_TOO_BIG = "Сумма слишком велика";
+    //    public final static String STRING_SUM_PARAMETER_ERROR = "Отсутствует или неправильный параметр 'sum'";
+    //    public final static String STRING_ID_PARAMETER_ERROR = "Отсутствует или неправильный параметр 'id'";
+    //    public final static String STRING_PAY_TIME_PARAMETER_ERROR = "Отсутствует или неправильный параметр 'pay_time'";
+    //    public final static String STRING_PAYMENT_ALREADY_COMPLETED = "Платеж с указанным 'id' уже проведен";
+    //    public final static String STRING_PAYMENT_ALREADY_REVOKED = "Платеж с указанным 'id' уже аннулирован";
+    //    public final static String STRING_PAYMENT_NOT_FOUND = "Платеж с указанным 'id' не найден";
+    //    public final static String STRING_COMMENT_TOO_LONG = "Длина поля comment больше 256 символов";
+
     /**
      *Поля запроса:
      *account - Идентификатор абонента
@@ -120,8 +121,7 @@ public class EPortInputHandler implements InputHandler {
                             }
                             try {
                                 timestamp = ((String[]) inputData.get("timestamp"))[0];
-                                // TODO: Денис - дату проверить на валидность
-                                // dtTimestamp = this.getDateTime(context.Server.UrlDecode(context.Request.Params["timestamp"]));
+                                dtTimestamp = this.convertEPortDateTimeStringToDateTime(URLDecoder.decode(timestamp, KOI8R_ENCODING));
                                 try {
                                     EntityManager em = EMF.getEntityManager();
                                     PaymentOrder paymentOrder = em.find(PaymentOrder.class, paymentOrderId);
@@ -296,92 +296,86 @@ public class EPortInputHandler implements InputHandler {
         if (dtAccepted != null) {
             response += "accepted=" + URLEncoder.encode(this.convertDateTimeToEPortDateTimeString(dtAccepted), KOI8R_ENCODING);
         }
-//
-//        // account
-//        if (anAccount != "") {
-//            if (response.Length > 0) {
-//                response += "&";
-//            }
-//            response += "account=" + anAccount;
-//        }
-//
-//        // comment
-//        if (aComment != "") {
-//            if (response.Length > 0) {
-//                response += "&";
-//            }
-//            response += "comment=" + httpServerUtility.UrlEncode(aComment);
-//        }
-//
-//        // id
-//        if (anId != -1) {
-//            if (response.Length > 0) {
-//                response += "&";
-//            }
-//            response += "id=" + anId.ToString();
-//        }
-//
-//        // pay_time
-//        if (dtPay_time.Year != 1) {
-//            if (response.Length > 0) {
-//                response += "&";
-//            }
-//            response += "pay_time=" + httpServerUtility.UrlEncode(this.getDateTimeString(dtPay_time));
-//        }
-//
-//        // reason
-//        if (aReason != "") {
-//            if (response.Length > 0) {
-//                response += "&";
-//            }
-//            response += "reason=" + httpServerUtility.UrlEncode(aReason);
-//        }
-//
-//        // result
-//        if (aResult != "") {
-//            if (response.Length > 0) {
-//                response += "&";
-//            }
-//            response += "result=" + aResult;
-//        }
-//
-//        // revoked
-//        if (dtRevoked.Year != 1) {
-//            if (response.Length > 0) {
-//                response += "&";
-//            }
-//            response += "revoked=" + httpServerUtility.UrlEncode(this.getDateTimeString(dtRevoked));
-//        }
-//
-//        // sum
-//        if (aSum != 0) {
-//            if (response.Length > 0) {
-//                response += "&";
-//            }
-//            response += "sum=" + aSum.ToString("f2", new System.Globalization.CultureInfo("en-US", false).NumberFormat);
-//        }
-//
-//        // timestamp
-//        if (dtTimestamp.Year != 1) {
-//            if (response.Length > 0) {
-//                response += "&";
-//            }
-//            response += "timestamp=" + httpServerUtility.UrlEncode(this.getDateTimeString(dtTimestamp));
-//        }
-//
-//        // type
-//        if (response.Length > 0) {
-//            response += "&";
-//        }
-//        response += "type=" + aType;
-//
-//        // sign
-//        if (response.Length > 0) {
-//            string responseSign = httpServerUtility.UrlEncode(this.getSignature(response, aDebugLogFileStreamWriter));
-//            response += "&";
-//            response += "sign=" + responseSign;
-//        }
-//        // response += "sign=576c20e01a5e7225dc7a70e353b4f30673db5c1f073d294b2b14c1e2ad944112cdc36d44b1aa22d674cbc12ed7ddc2d79e51bf4046e20db8e9674682462ba6d635eb71d993ce011ac39a4cce16280b01a7e96b1ab61d05ebd356b69a3bd5cc14b717b69f4c5eba8c4a14d5381f2d5b11a7a692711f32de39c951fd9bb8b7cf4a";
+
+        // account
+        if (!account.equals("")) {
+            if (response.length() > 0) {
+                response += "&";
+            }
+            response += "account=" + account;
+        }
+
+        // comment
+        if (!comment.equals("")) {
+            if (response.length() > 0) {
+                response += "&";
+            }
+            response += "comment=" + URLEncoder.encode(comment, KOI8R_ENCODING);
+        }
+
+        // id
+        if (id != -1) {
+            if (response.length() > 0) {
+                response += "&";
+            }
+            response += "id=" + Integer.toString(id);
+        }
+
+        // pay_time
+        if (dtPay_time != null) {
+            if (response.length() > 0) {
+                response += "&";
+            }
+            response += "pay_time=" + URLEncoder.encode(this.convertDateTimeToEPortDateTimeString(dtPay_time), KOI8R_ENCODING);
+        }
+
+        // reason
+        if (!reason.equals("")) {
+            if (response.length() > 0) {
+                response += "&";
+            }
+            response += "reason=" + URLEncoder.encode(reason, KOI8R_ENCODING);
+        }
+
+        // result
+        if (!result.equals("")) {
+            if (response.length() > 0) {
+                response += "&";
+            }
+            response += "result=" + result;
+        }
+
+        // revoked
+        if (dtRevoked != null) {
+            if (response.length() > 0) {
+                response += "&";
+            }
+            response += "revoked=" + URLEncoder.encode(this.convertDateTimeToEPortDateTimeString(dtRevoked), KOI8R_ENCODING);
+        }
+
+        // sum
+        if (sum != -1.00) {
+            if (response.length() > 0) {
+                response += "&";
+            }
+            response += "sum=" + String.format("%.2f", sum).replace(',', '.');
+        }
+
+        // timestamp
+        if (dtTimestamp != null) {
+            if (response.length() > 0) {
+                response += "&";
+            }
+            response += "timestamp=" + URLEncoder.encode(this.convertDateTimeToEPortDateTimeString(dtTimestamp), KOI8R_ENCODING);
+        }
+
+        // type
+        if (response.length() > 0) {
+            response += "&";
+        }
+        response += "type=" + type;
+
+        // TODO : Денис - доработать с учётом того, что должна быть ЭЦП
 
         return response;
     }
