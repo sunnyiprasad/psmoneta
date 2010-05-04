@@ -5,7 +5,6 @@
 
 package com.rsc.moneta.test.module;
 
-import com.rsc.moneta.bean.Market;
 import java.util.Map;
 import java.util.Properties;
 import junit.framework.Assert;
@@ -13,9 +12,11 @@ import org.junit.Test;
 import javax.persistence.EntityManager;
 import java.util.Vector;
 
+import com.rsc.moneta.bean.Market;
 import com.rsc.moneta.bean.PaymentOrder;
 import com.rsc.moneta.bean.PaymentOrderStatus;
 import com.rsc.moneta.module.inputhandler.OSMPInputHandler;
+import com.rsc.moneta.module.inputhandler.Const;
 import com.rsc.moneta.dao.EMF;
 import com.rsc.moneta.dao.Dao;
 import com.rsc.moneta.dao.MarketDao;
@@ -92,7 +93,7 @@ public class TestOsmpHandler {
                     "<osmp_txn_id>" + txn_id + "</osmp_txn_id>" +
                     "<prv_txn>" + account + "</prv_txn>" +
                     "<result>" + OSMPInputHandler.OSMP_RETURN_CODE_OK  + "</result>" +
-                    "<comment>" + OSMPInputHandler.STRING_ORDER_PAID_AND_COMPLETED + "</comment>" + 
+                    "<comment>" + Const.STRING_ORDER_PAID_AND_COMPLETED + "</comment>" +
                     "</response>",
                 response);
     }
