@@ -23,6 +23,8 @@ import com.rsc.moneta.dao.MarketDao;
 import com.rsc.moneta.dao.PaymentOrderDao;
 import com.rsc.moneta.dao.UserDao;
 import com.rsc.moneta.module.ResultCode;
+import java.util.Calendar;
+import java.util.Locale;
 // import com.rsc.moneta.test.TestConf;
 
 /**
@@ -38,7 +40,7 @@ public class TestOsmpHandler {
     public void testOsmpCheckForPaidAndCompletedOrder(){
         // 1. Создать тестовый ИМ-н, записать его в БД
         EntityManager em = EMF.getEntityManager();
-        Market market = new MarketDao(em).getMarketByName("testMarket1");
+        Market market = new MarketDao(em).getMarketByName("test");
         if (market == null) {
             market = new Market();
             market.setName("testMarket1");
@@ -60,9 +62,12 @@ public class TestOsmpHandler {
 
         // 2. Создать запись о заказе в т-це PaymentOrder, выставить заказу
         // статус "ORDER_STATUS_PAID_AND_COMPLETED"
+        String txn_id = "1234567";
         PaymentOrder paymentOrder = new PaymentOrder();
         paymentOrder.setStatus(PaymentOrderStatus.ORDER_STATUS_PAID_AND_COMPLETED);
         paymentOrder.setTest(Boolean.TRUE);
+        paymentOrder.setDate(Calendar.getInstance().getTime());
+        paymentOrder.setTransactionId(txn_id);
         paymentOrder.setMarket(market);
         new Dao(em).persist(paymentOrder);
         em.close();
@@ -71,7 +76,6 @@ public class TestOsmpHandler {
         // в п.1 номеру заказа
         long orderId = paymentOrder.getId();
         String account = String.format("%019d", orderId);
-        String txn_id = "1234567";
         OSMPInputHandler handler = new OSMPInputHandler();
         Map map = new Properties();
         map.put("command", "check");

@@ -41,7 +41,7 @@ public class PaymentOrder implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    // Это номер заказа в системе интернет магазина.
+    // Это номер заказа в системе Интернет-магазина.
     @Column(name = "transactionId", nullable=false)
     private String transactionId;
 
