@@ -54,6 +54,7 @@ public class Assistant extends BaseAction {
     private String name;
     private String email;
     private String phone;
+    private String webmoneyUrl;
 
 
     @Override
@@ -169,6 +170,7 @@ public class Assistant extends BaseAction {
             } else {
                 u = dao.createUserAndSendNotify(phone, name, email);
                 paymentOrder.setUser(u);
+                webmoneyUrl = Utils.getWebmoneyUrl(paymentOrder);
                 addActionMessage(getText("you_was_success_registred"));
                 result = "next";
                 _new = true;
@@ -185,6 +187,16 @@ public class Assistant extends BaseAction {
         }
         return result;
     }
+
+    public String getWebmoneyUrl() {
+        return webmoneyUrl;
+    }
+
+    public void setWebmoneyUrl(String webmoneyUrl) {
+        this.webmoneyUrl = webmoneyUrl;
+    }
+
+    
 
     public Assistant getContact() {
         return contact;
@@ -300,10 +312,6 @@ public class Assistant extends BaseAction {
 
     public void setMNT_AMOUNT(String MNT_AMOUNT) {
         this.MNT_AMOUNT = Double.parseDouble(MNT_AMOUNT);
-    }
-
-    public void setMNT_AMOUNT(Double MNT_AMOUNT) {
-        this.MNT_AMOUNT = MNT_AMOUNT;
     }
 
     public String getMNT_CURRENCY_CODE() {

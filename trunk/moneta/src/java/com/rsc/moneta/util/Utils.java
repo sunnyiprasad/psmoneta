@@ -4,6 +4,7 @@
  */
 package com.rsc.moneta.util;
 
+import com.rsc.moneta.Config;
 import com.rsc.moneta.Currency;
 import com.rsc.moneta.bean.PaymentOrder;
 import java.security.MessageDigest;
@@ -13,7 +14,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 
 /**
  *
@@ -157,7 +157,7 @@ public class Utils {
 
     /*
      * Возвращает true если string соотвествует шаблону regex,
-     false - в прот. случ.
+    false - в прот. случ.
      */
     public static boolean regexMatch(String regex, String string) {
         Pattern pattern = null;
@@ -168,5 +168,17 @@ public class Utils {
         } else {
             return false;
         }
+    }
+
+    public static String getWebmoneyUrl(PaymentOrder paymentOrder) throws Exception {
+        String url = "https://merchant.webmoney.ru/lmi/payment.asp?";
+        url += "LMI_PAYMENT_AMOUNT=" + paymentOrder.getAmount();
+        url += "&LMI_PAYMENT_DESC=" + paymentOrder.getDescription();
+        url += "&LMI_PAYEE_PURSE=" + Config.getWebmoneyAccount(paymentOrder.getCurrency());
+        url += "&LMI_PAYMENT_NO=" + paymentOrder.getId();
+        if (paymentOrder.getTest()) {
+            url += "&LMI_SIM_MODE=2";
+        }
+        return url;
     }
 }

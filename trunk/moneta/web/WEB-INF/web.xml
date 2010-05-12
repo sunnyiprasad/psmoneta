@@ -8,18 +8,16 @@
     </context-param>
     <context-param>
         <param-name>shutdown-on-unload</param-name>
-        <param-value>true</param-value>
+        <param-value>false</param-value>
     </context-param>
     <context-param>
         <param-name>start-scheduler-on-load</param-name>
-        <param-value>true</param-value>
+        <param-value>false</param-value>
     </context-param>
 
 
     <listener>
-        <listener-class>
-            org.quartz.ee.servlet.QuartzInitializerListener
-        </listener-class>
+        <listener-class>org.quartz.ee.servlet.QuartzInitializerListener</listener-class>
     </listener>
     
 
@@ -64,6 +62,18 @@
     <context-param>
         <param-name>OutputHandlerClass.0</param-name>
         <param-value>com.rsc.moneta.module.outputhandler.TaisOutputHandler</param-value>
+    </context-param>
+    <context-param>
+        <param-name>webmoney.euro.account</param-name>
+        <param-value>E167497903764</param-value>
+    </context-param>
+    <context-param>
+        <param-name>webmoney.rub.account</param-name>
+        <param-value>R293822966816</param-value>
+    </context-param>
+    <context-param>
+        <param-name>webmoney.usd.account</param-name>
+        <param-value>Z118644719028</param-value>
     </context-param>
     <filter>
         <filter-name>struts2</filter-name>
@@ -110,10 +120,6 @@
             <description/>
             <url-pattern>/Platika.html</url-pattern>
         </web-resource-collection>
-        <auth-constraint>
-            <description/>
-            <role-name>platika</role-name>
-        </auth-constraint>
     </security-constraint>
     <login-config>
         <auth-method>BASIC</auth-method>

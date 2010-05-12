@@ -1,23 +1,15 @@
 package com.rsc.moneta.test;
 
-import com.rsc.moneta.Currency;
 import com.rsc.moneta.dao.Dao;
 import com.rsc.moneta.dao.EMF;
 import com.rsc.moneta.bean.Market;
 import com.rsc.moneta.bean.User;
 import com.rsc.moneta.dao.MarketDao;
 import com.rsc.moneta.dao.UserDao;
-import com.rsc.moneta.bean.PaymentOrder;
-import com.rsc.moneta.bean.OSMPPayment;
-import com.rsc.moneta.bean.PaymentOrderStatus;
-import com.rsc.moneta.dao.OSMPPaymentDao;
 
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Random;
 import java.util.Vector;
 import javax.persistence.EntityManager;
 import org.junit.Assert;

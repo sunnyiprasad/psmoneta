@@ -6,8 +6,6 @@ package com.rsc.moneta.listener;
 
 import com.rsc.moneta.Config;
 import com.rsc.moneta.core.SmsProcessor;
-import java.io.FileOutputStream;
-import java.io.PrintStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletContextEvent;
@@ -66,6 +64,11 @@ public class MainAppListener implements ServletContextListener {
         } else {
             Logger.getLogger(MainAppListener.class.getName()).log(Level.SEVERE, "output handlers count not found");
         }
+        Config.setWebmoneyEURO(sce.getServletContext().getInitParameter("webmoney.euro.account"));
+        Config.setWebmoneyUSD(sce.getServletContext().getInitParameter("webmoney.usd.account"));
+        Config.setWebmoneyRUB(sce.getServletContext().getInitParameter("webmoney.rub.account"));
+
+
     }
 
     public void contextDestroyed(ServletContextEvent sce) {
