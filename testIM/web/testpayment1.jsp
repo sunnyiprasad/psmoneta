@@ -27,7 +27,7 @@
             <input type="hidden" name="MNT_CUSTOM2" value="abcdefghij">
             <input type="hidden" name="MNT_CUSTOM3" value="somebody@somewhere.com">
             <input type="hidden" name="contact.name" value="Suleyman" />
-            <input type="hidden" name="contact.phone" value="+79882970412" />
+            <input type="hidden" name="contact.phone" value="+79882970414" />
             <input type="hidden" name="contact.email" value="sulic123@batyrov.ru" />
             <input type="submit" value="Оплатить заказ">
             <!--</form>-->

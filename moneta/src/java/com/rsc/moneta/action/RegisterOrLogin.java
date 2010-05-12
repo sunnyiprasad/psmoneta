@@ -5,10 +5,13 @@
 package com.rsc.moneta.action;
 
 import com.opensymphony.xwork2.Action;
+import com.rsc.moneta.Config;
+import com.rsc.moneta.Currency;
 import com.rsc.moneta.bean.PaymentOrder;
 import com.rsc.moneta.dao.Dao;
 import com.rsc.moneta.bean.User;
 import com.rsc.moneta.dao.UserDao;
+import com.rsc.moneta.util.Utils;
 
 /**
  *
@@ -24,6 +27,7 @@ public class RegisterOrLogin extends BaseAction {
     private String name;
     private String email;
     private Boolean _new;
+    private String webmoneyUrl;
 
     @Override
     public String execute() throws Exception {
@@ -60,7 +64,16 @@ public class RegisterOrLogin extends BaseAction {
             }
         }
         paymentOrderId = String.format("%019d", paymentOrder.getId());
+        webmoneyUrl = Utils.getWebmoneyUrl(paymentOrder);
         return Action.SUCCESS;
+    }
+
+    public String getWebmoneyUrl() {
+        return webmoneyUrl;
+    }
+
+    public void setWebmoneyUrl(String webmoneyUrl) {
+        this.webmoneyUrl = webmoneyUrl;
     }
 
     public Boolean getNew() {

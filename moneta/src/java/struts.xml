@@ -45,5 +45,22 @@
             <result name="yandex">/pages/notSupportedPS.jsp</result>
         </action>
 
+        <action name="webmoneyResult" class="com.rsc.moneta.action.webmoney.Result">
+            <result name="success">/pages/webmoney/resultSuccess.jsp</result>
+            <result name="input">/pages/webmoney/resultError.jsp</result>
+            <result name="error">/pages/webmoney/resultError.jsp</result>
+        </action>
+
+        <action name="webmoneyPay" class="com.rsc.moneta.action.webmoney.Pay">
+            <result name="success">/pages/webmoney/paySuccess.jsp</result>
+            <result name="input">/pages/webmoney/payError.jsp</result>
+            <result name="error">/pages/webmoney/payError.jsp</result>
+        </action>
+
+        <action name="webmoneyFail" class="com.rsc.moneta.action.webmoney.Pay">
+            <result name="success">/pages/webmoney/failSuccess.jsp</result>
+            <result name="input">/pages/webmoney/failError.jsp</result>
+            <result name="error">/pages/webmoney/failError.jsp</result>
+        </action>
     </package>
 </struts>

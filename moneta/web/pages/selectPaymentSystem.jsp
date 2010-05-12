@@ -15,5 +15,8 @@
         </p>
         <p><s:a href="%{paymentOrder.successUrl}" ><s:text name="return_to_emarketplace" /></s:a></p>
         <p><s:a action="public/"><s:text name="my_cabinet" /></s:a></p>
+        <p>
+            <a href="<s:property value="%{webmoneyUrl}" />"><s:text name="webmoneylink" /></a>
+        </p>
     </body>
 </html>
