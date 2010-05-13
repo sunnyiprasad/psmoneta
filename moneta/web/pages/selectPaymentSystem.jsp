@@ -16,7 +16,7 @@
         <p><s:a href="%{paymentOrder.successUrl}" ><s:text name="return_to_emarketplace" /></s:a></p>
         <p><s:a action="public/"><s:text name="my_cabinet" /></s:a></p>
         <p>
-            <s:form>
+            <form action="https://merchant.webmoney.ru/lmi/payment.asp">
                 <s:hidden name="LMI_PAYMENT_AMOUNT" value="%{paymentOrder.amount}" />
                 <s:hidden name="LMI_PAYMENT_DESC" value="%{paymentOrder.description}"/>
                 <s:hidden name="LMI_PAYMENT_NO" value="%{paymentOrder.id}" />
@@ -25,7 +25,7 @@
                     <s:hidden name="LMI_SIM_MODE" value="2" />
                 </s:if>
                 <s:submit value="WEBMONEY" />
-            </s:form>
+            </form>
         </p>
     </body>
 </html>
