@@ -4,26 +4,24 @@
  */
 package com.rsc.moneta.action.webmoney;
 
+import com.opensymphony.xwork2.Action;
+import com.rsc.moneta.Currency;
 import com.rsc.moneta.action.BaseAction;
 import com.rsc.moneta.bean.PaymentOrder;
 import com.rsc.moneta.bean.WebMoneyPayment;
+import com.rsc.moneta.dao.PaymentOrderDao;
 import com.rsc.moneta.dao.WebMoneyPaymentDao;
 import com.rsc.moneta.module.CheckResponse;
 import com.rsc.moneta.module.MainPaymentHandler;
 import com.rsc.moneta.module.ResultCode;
-import com.rsc.moneta.util.Utils;
-import java.security.NoSuchAlgorithmException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
  * @author sulic
  */
-public class Result extends BaseAction {
-
+public class Success extends BaseAction {
+    
+    // WEBMONEY
     private Integer LMI_PREREQUEST;
     private Double LMI_PAYMENT_AMOUNT;
     private String LMI_PAYMENT_DESC;
@@ -46,107 +44,20 @@ public class Result extends BaseAction {
     private String LMI_PAYMER_NUMBER;
     private String LMI_CAPITALLER_WMID;
 
-    private boolean checkMd5(){
-        try {
-            String str = LMI_PAYEE_PURSE + LMI_PAYMENT_AMOUNT + LMI_PAYMENT_NO;
-            if (LMI_MODE != null) {
-                str += LMI_MODE;
-            }
-            if (LMI_SYS_INVS_NO != null) {
-                str += LMI_SYS_INVS_NO;
-            }
-            if (LMI_SYS_TRANS_NO != null) {
-                str += LMI_SYS_TRANS_NO;
-            }
-            if (LMI_SYS_TRANS_DATE != null) {
-                str += LMI_SYS_TRANS_DATE;
-            }
-            if (LMI_SECRET_KEY != null) {
-                str += LMI_SECRET_KEY;
-            }
-            if (LMI_PAYER_PURSE != null) {
-                str += LMI_PAYER_PURSE;
-            }
-            if (LMI_PAYER_WM != null) {
-                str += LMI_PAYER_WM;
-            }
-            String hash = Utils.getMd5InHexString(str);
-            return LMI_HASH != null && LMI_HASH.equals(hash);
-        } catch (NoSuchAlgorithmException ex) {
-            Logger.getLogger(Result.class.getName()).log(Level.SEVERE, ex.getMessage());
-            ex.printStackTrace();
-            return false;
-        }
-    }
-
     @Override
     public String execute() throws Exception {
-        if (LMI_PREREQUEST == null || LMI_PREREQUEST != 1) {
-            if (LMI_PAYMENT_NO == null) {
-                message = "invalid_payment_number";
-            } else {
-                PaymentOrder paymentOrder = em.find(PaymentOrder.class, LMI_PAYMENT_NO);
-                if (paymentOrder == null) {
-                    message = getText("payment_order_id_not_found");
-                } else {
-                    if (paymentOrder.getAmount() != LMI_PAYMENT_AMOUNT) {
-                        message = getText("invalid_amount");
-                    } else {
-                        MainPaymentHandler handler = new MainPaymentHandler(em);
-                        CheckResponse response = handler.pay(paymentOrder, LMI_PAYMENT_AMOUNT);
-                        if (response.getResultCode() == ResultCode.SUCCESS_WITH_AMOUNT
-                                || response.getResultCode() == ResultCode.SUCCESS_WITHOUT_AMOUNT) {
-                            WebMoneyPayment payment = new WebMoneyPayment();
-                            WebMoneyPaymentDao dao = new WebMoneyPaymentDao(em);
-                            payment.setAmount(LMI_PAYMENT_AMOUNT);
-                            payment.setAtmTransactionId(LMI_ATM_WMTRANSID);
-                            SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
-                            payment.setWmDate(df.parse(LMI_SYS_TRANS_DATE));
-                            payment.setDate(new Date());
-                            payment.setDescription(LMI_PAYMENT_DESC);
-                            payment.setEuronoteEmail(LMI_EURONOTE_EMAIL);
-                            payment.setEuronoteNumber(LMI_EURONOTE_NUMBER);
-                            payment.setHash(LMI_HASH);
-                            payment.setInAccount(LMI_PAYER_PURSE);
-                            payment.setMode(LMI_MODE==1);
-                            payment.setOutAccount(LMI_PAYEE_PURSE);
-                            payment.setPaymerEmail(LMI_PAYMER_EMAIL);
-                            payment.setPaymerNumber(LMI_PAYMER_NUMBER);
-                            payment.setSecretKey(LMI_SECRET_KEY);
-                            payment.setStatus(WebMoneyPayment.PAY);
-                            payment.setTerminaltype(LMI_CASHIER_ATMNUMBERINSIDE);
-                            payment.setWmInvoiceId(LMI_SYS_INVS_NO);
-                            payment.setWmTransactionId(LMI_SYS_TRANS_NO);
-                            payment.setWmid(LMI_PAYER_WM);
-                            payment.setCapitallerWMID(LMI_CAPITALLER_WMID);
-                            dao.persist(payment);
-                            message = "yes";
-                        } else {
-                            message = response.getDescription() + ", result code = " + response.getResultCode();
-                        }
-                    }
-                }
-            }
+        if (LMI_PAYMENT_NO == null) {
+            message = "invalid_payment_number";
         } else {
-            if (LMI_PAYMENT_NO == null) {
-                message = "yes";
+            PaymentOrder paymentOrder = em.find(PaymentOrder.class, LMI_PAYMENT_NO);
+            if (paymentOrder == null) {
+                message = getText("payment_order_id_not_found");
             } else {
-                PaymentOrder paymentOrder = em.find(PaymentOrder.class, LMI_PAYMENT_NO);
-                if (paymentOrder == null) {
-                    message = getText("payment_order_id_not_found");
-                } else {
-                    if (paymentOrder.getAmount() != LMI_PAYMENT_AMOUNT) {
-                        message = getText("invalid_amount");
-                    } else {
-                        MainPaymentHandler handler = new MainPaymentHandler(em);
-                        CheckResponse response = handler.check(paymentOrder, LMI_PAYMENT_AMOUNT);
-                        if (response.getResultCode() == ResultCode.SUCCESS_WITH_AMOUNT
-                                || response.getResultCode() == ResultCode.SUCCESS_WITHOUT_AMOUNT) {
-                            message = "yes";                            
-                        } else {
-                            message = response.getDescription() + ", result code = " + response.getResultCode();
-                        }
-                    }
+                WebMoneyPaymentDao dao = new WebMoneyPaymentDao(em);
+                WebMoneyPayment payment = dao.getPaymentByWmTransactionId(LMI_SYS_TRANS_NO);
+                if (payment != null){
+                    payment.setStatus(WebMoneyPayment.SUCCESS);
+                    dao.persist(payment);
                 }
             }
         }
@@ -320,4 +231,5 @@ public class Result extends BaseAction {
     public void setMessage(String message) {
         this.message = message;
     }
+
 }

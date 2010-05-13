@@ -32,7 +32,7 @@
     <class>com.rsc.moneta.test.bean.Order</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
-       <property name="hibernate.connection.username" value="tlsm"/>
+      <property name="hibernate.connection.username" value="tlsm"/>
       <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>
       <property name="hibernate.connection.password" value="12345"/>
       <property name="hibernate.connection.url" value="jdbc:postgresql://localhost:5432/tlsm"/>

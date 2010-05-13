@@ -45,22 +45,28 @@
             <result name="yandex">/pages/notSupportedPS.jsp</result>
         </action>
 
-        <action name="webmoneyResult" class="com.rsc.moneta.action.webmoney.Result">
-            <result name="success">/pages/webmoney/resultSuccess.jsp</result>
-            <result name="input">/pages/webmoney/resultError.jsp</result>
-            <result name="error">/pages/webmoney/resultError.jsp</result>
+        <action name="wmResult" class="com.rsc.moneta.action.webmoney.Result">
+            <result>/pages/webmoney.jsp</result>
         </action>
 
-        <action name="webmoneyPay" class="com.rsc.moneta.action.webmoney.Pay">
-            <result name="success">/pages/webmoney/paySuccess.jsp</result>
-            <result name="input">/pages/webmoney/payError.jsp</result>
-            <result name="error">/pages/webmoney/payError.jsp</result>
+        <action name="wmSuccess" class="com.rsc.moneta.action.webmoney.Success">
+            <result>/pages/wm_success.jsp</result>
         </action>
 
-        <action name="webmoneyFail" class="com.rsc.moneta.action.webmoney.Pay">
-            <result name="success">/pages/webmoney/failSuccess.jsp</result>
-            <result name="input">/pages/webmoney/failError.jsp</result>
-            <result name="error">/pages/webmoney/failError.jsp</result>
+        <action name="wmFail" class="com.rsc.moneta.action.webmoney.Fail">
+            <result>/pages/wm_fail.jsp</result>
+        </action>
+
+        <action name="wmResultOrder" class="com.rsc.moneta.action.webmoney.ResultOrder">
+            <result>/pages/webmoney.jsp</result>
+        </action>
+
+        <action name="wmSuccessOrder" class="com.rsc.moneta.action.webmoney.SuccessOrder">
+            <result>/pages/wm_success.jsp</result>
+        </action>
+
+        <action name="wmFailOrder" class="com.rsc.moneta.action.webmoney.FailOrder">
+            <result>/pages/wm_fail.jsp</result>
         </action>
     </package>
 </struts>
