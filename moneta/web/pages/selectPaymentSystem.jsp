@@ -17,14 +17,14 @@
         <p><s:a action="public/"><s:text name="my_cabinet" /></s:a></p>
         <p>
             <s:form>
-                <s:hidden name="LMI_PAYMENT_AMOUNT" value="paymentOrder.amount" />
-                <s:hidden name="LMI_PAYMENT_DESC" value="paymentOrder.description"/>
-                <s:hidden name="LMI_PAYMENT_NO" value="paymentOrder.id" />
-                <s:hidden name="LMI_PAYEE_PURSE" value="webmoneyAccount" />
-                <s:if test="paymentOrder.test">
+                <s:hidden name="LMI_PAYMENT_AMOUNT" value="%{paymentOrder.amount}" />
+                <s:hidden name="LMI_PAYMENT_DESC" value="%{paymentOrder.description}"/>
+                <s:hidden name="LMI_PAYMENT_NO" value="%{paymentOrder.id}" />
+                <s:hidden name="LMI_PAYEE_PURSE" value="%{webmoneyAccount}" />
+                <s:if test="%{paymentOrder.test}">
                     <s:hidden name="LMI_SIM_MODE" value="2" />
                 </s:if>
-                <s:submit value="WEMONEY" />
+                <s:submit value="WEBMONEY" />
             </s:form>
         </p>
     </body>
