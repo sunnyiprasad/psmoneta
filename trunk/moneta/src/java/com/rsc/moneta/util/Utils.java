@@ -6,7 +6,9 @@ package com.rsc.moneta.util;
 
 import com.rsc.moneta.Config;
 import com.rsc.moneta.Currency;
+import com.rsc.moneta.bean.Account;
 import com.rsc.moneta.bean.PaymentOrder;
+import com.rsc.moneta.bean.User;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import org.w3c.dom.Document;
@@ -180,5 +182,18 @@ public class Utils {
             url += "&LMI_SIM_MODE=2";
         }
         return url;
+    }
+
+    public static Account getAccount(User user, String LMI_PAYEE_PURSE) {
+        char ch = LMI_PAYEE_PURSE.charAt(0);
+        if (ch == 'R'){
+            return user.getAccount(Currency.RUB);
+        }else if (ch == 'Z'){
+            return user.getAccount(Currency.USD);
+        }else if (ch == 'E'){
+            return user.getAccount(Currency.EURO);
+        }else{
+            return null;
+        }
     }
 }

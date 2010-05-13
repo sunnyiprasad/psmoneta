@@ -84,16 +84,18 @@ public class PaymentOrderDao extends Dao {
         q.executeUpdate();
     }
 
-    public void addUserAccountBalance(Account account, double amount) {
+    public boolean addUserAccountBalance(Account account, double amount) {
         em.getTransaction().begin();
         try {
             addBalance(account.getId(), amount);
             em.refresh(account);
             em.getTransaction().commit();
+            return true;
         } catch (Exception e) {
             if (em.getTransaction().isActive()) {
                 em.getTransaction().rollback();
             }
+            return false;
         }
     }
 
