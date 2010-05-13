@@ -19,7 +19,13 @@ import javax.persistence.Temporal;
  * @author sulic
  */
 @Entity
-public class WebmoneyPayment implements Serializable{
+public class WebMoneyPayment implements Serializable{
+
+    public final static int PREREQUEST = 0;
+    public final static int PAY = 1;
+    public final static int SUCCESS = 2;
+    public final static int FAIL = 3;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -38,13 +44,31 @@ public class WebmoneyPayment implements Serializable{
     @Column(name="_hash")
     private String hash;
     private String paymerNumber;
-    private String payerEmail;
+    private String paymerEmail;
     private String euronoteNumber;
     private String euronoteEmail;
     private String atmTransactionId;
     private String terminaltype;
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date wmDate;
+    private int status;
+    private String capitallerWMID;
+
+    public String getCapitallerWMID() {
+        return capitallerWMID;
+    }
+
+    public void setCapitallerWMID(String capitallerWMID) {
+        this.capitallerWMID = capitallerWMID;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
 
     public double getAmount() {
         return amount;
@@ -134,12 +158,12 @@ public class WebmoneyPayment implements Serializable{
         this.outAccount = outAccount;
     }
 
-    public String getPayerEmail() {
-        return payerEmail;
+    public String getPaymerEmail() {
+        return paymerEmail;
     }
 
-    public void setPayerEmail(String payerEmail) {
-        this.payerEmail = payerEmail;
+    public void setPaymerEmail(String paymerEmail) {
+        this.paymerEmail = paymerEmail;
     }
 
     public String getPaymerNumber() {
