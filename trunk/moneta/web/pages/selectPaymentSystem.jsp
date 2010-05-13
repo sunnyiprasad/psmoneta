@@ -16,7 +16,16 @@
         <p><s:a href="%{paymentOrder.successUrl}" ><s:text name="return_to_emarketplace" /></s:a></p>
         <p><s:a action="public/"><s:text name="my_cabinet" /></s:a></p>
         <p>
-            <a href="<s:property value="%{webmoneyUrl}" />"><s:text name="webmoneylink" /></a>
+            <s:form>
+                <s:hidden name="LMI_PAYMENT_AMOUNT" value="paymentOrder.amount" />
+                <s:hidden name="LMI_PAYMENT_DESC" value="paymentOrder.description"/>
+                <s:hidden name="LMI_PAYMENT_NO" value="paymentOrder.id" />
+                <s:hidden name="LMI_PAYEE_PURSE" value="webmoneyAccount" />
+                <s:if test="paymentOrder.test">
+                    <s:hidden name="LMI_SIM_MODE" value="2" />
+                </s:if>
+                <s:submit value="WEMONEY" />
+            </s:form>
         </p>
     </body>
 </html>

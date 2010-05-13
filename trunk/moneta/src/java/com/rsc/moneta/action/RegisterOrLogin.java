@@ -27,11 +27,10 @@ public class RegisterOrLogin extends BaseAction {
     private String name;
     private String email;
     private Boolean _new;
-    private String webmoneyUrl;
+    private String webmoneyAccount;
 
     @Override
     public String execute() throws Exception {
-
         if (paymentId != null) {
             paymentOrder = em.find(PaymentOrder.class, paymentId);
             if (paymentOrder == null) {
@@ -64,16 +63,16 @@ public class RegisterOrLogin extends BaseAction {
             }
         }
         paymentOrderId = String.format("%019d", paymentOrder.getId());
-        webmoneyUrl = Utils.getWebmoneyUrl(paymentOrder);
+        webmoneyAccount = Config.getWebmoneyAccount(paymentOrder.getCurrency());
         return Action.SUCCESS;
     }
 
-    public String getWebmoneyUrl() {
-        return webmoneyUrl;
+    public String getWebmoneyAccount() {
+        return webmoneyAccount;
     }
 
-    public void setWebmoneyUrl(String webmoneyUrl) {
-        this.webmoneyUrl = webmoneyUrl;
+    public void setWebmoneyAccount(String webmoneyAccount) {
+        this.webmoneyAccount = webmoneyAccount;
     }
 
     public Boolean getNew() {

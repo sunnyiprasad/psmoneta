@@ -6,6 +6,7 @@ package com.rsc.moneta.action;
 
 import com.rsc.moneta.bean.Market;
 import com.opensymphony.xwork2.Action;
+import com.rsc.moneta.Config;
 import com.rsc.moneta.dao.Dao;
 import com.rsc.moneta.bean.PaymentOrder;
 import com.rsc.moneta.bean.PaymentOrderStatus;
@@ -54,7 +55,7 @@ public class Assistant extends BaseAction {
     private String name;
     private String email;
     private String phone;
-    private String webmoneyUrl;
+    private String webmoneyAccount;
 
 
     @Override
@@ -170,7 +171,7 @@ public class Assistant extends BaseAction {
             } else {
                 u = dao.createUserAndSendNotify(phone, name, email);
                 paymentOrder.setUser(u);
-                webmoneyUrl = Utils.getWebmoneyUrl(paymentOrder);
+                webmoneyAccount = Config.getWebmoneyAccount(paymentOrder.getCurrency());
                 addActionMessage(getText("you_was_success_registred"));
                 result = "next";
                 _new = true;
@@ -188,15 +189,13 @@ public class Assistant extends BaseAction {
         return result;
     }
 
-    public String getWebmoneyUrl() {
-        return webmoneyUrl;
+    public String getWebmoneyAccount() {
+        return webmoneyAccount;
     }
 
-    public void setWebmoneyUrl(String webmoneyUrl) {
-        this.webmoneyUrl = webmoneyUrl;
+    public void setWebmoneyAccount(String webmoneyAccount) {
+        this.webmoneyAccount = webmoneyAccount;
     }
-
-    
 
     public Assistant getContact() {
         return contact;
