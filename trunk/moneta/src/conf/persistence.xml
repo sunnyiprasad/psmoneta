@@ -15,6 +15,7 @@
     <class>com.rsc.moneta.bean.EPortPayment</class>
     <class>com.rsc.moneta.module.cyberplat.AbonentPayment</class>
     <class>com.rsc.moneta.module.cyberplat.Provider</class>
+    <class>com.rsc.moneta.bean.WebMoneyPayment</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <property name="hibernate.connection.username" value="tlsm"/>
