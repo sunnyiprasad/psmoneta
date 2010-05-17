@@ -6,20 +6,61 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Вход в ПС ТЛСМ</title>
+        <title><s:text name="title_main_public_page" /></title>
+        <link href="<s:url value="/css/base_style.css"/>" type="text/css" />
+        <script src="<s:url value="/js/jquery.js"/>" type="text/javascript"></script>
+        <script type="text/javascript">
+            $(document).ready(
+            function (){
+            <s:if test="reg">
+                    $("#pswd").show();
+                    $("#license").hide();
+                    $("#submit_button").val("<s:text name="login_button"/>");
+            </s:if>
+            <s:else >
+                    $("#pswd").hide();
+            </s:else>
+                    $("#checkbox").click(function(){
+                        //alert($("#checkbox:checked").val());
+                        if ($("#checkbox:checked").val() == "true"){
+                            $("#pswd").show();
+                            $("#license").hide();
+                            $("#submit_button").val("<s:text name="login_button"/>");
+                        }else{
+                            $("#pswd").hide();
+                            $("#license").show();
+                            $("#submit_button").val("<s:text name="create_account_button"/>");
+                        }
+                    });
+                }
+            );
+        </script>
     </head>
-    <body>
-        <p>
-            <s:text name="license_agreement" />
-        </p>
-        <p align="center">
-            <s:form action="RegisterOrLogin" method="post">
+    <body>        
+        <center>
+            <img src="<s:url value="/images/big_logo.gif" />" alt="logotype" />
+            <table width="600" id="license">
+                <tr><td><s:text name="license_agreement" /></td></tr>
+            </table>
+            <s:actionerror/>
+            <s:form action="RegisterOrLogin" method="get">
                 <s:hidden name="paymentId" value="%{paymentOrder.id}" />
-                <s:textfield name="email" label="%{getText('enter_email')}"/>
-                <s:password name="password" label="%{getText('enter_password')}" />
-                <s:submit value="Registation"/>
-                <a href="<s:url action="SelectPaymentSystem"><s:param name="paymentId" value="%{paymentOrder.id}"/></s:url>"></a>
-            </s:form>
-        </p>
+                <s:textfield name="email"  label="%{getText('enter_email')}" />
+                <tr id="pswd" >
+                    <td  class="tdLabel">
+                        <s:label cssClass="label" value="%{getText('enter_password')}" label="%{getText('enter_password')}" theme="simple"/>
+                    </td>
+                    <td>
+                        <s:password name="password" theme="simple"  />
+                    </td>
+                </tr>
+                <s:submit id="submit_button" value="%{getText('create_account_button')}"/>
+                <a href="<s:url action="SelectPaymentSystem">
+                       <s:param name="paymentId" value="%{paymentOrder.id}"/>
+                   </s:url>">
+                </a>
+                <s:checkbox name="reg" id="checkbox" label="%{getText('already_registered')}" value="%{reg}" />
+            </s:form>            
+        </center>
     </body>
 </html>

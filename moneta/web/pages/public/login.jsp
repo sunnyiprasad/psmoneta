@@ -1,17 +1,10 @@
 <%@page contentType="text/html" pageEncoding="UTF-8" language="java"%>
 <%@ taglib prefix="s" uri="/struts-tags" %>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page1</title>
-    </head>
-    <body>
-        <p align="center">
-            <s:form action="Login" method="get" >
-                <s:textfield name="email" label="%{getText('email')}" required="true" />
-                <s:password name="password" label="%{getText('password')}" required="true" />
-                <s:submit value="%{getText('login')}" />            
-            </s:form>
-        </p>
-    </body>
-</html>
+<center>
+    <img src="<s:url value="/images/big_logo.gif"/>" alt="logotype" />
+    <s:form action="Login" method="get" >
+        <s:textfield name="email" label="%{getText('email')}" required="true" />
+        <s:password name="password" label="%{getText('password')}" required="true" />
+        <s:submit value="%{getText('login_button')}" />
+    </s:form>
+</center>

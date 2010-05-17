@@ -6,26 +6,34 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Выбор платежной системы</title>
+        <title><s:text name="select_payment_system" /></title>
+        <link href="/css/base_style.css" />
     </head>
     <body>
-        <p><s:text name="selectpayment.order_registered" /> <br/>
-            <s:text name="selectpayment.main_message" />
-            <s:text name="selectpayment.enter_payment_key" /><s:property value="%{paymentOrderId}" />
-        </p>
-        <p><s:a href="%{paymentOrder.successUrl}" ><s:text name="return_to_emarketplace" /></s:a></p>
-        <p><s:a action="public/"><s:text name="my_cabinet" /></s:a></p>
-        
-        <form action="https://merchant.webmoney.ru/lmi/payment.asp" method="post">
-            <s:hidden name="LMI_PAYMENT_AMOUNT" value="%{paymentOrder.amount}" />
-            <s:hidden name="LMI_PAYMENT_DESC" value="%{paymentOrder.description}"/>
-            <s:hidden name="LMI_PAYMENT_NO" value="%{paymentOrder.id}" />
-            <s:hidden name="LMI_PAYEE_PURSE" value="%{webmoneyAccount}" />
-            <s:if test="%{paymentOrder.test}">
-                <s:hidden name="LMI_SIM_MODE" value="2" />
-            </s:if>
-            <s:submit value="WEBMONEY" />
-        </form>
-
-</body>
+        <table width="600" align="center">
+            <tr>
+                <td align="center">
+                    <img src="<s:url value="/images/big_logo.gif" />" alt="logotype" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p><s:text name="%{msg}" /> 
+                    </p>
+                    <p><s:a href="%{paymentOrder.successUrl}" ><s:text name="return_to_emarketplace" /></s:a></p>
+                    <p><s:a action="user/"><s:text name="my_cabinet" /></s:a></p>
+                    <form action="https://merchant.webmoney.ru/lmi/payment.asp" method="post">
+                        <s:hidden name="LMI_PAYMENT_AMOUNT" value="%{paymentOrder.amount}" />
+                        <s:hidden name="LMI_PAYMENT_DESC" value="%{paymentOrder.description}"/>
+                        <s:hidden name="LMI_PAYMENT_NO" value="%{paymentOrder.id}" />
+                        <s:hidden name="LMI_PAYEE_PURSE" value="%{webmoneyAccount}" />
+                        <s:if test="%{paymentOrder.test}">
+                            <s:hidden name="LMI_SIM_MODE" value="2" />
+                        </s:if>
+                        <s:submit value="WEBMONEY" />
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </body>
 </html>
