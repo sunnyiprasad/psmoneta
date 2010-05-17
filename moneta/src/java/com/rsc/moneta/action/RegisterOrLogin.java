@@ -26,17 +26,20 @@ public class RegisterOrLogin extends BaseAction {
     private String email;
     private Boolean _new;
     private String webmoneyAccount;
+    private boolean reg = false;
+    private String msg;
 
     @Override
     public String execute() throws Exception {
-        if (paymentId != null) {
+        if (paymentId != null){
             paymentOrder = em.find(PaymentOrder.class, paymentId);
             if (paymentOrder == null) {
                 addActionError(getText("payment_key_not_found"));
                 return Action.ERROR;
             }else{
-                if (paymentOrder.getUser() != null){
-                    return Action.LOGIN;
+                if (paymentOrder.getUser() != null && !paymentOrder.getUser().getEmail().equals(email)){
+                    addActionError(getText("this_order_already_binded_to_other_user"));
+                    return Action.ERROR;
                 }
             }
         } else {
@@ -55,15 +58,38 @@ public class RegisterOrLogin extends BaseAction {
                     new Dao(em).persist(paymentOrder);
                     session.put("user", localUser);
                 } else {
-                    addActionError(getText("incorrect_password_please_try_again"));
+                    if (!reg){
+                        addActionError(getText("this_email_already_registered"));
+                    }else{
+                        addActionError(getText("incorrect_password_please_try_again"));
+                    }                    
                     return "again";
                 }
             }
         }
         paymentOrderId = String.format("%019d", paymentOrder.getId());
         webmoneyAccount = Config.getWebmoneyAccount(paymentOrder.getCurrency());
+        String amount = paymentOrder.getAmount()+"";
+        String [] args = {amount, paymentOrderId};
+        msg = getText("selectpayment.order_registered", args);
         return Action.SUCCESS;
     }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
+    public boolean isReg() {
+        return reg;
+    }
+
+    public void setReg(boolean reg) {
+        this.reg = reg;
+    }    
 
     public String getWebmoneyAccount() {
         return webmoneyAccount;

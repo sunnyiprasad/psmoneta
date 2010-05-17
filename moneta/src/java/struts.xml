@@ -20,7 +20,7 @@
         </interceptors>
         <default-interceptor-ref name="main" />
 
-        <default-action-ref name="Login"></default-action-ref>
+        <default-action-ref name="Login" />
 
         <action name="Login">
             <result type="redirectAction">public/</result>
