@@ -73,27 +73,6 @@ public class Assistant extends BaseAction {
             }
         }
 
-        /*HttpServletRequest request = ServletActionContext.getRequest();
-        String _monetaLocale = request.getParameter("moneta.locale");
-        if (_monetaLocale != null) {
-            this.monetaLocale = _monetaLocale;
-            Locale locale = new Locale(this.monetaLocale);
-            ServletActionContext.getContext().setLocale(locale);
-        }
-        String _paymentSystemUnitId = request.getParameter("paymentSystem.unitId");
-        if (_paymentSystemUnitId != null) {
-            this.paymentSystemUnitId = _paymentSystemUnitId;
-        }
-        String _paymentSystemLimitIds = request.getParameter("paymentSystem.limitIds");
-        if (_paymentSystemLimitIds != null) {
-            this.paymentSystemLimitIds = _paymentSystemLimitIds;
-        }*/
-
-        /*String _contactName = request.getParameter("contact.name");
-        String _contactEmail = request.getParameter("contact.email");
-        String _contactPhone = request.getParameter("contact.phone");*/
-
-
         if (MNT_ID == null) {
             addActionError(getText("MNT_ID_not_defined"));
             return Action.ERROR;
@@ -163,12 +142,15 @@ public class Assistant extends BaseAction {
         paymentOrder.setTest(MNT_TEST_MODE);
         String result = Action.SUCCESS;
         if (email != null) {
+            // mail указан
             UserDao dao = new UserDao(em);
             User u = dao.getUserByEmail(email);
             if (u != null) {
+                // пользователь существует
                 addActionMessage(getText("you_are_already_registred"));
                 _new = false;
             } else {
+                // пользователь не существует
                 u = dao.createUserAndSendNotify(phone, name, email);
                 paymentOrder.setUser(u);
                 webmoneyAccount = Config.getWebmoneyAccount(paymentOrder.getCurrency());
@@ -177,6 +159,7 @@ public class Assistant extends BaseAction {
                 _new = true;
             }
         }else{
+            //mail не указан
             _new = false;
         }
         if (!new Dao(em).persist(paymentOrder)) {

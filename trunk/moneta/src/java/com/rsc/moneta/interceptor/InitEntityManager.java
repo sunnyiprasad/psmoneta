@@ -19,12 +19,24 @@ import java.util.Collection;
  */
 public class InitEntityManager implements Interceptor {
 
+    /**
+     * 
+     */
     public void destroy() {
     }
 
+    /**
+     *
+     */
     public void init() {
     }
 
+    /**
+     *
+     * @param actionInvocation
+     * @return
+     * @throws Exception
+     */
     public String intercept(ActionInvocation actionInvocation) throws Exception {
         if (actionInvocation.getAction() instanceof BaseAction) {
             BaseAction action = (BaseAction) actionInvocation.getAction();
