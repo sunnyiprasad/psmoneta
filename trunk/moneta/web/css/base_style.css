@@ -1,0 +1,23 @@
+/* 
+    Document   : base_style
+    Created on : 14.05.2010, 18:45:25
+    Author     : sulic
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* 
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+
+.payment_order_id {
+    font-weight: bold
+}
+
+p {
+    text-indent: 20px;
+    font-weight: bold;
+}
+
