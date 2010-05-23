@@ -26,7 +26,17 @@
                 <param name="namespace">/public</param>
                 <param name="actionName">LoginForm</param>
             </result>
-        </global-results>        
+        </global-results>
+
+        <action name="GetInvoice" class="com.rsc.moneta.action.user.GetInvoice">
+            <result name="error">/pages/error.jsp</result>
+            <result name="success" type="stream">
+                <param name="contentType">application/octet-stream</param>
+                <param name="inputName">inputStream</param>
+                <param name="contentDisposition">filename="invoice.pdf"</param>
+                <param name="bufferSize">1024</param>
+            </result>
+        </action>
 
         <action name="ViewAccountList" class="com.rsc.moneta.action.user.ViewAccountList">
             <result>/pages/user/viewAccountList.jsp</result>
@@ -62,6 +72,14 @@
                 <param name="accountId">${accountId}</param>
             </result>
             <result name="error">/pages/user/error.jsp</result>
+        </action>
+
+        <action name="MTS">
+            <result>/pages/user/cyberplat/mts.jsp</result>
+        </action>
+
+        <action name="MTSProcess" class="com.rsc.moneta.action.user.ProcessCyberplatPayment">
+            <result>/pages/user/cyberplat/mts.jsp</result>
         </action>
       
     </package>

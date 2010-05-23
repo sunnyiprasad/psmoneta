@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="abonent_payment" language="groovy" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="0.9090909090909111"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="212"/>
+	<parameter name="ExpireDate" class="java.lang.String"/>
+	<parameter name="InvoiceNumber" class="java.lang.String"/>
+	<parameter name="Customer" class="java.lang.String"/>
+	<parameter name="TotalInWords" class="java.lang.String"/>
+	<field name="Number" class="java.lang.String"/>
+	<field name="Article" class="java.lang.String"/>
+	<field name="Description" class="java.lang.String"/>
+	<field name="Count" class="java.lang.String"/>
+	<field name="Price" class="java.lang.String"/>
+	<field name="Amount" class="java.lang.String"/>
+	<field name="_Unit" class="java.lang.String"/>
+	<variable name="Tax" class="java.lang.Double">
+		<variableExpression><![CDATA[$V{Total}*0.18]]></variableExpression>
+	</variable>
+	<variable name="Total" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{Amount}]]></variableExpression>
+	</variable>
+	<variable name="ServiceCount" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$F{Number}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="185" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="752" height="88"/>
+			</rectangle>
+			<line>
+				<reportElement x="347" y="69" width="405" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="358" y="49" width="45" height="20"/>
+				<textElement>
+					<font fontName="Constantia" size="13" pdfEncoding="Cp1251"/>
+				</textElement>
+				<text><![CDATA[БИК]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="358" y="21" width="100" height="19"/>
+				<textElement>
+					<font fontName="Constantia" size="13" pdfEncoding="Cp1251"/>
+				</textElement>
+				<text><![CDATA[Сч. №]]></text>
+			</staticText>
+			<line>
+				<reportElement x="347" y="1" width="1" height="87"/>
+			</line>
+			<line>
+				<reportElement x="403" y="1" width="1" height="87"/>
+			</line>
+			<line>
+				<reportElement x="0" y="48" width="752" height="1"/>
+			</line>
+			<line>
+				<reportElement x="0" y="20" width="347" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="358" y="69" width="100" height="19"/>
+				<textElement>
+					<font fontName="Constantia" size="13" pdfEncoding="Cp1251"/>
+				</textElement>
+				<text><![CDATA[Сч. №]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="11" y="0" width="100" height="20"/>
+				<textElement>
+					<font fontName="Constantia" size="13" pdfEncoding="Cp1251"/>
+				</textElement>
+				<text><![CDATA[ИНН]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="194" y="1" width="100" height="20"/>
+				<textElement>
+					<font fontName="Constantia" size="13" pdfEncoding="Cp1251"/>
+				</textElement>
+				<text><![CDATA[КПП]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="20" width="100" height="20"/>
+				<textElement>
+					<font fontName="Constantia" size="13" pdfEncoding="Cp1251"/>
+				</textElement>
+				<text><![CDATA[Получатель:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="183" y="1" width="1" height="20"/>
+			</line>
+			<staticText>
+				<reportElement x="111" y="21" width="154" height="20"/>
+				<textElement>
+					<font fontName="Constantia" size="13" pdfEncoding="Cp1251"/>
+				</textElement>
+				<text><![CDATA[ООО "Киберпорт"]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="9" y="49" width="144" height="20"/>
+				<textElement>
+					<font fontName="Constantia" size="13" pdfEncoding="Cp1251"/>
+				</textElement>
+				<text><![CDATA[Банк получателя]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="110" width="752" height="23"/>
+				<textElement>
+					<font fontName="Constantia" size="18" isBold="false" isItalic="false" pdfEncoding="Cp1251" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["СЧЕТ № 5 от 21 мая 2010 г."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1" y="145" width="473" height="20"/>
+				<textElement>
+					<font fontName="Constantia" size="13" pdfEncoding="Cp1251" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Заказчик: "+$P{Customer}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1" y="165" width="473" height="20"/>
+				<textElement>
+					<font fontName="Constantia" size="13" pdfEncoding="Cp1251" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Плательщик:  "+$P{Customer}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement x="1" y="1" width="48" height="20"/>
+				<textElement textAlignment="Center">
+					<font fontName="Constantia" pdfEncoding="Cp1251" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["№"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="49" y="1" width="302" height="20"/>
+				<textElement textAlignment="Center">
+					<font fontName="Constantia" pdfEncoding="Cp1251" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Наименование товара"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="351" y="1" width="100" height="20"/>
+				<textElement textAlignment="Center">
+					<font fontName="Constantia" pdfEncoding="Cp1251" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Ед. изм"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="451" y="1" width="100" height="20"/>
+				<textElement textAlignment="Center">
+					<font fontName="Constantia" pdfEncoding="Cp1251" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Количество"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="551" y="1" width="100" height="20"/>
+				<textElement textAlignment="Center">
+					<font fontName="Constantia" pdfEncoding="Cp1251" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Цена"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="651" y="1" width="100" height="20"/>
+				<textElement textAlignment="Center">
+					<font fontName="Constantia" pdfEncoding="Cp1251" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Сумма"]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement x="2" y="0" width="49" height="20"/>
+				<textElement textAlignment="Center">
+					<font fontName="Constantia" pdfEncoding="Cp1251" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Number}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="">
+				<reportElement x="49" y="0" width="302" height="20"/>
+				<textElement>
+					<font fontName="Constantia" pdfEncoding="Cp1251" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Description}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="451" y="0" width="100" height="20"/>
+				<textElement textAlignment="Center">
+					<font fontName="Constantia" pdfEncoding="Cp1251" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Count}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="551" y="0" width="100" height="20"/>
+				<textElement textAlignment="Center">
+					<font fontName="Constantia" pdfEncoding="Cp1251" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Price}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="651" y="0" width="100" height="20"/>
+				<textElement textAlignment="Center">
+					<font fontName="Constantia" pdfEncoding="Cp1251" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Amount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="351" y="0" width="100" height="20"/>
+				<textElement>
+					<font fontName="Constantia" pdfEncoding="Cp1251" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{_Unit}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="328" splitType="Stretch">
+			<rectangle>
+				<reportElement x="-1" y="219" width="751" height="77"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="-1" y="306" width="751" height="20"/>
+				<textElement>
+					<font fontName="Constantia" pdfEncoding="Cp1251" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Деятельность ООО "Киберпорт" осуществляется на основании договора с ОАО "Дагестанские авиалинии" №1 от 21/05/2010 г. E-mail: sulic@batyrov.ru]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="2" y="228" width="383" height="21"/>
+				<textElement>
+					<font fontName="Constantia" size="13" pdfEncoding="Cp1251" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Срок оплаты при безналичном расчете до (московское время)"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="2" y="249" width="383" height="39"/>
+				<textElement>
+					<font fontName="Constantia" size="13" pdfEncoding="Cp1251" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["В платежном поручении в графе [Назначение] обязательно указывайте номер оплачиваемого счета"]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement x="-1" y="188" width="173" height="20"/>
+				<textElement>
+					<font fontName="Constantia" size="15" isBold="true" pdfEncoding="Cp1251"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Внимание!"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="388" y="229" width="362" height="20"/>
+				<textElement>
+					<font fontName="Constantia" size="13" isBold="true" pdfEncoding="Cp1251" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{ExpireDate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="388" y="268" width="362" height="20"/>
+				<textElement>
+					<font fontName="Constantia" size="13" isBold="true" pdfEncoding="Cp1251" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{InvoiceNumber}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="113" width="483" height="20"/>
+				<textElement>
+					<font fontName="Constantia" pdfEncoding="Cp1251" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Руководитель предприятия __________________________________________________]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="133" width="483" height="20"/>
+				<textElement>
+					<font fontName="Constantia" pdfEncoding="Cp1251" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Главный бухгалтер _________________________________________________________]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="90" width="749" height="20"/>
+				<textElement>
+					<font fontName="Constantia" pdfEncoding="Cp1251"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{TotalInWords}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="2" y="45" width="747" height="20"/>
+				<textElement>
+					<font fontName="Constantia" pdfEncoding="Cp1251" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Всего наименований "+$V{ServiceCount}+" на сумму: "+$V{Total}+" руб."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="651" y="25" width="100" height="20"/>
+				<textElement>
+					<font fontName="Constantia" pdfEncoding="Cp1251" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$V{Total}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="551" y="25" width="100" height="20"/>
+				<textElement>
+					<font fontName="Constantia" pdfEncoding="Cp1251" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Всего к оплате:]]></text>
+			</staticText>
+			<textField pattern="">
+				<reportElement x="651" y="5" width="100" height="20"/>
+				<textElement>
+					<font fontName="Constantia" pdfEncoding="Cp1251" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$V{Tax}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="551" y="5" width="100" height="20"/>
+				<textElement>
+					<font fontName="Constantia" pdfEncoding="Cp1251" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[в т.ч. НДС 18%]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

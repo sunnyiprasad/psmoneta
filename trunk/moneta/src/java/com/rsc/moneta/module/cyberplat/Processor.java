@@ -1,7 +1,9 @@
 package com.rsc.moneta.module.cyberplat;
 
 
-import java.util.Properties;
+import com.rsc.moneta.bean.PSPayment;
+import com.rsc.moneta.bean.PSResponse;
+import javax.persistence.EntityManager;
 
 /**
  * Created by IntelliJ IDEA.
@@ -11,7 +13,8 @@ import java.util.Properties;
  * To change this template use File | Settings | File Templates.
  */
 public interface Processor {
-    Properties check(AbonentPayment pay, int req_type);
-    Properties payment(AbonentPayment pay, int req_type);
-    Properties getStatus(AbonentPayment pay, int req_type);
+    void setEntityManager(EntityManager em);
+    PSResponse check(PSPayment pay);
+    PSResponse payment(PSPayment pay);
+    PSResponse getStatus(PSPayment pay);
 }

@@ -1,5 +1,8 @@
 package com.rsc.moneta.module.cyberplat;
 
+import com.rsc.moneta.bean.CyberplatPayment;
+import com.rsc.moneta.bean.PSPayment;
+import com.rsc.moneta.bean.PSResponse;
 import com.rsc.moneta.dao.Dao;
 import com.rsc.moneta.util.Utils;
 import org.cyberplat.ipriv.IPriv;
@@ -37,7 +40,11 @@ public class Cyberplat implements Processor {
     private String PUBKEYS = "";
     private String SECRET = "";
     private IPriv iPriv;
-    private final EntityManager em;
+    private EntityManager em;
+
+    public void setEntityManager(EntityManager em) {
+        this.em = em;
+    }
 
     private String getConfigParameter(Properties props, String name) throws IOException {
         if (props.get(name) != null) {
@@ -47,8 +54,7 @@ public class Cyberplat implements Processor {
         }
     }
 
-    public Cyberplat(EntityManager em) throws IOException {
-        this.em = em;
+    public Cyberplat() throws IOException {
         Properties props = new Properties();
         FileInputStream config = new FileInputStream(keyDirectory + "cyberplat.properties");
         props.load(config);
@@ -65,7 +71,7 @@ public class Cyberplat implements Processor {
         iPriv.init();
     }
 
-    public String makeRequest(AbonentPayment pay, int req_type) {
+    public String makeRequest(CyberplatPayment pay) {
         String req = "SD=" + SD + "\r\n";
         req += "AP=" + AP + "\r\n";
         req += "OP=" + OP + "\r\n";
@@ -79,19 +85,17 @@ public class Cyberplat implements Processor {
         else
             req += "ACCOUNT=\r\n";
         req += "AMOUNT=" + pay.getAmount() + "\r\n";
-        req += "AMOUNT_ALL=" + pay.getAmountAll() + "\r\n";
+        req += "AMOUNT_ALL=" + pay.getAmount() + "\r\n";
         if (pay.getComment() != null)
             req += "COMMENT=" + pay.getComment() + "\r\n";
         else
             req += "COMMENT=\r\n";
-        if (req_type >= 0)
-            req = req + "REQ_TYPE=" + req_type + "\r\n";
         return req;
     }
 
-    public Properties sendRequest(AbonentPayment pay, int req_type, String url) {
+    public Properties sendRequest(CyberplatPayment pay, String url) {
         try {
-            String req = makeRequest(pay, req_type);
+            String req = makeRequest(pay);
             req = new String(iPriv.sign(req.getBytes(), 0, req.length()));
             System.out.println(req);
             req = "inputmessage=" + URLEncoder.encode(req, "cp1251");
@@ -128,58 +132,61 @@ public class Cyberplat implements Processor {
         }
     }
 
-    public Properties check(AbonentPayment pay, int req_type) {
-        Properties props = sendRequest(pay, req_type, pay.getProvider().getCheckUrl());
+    public PSResponse check(PSPayment pay) {
+        CyberplatPayment payment = new CyberplatPayment(pay);        
+        Properties props = sendRequest(payment, pay.getProvider().getCheckUrl());
         if ("0".equals(props.getProperty("RESULT")) && "0".equals(props.getProperty("ERROR")))
-            pay.setStatus(AbonentPayment.CHECKED);
+            pay.setStatus(CyberplatPayment.CHECKED);
         else
-            pay.setStatus(AbonentPayment.CHECKED_ERROR);
-        return props;
+            pay.setStatus(CyberplatPayment.CHECKED_ERROR);
+        return new PSResponse();
     }
 
-    public Properties payment(AbonentPayment pay, int req_type) {
-        Properties props = sendRequest(pay, req_type, pay.getProvider().getPaymentUrl());
+    public PSResponse payment(PSPayment pay) {
+        CyberplatPayment payment = new CyberplatPayment(pay);
+        Properties props = sendRequest(payment, pay.getProvider().getPaymentUrl());
         if ("0".equals(props.getProperty("RESULT")) && "0".equals(props.getProperty("ERROR")))
-            pay.setStatus(AbonentPayment.PAYMENT);
+            pay.setStatus(CyberplatPayment.PAYMENT);
         else
-            pay.setStatus(AbonentPayment.PAYMENT_ERROR);
-        return props;
+            pay.setStatus(CyberplatPayment.PAYMENT_ERROR);
+        return new PSResponse();
     }
 
-    public Properties getStatus(AbonentPayment pay, int req_type){
-        Properties props = sendRequest(pay, req_type, pay.getProvider().getGetStatusUrl());
+    public PSResponse getStatus(PSPayment pay){
+        CyberplatPayment payment = new CyberplatPayment(pay);
+        Properties props = sendRequest(payment, pay.getProvider().getGetStatusUrl());
         int result = Utils.getInt(props.getProperty("RESULT"));
         int error = Utils.getInt(props.getProperty("ERROR"));
         if (result == -1) {
             if (error == 11) {
-                pay.setStatus(AbonentPayment.ERROR);
+                pay.setStatus(CyberplatPayment.ERROR);
                 new Dao(em).persist(pay);                
             } else {
-                pay.setStatus(AbonentPayment.UNKNOWN);
+                pay.setStatus(CyberplatPayment.UNKNOWN);
                 new Dao(em).persist(pay);
             }
         } else {
             if (result < 2){
-                pay.setStatus(AbonentPayment.ERROR);
+                pay.setStatus(CyberplatPayment.ERROR);
                 new Dao(em).persist(pay);
             } else if ((result > 1) && (result < 7)){
-                pay.setStatus(AbonentPayment.PROCESSING);
+                pay.setStatus(CyberplatPayment.PROCESSING);
                 new Dao(em).persist(pay);
             }else if (result == 7) {
                 if (error == 0){
-                    pay.setStatus(AbonentPayment.SUCCESS);
+                    pay.setStatus(CyberplatPayment.SUCCESS);
                     new Dao(em).persist(pay);
                 }
                 else{
-                    pay.setStatus(AbonentPayment.ERROR);
+                    pay.setStatus(CyberplatPayment.ERROR);
                 new Dao(em).persist(pay);
                 }
             }else{
-                pay.setStatus(AbonentPayment.UNKNOWN);
+                pay.setStatus(CyberplatPayment.UNKNOWN);
                 new Dao(em).persist(pay);
             }
         }
-        return props;
+        return new PSResponse();
     }
 
     public Properties getCommonError(String session) {

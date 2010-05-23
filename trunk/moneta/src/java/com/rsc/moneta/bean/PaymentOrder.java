@@ -61,6 +61,8 @@ public class PaymentOrder implements Serializable {
     private String successUrl;
     // Куда отправить пользователь при ошибке об оплате.
     private String failUrl;
+    @Temporal(javax.persistence.TemporalType.DATE)
+    private Date expireDate;
 
 
     private String paymentSystemUnitId;
@@ -102,6 +104,16 @@ public class PaymentOrder implements Serializable {
     @ManyToOne
     @JoinColumn(name="userId")
     private User user;
+
+    public Date getExpireDate() {
+        return expireDate;
+    }
+
+    public void setExpireDate(Date expireDate) {
+        this.expireDate = expireDate;
+    }
+
+
 
     public long getAccountId() {
         return accountId;

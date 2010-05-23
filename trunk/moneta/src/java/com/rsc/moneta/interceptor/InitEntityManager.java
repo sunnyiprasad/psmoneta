@@ -10,7 +10,7 @@ import com.rsc.moneta.Config;
 import com.rsc.moneta.action.BaseAction;
 import com.rsc.moneta.bean.User;
 import com.rsc.moneta.dao.EMF;
-import com.rsc.moneta.module.cyberplat.Provider;
+import com.rsc.moneta.bean.Provider;
 import java.util.Collection;
 
 /**

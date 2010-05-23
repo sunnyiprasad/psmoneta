@@ -56,9 +56,15 @@
                     <s:a action="PaymentOrderCheck">
                         <s:text name="pay" />
                         <s:param name="paymentOrderId" value="id" />
-                    </s:a>
+                    </s:a>                    
                 </td>
             </s:if>
+            <td><s:a action="GetInvoice">
+                    <s:text name="get_invoice" />
+                    <s:param name="paymentOrderId" value="id" />
+                    <s:param name="organization" value="%{'Microsoft'}" />
+                </s:a>
+            </td>
         </tr>
     </s:iterator>
 </table>

@@ -22,6 +22,7 @@
                     </p>
                     <p><s:a href="%{paymentOrder.successUrl}" ><s:text name="return_to_emarketplace" /></s:a></p>
                     <p><s:a action="user/"><s:text name="my_cabinet" /></s:a></p>
+                    <s:a action="asd"><s:text name="bank_transfer" /></s:a>
                     <form action="https://merchant.webmoney.ru/lmi/payment.asp" method="post">
                         <s:hidden name="LMI_PAYMENT_AMOUNT" value="%{paymentOrder.amount}" />
                         <s:hidden name="LMI_PAYMENT_DESC" value="%{paymentOrder.description}"/>

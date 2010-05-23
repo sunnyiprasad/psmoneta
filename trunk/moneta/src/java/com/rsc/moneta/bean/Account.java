@@ -28,6 +28,7 @@ import javax.persistence.OneToMany;
 @Entity
 public class Account implements Serializable{
     
+    
     // Типы возможного периода обналичивания средств.
     public static int EVERYDAY = 0;
     public static int EVERYWEEK = 1;
@@ -59,6 +60,9 @@ public class Account implements Serializable{
     // Это пользователь владелец счета.
     @Column(insertable=false, updatable=false, nullable=false)
     private long userId;
+
+    @OneToMany(mappedBy = "account")    
+    private List<PSPayment> psPayments;
 
     @ManyToOne
     @JoinColumn(name="userId")
