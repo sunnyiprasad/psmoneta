@@ -1,6 +1,8 @@
-package com.rsc.moneta.module.cyberplat;
+package com.rsc.moneta.bean;
 
+import com.rsc.moneta.bean.CyberplatPayment;
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.*;
 import java.util.Collection;
 
@@ -13,6 +15,8 @@ import java.util.Collection;
  */
 @Entity
 public class Provider implements Serializable {
+    @OneToMany(mappedBy = "provider")
+    private List<PSPayment> psPayments;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -21,8 +25,7 @@ public class Provider implements Serializable {
     private String paymentUrl;
     private String getStatusUrl;
     private String className;
-    @OneToMany(mappedBy="provider")
-    private Collection<AbonentPayment> payments;
+
 
     public String getCheckUrl() {
         return checkUrl;
@@ -70,14 +73,6 @@ public class Provider implements Serializable {
 
     public void setPaymentUrl(String paymentUrl) {
         this.paymentUrl = paymentUrl;
-    }
-
-    public Collection<AbonentPayment> getPayments() {
-        return payments;
-    }
-
-    public void setPayments(Collection<AbonentPayment> payments) {
-        this.payments = payments;
     }
     
 }

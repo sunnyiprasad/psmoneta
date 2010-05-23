@@ -4,7 +4,6 @@
  */
 package com.rsc.moneta.bean;
 
-import com.rsc.moneta.module.cyberplat.AbonentPayment;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Column;
@@ -55,9 +54,6 @@ public class User implements Serializable {
     private List<Market> markets;
 
     @OneToMany(mappedBy = "user")
-    private List<AbonentPayment> abonentPayments;
-
-    @OneToMany(mappedBy = "user")
     private List<PaymentOrder> paymentOrders;
 
     @OneToMany(mappedBy = "user")
@@ -69,14 +65,6 @@ public class User implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public List<AbonentPayment> getAbonentPayments() {
-        return abonentPayments;
-    }
-
-    public void setAbonentPayments(List<AbonentPayment> abonentPayments) {
-        this.abonentPayments = abonentPayments;
     }
 
     public String getEmail() {

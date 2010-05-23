@@ -7,7 +7,7 @@ package com.rsc.moneta;
 import com.rsc.moneta.dao.EMF;
 import com.rsc.moneta.dao.ProviderDao;
 import com.rsc.moneta.module.OutputHandler;
-import com.rsc.moneta.module.cyberplat.Provider;
+import com.rsc.moneta.bean.Provider;
 import java.util.Collection;
 import java.util.Hashtable;
 import javax.persistence.EntityManager;

@@ -1,9 +1,8 @@
-package com.rsc.moneta.module.cyberplat;
+package com.rsc.moneta.bean;
 
 import com.rsc.moneta.bean.User;
 import java.io.Serializable;
 import javax.persistence.*;
-import java.sql.Timestamp;
 import java.util.Date;
 
 /**
@@ -17,7 +16,7 @@ import java.util.Date;
  *
  */
 @Entity
-public class AbonentPayment implements Serializable {
+public class CyberplatPayment implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -27,22 +26,19 @@ public class AbonentPayment implements Serializable {
     private String authCode;    
     private String transId;
     private int status;
-    private int errorMessage;    
-    @ManyToOne
-    private User user;
-    @ManyToOne
-    private Provider provider;
+    private int errorMessage;
+    @Column(insertable=false, updatable=false, nullable=false)
+    private long psPaymentId;
+    @OneToOne
+    @JoinColumn(name="psPaymentId")
+    private PSPayment psPayment;
     @Column(name = "_session")
     private String session;
     private double amount;
-    private double amountAll;
     @Column(name = "_date")
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date date;
-    @Temporal(javax.persistence.TemporalType.DATE)
-    private Date startDate;
-    @Temporal(javax.persistence.TemporalType.DATE)
-    private Date endDate;
+    
 
     public final static int SUCCESS = 0;
     public static final int NEW = 1;
@@ -54,23 +50,17 @@ public class AbonentPayment implements Serializable {
     public static final int UNKNOWN = 7;
     public static final int PROCESSING = 8;
 
-    public Provider getProvider() {
-        return provider;
+    public CyberplatPayment() {
+        this.date = new Date();
     }
 
-    public void setProvider(Provider provider) {
-        this.provider = provider;
+    public CyberplatPayment(PSPayment pay) {
+        this.psPayment = pay;
+        this.amount = pay.getAmount();
+        this.account = pay.getBill();
+        this.number = pay.getNumber();
+        this.date = new Date();
     }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-
 
     public String getAccount() {
         return account;
@@ -86,14 +76,6 @@ public class AbonentPayment implements Serializable {
 
     public void setAmount(double amount) {
         this.amount = amount;
-    }
-
-    public double getAmountAll() {
-        return amountAll;
-    }
-
-    public void setAmountAll(double amountAll) {
-        this.amountAll = amountAll;
     }
 
     public String getAuthCode() {
@@ -118,15 +100,7 @@ public class AbonentPayment implements Serializable {
 
     public void setDate(Date date) {
         this.date = date;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
+    }   
 
     public int getErrorMessage() {
         return errorMessage;
@@ -150,9 +124,7 @@ public class AbonentPayment implements Serializable {
 
     public void setNumber(String number) {
         this.number = number;
-    }
-
-   
+    } 
 
     public String getSession() {
         return session;
@@ -160,15 +132,7 @@ public class AbonentPayment implements Serializable {
 
     public void setSession(String session) {
         this.session = session;
-    }
-
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
+    }   
 
     public int getStatus() {
         return status;

@@ -6,7 +6,7 @@
 package com.rsc.moneta.dao;
 
 
-import com.rsc.moneta.module.cyberplat.Provider;
+import com.rsc.moneta.bean.Provider;
 import java.util.Collection;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;

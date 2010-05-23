@@ -3,7 +3,7 @@ package com.rsc.moneta.action;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.rsc.moneta.bean.User;
-import com.rsc.moneta.module.cyberplat.Provider;
+import com.rsc.moneta.bean.Provider;
 import java.util.Collection;
 import javax.servlet.ServletContext;
 import org.apache.struts2.interceptor.SessionAware;
